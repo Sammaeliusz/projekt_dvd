@@ -1,0 +1,6 @@
+-1 - wystąpił problem z połączeniem z bazą danych/podany argument nie jest zaczepem do bazy danych
+-2 - któreś z pól login/email/hasło nie jest tekstem
+-3 - podany email jest niepoprawny
+-4 - podane hasło nie spełni wymagań
+-5 - podane dane już znajdują się w bazie danych
+-6 - podane hasło nie pasuje do podanego loginu
