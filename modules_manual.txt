@@ -1,0 +1,10 @@
+Aby utworzyć połączenie z bazą należy użyć nazwa_zaczepu = connection(opt nazwa, opt hasło)
+Na końcu każdego pliku w którym utwarzamy połączenie powinno być jego zamknięcie poleceniem nazwa_zaczepu.close()
+Dostępne funkcje:
+    connection(name="root", passwd="")->MySQLConnection
+    check_mail(email)->bool
+    check_injection(tekst)->str
+    check_passwd(passwd)->bool
+    checkdata(connection, typ, wartosc)->int
+    user_register(connection, login, email, passwd)->int
+    user_login(connection, name, passwd)->int
