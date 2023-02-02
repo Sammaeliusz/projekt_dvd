@@ -89,7 +89,6 @@ def user_change_data(connection:sql.connection.MySQLConnection, user_id:int, dat
                     connection.commit()
                     curs.close()
                     return 1
-                    
             else:
                 curs.close()
                 return -2
