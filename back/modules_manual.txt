@@ -8,3 +8,4 @@ Dostępne funkcje:
     checkdata(connection, typ, wartosc)->int
     user_register(connection, login, email, passwd)->int
     user_login(connection, name, passwd)->int
+    user_change_data(connection, user_id, data)->int

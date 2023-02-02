@@ -2,3 +2,4 @@
 -2 - podane hasło nie spełni wymagań
 -3 - podane dane już znajdują się w bazie danych
 -4 - podane hasło nie pasuje do podanego loginu
+-5 - konto nie jest aktywne
