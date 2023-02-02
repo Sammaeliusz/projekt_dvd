@@ -46,7 +46,7 @@ def user_register(connection:sql.connection.MySQLConnection, login:str, email:st
     curs = connection.cursor()
     if(check_mail(email)):
         if(check_passwd(passwd)):
-            if(checkdata(connection, "nazwa", login) or checkdata(connection, "email", email) or checkdata(connection, "haslo", passwd)):
+            if(checkdata(connection, "nazwa", login) or checkdata(connection, "email", email)):
                 curs.close()
                 return -3
             else:
@@ -62,9 +62,9 @@ def user_register(connection:sql.connection.MySQLConnection, login:str, email:st
     else:
         curs.close()
         return -1
-def user_login(connection:sql.connection.MySQLConnection, name:str, passwd:str)->int:
+def user_login(connection:sql.connection.MySQLConnection, mail:str, passwd:str)->int:
     curs = connection.cursor()
-    curs.execute(f"SELECT id_user FROM uzytkownicy WHERE (nazwa LIKE '{check_injection(name)}') or (haslo LIKE '{check_injection(passwd)}')")
+    curs.execute(f"SELECT id_user FROM uzytkownicy WHERE (email LIKE '{check_injection(mail)}') or (haslo LIKE '{check_injection(passwd)}')")
     wynik = curs.fetchall()
     if(bool(wynik)):
         if(check_activity(connection, wynik[0][0])==0):
@@ -81,7 +81,7 @@ def user_change_data(connection:sql.connection.MySQLConnection, user_id:int, dat
     if(check_activity(connection, user_id)==0):
         if(check_mail(data[1])):
             if(check_passwd([data[2]])):
-                if(checkdata(connection, "nazwa", data[0]) or checkdata(connection, "email", data[1]) or checkdata(connection, "haslo", data[2])):
+                if(checkdata(connection, "nazwa", data[0]) or checkdata(connection, "email", data[1])):
                     curs.close()
                     return -3
                 else:
