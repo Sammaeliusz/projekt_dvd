@@ -3,3 +3,4 @@
 -3 - podane dane już znajdują się w bazie danych
 -4 - podane hasło nie pasuje do podanego loginu
 -5 - konto nie jest aktywne
+-6 - uzytkownik o takoim id nie istnieje
