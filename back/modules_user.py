@@ -2,6 +2,7 @@ import mysql.connector as sql
 from mysql.connector.connection import MySQLConnection as mysql
 from mysql.connector import errorcode
 import re
+import modules_films as mf
 def connection(name="serw", passwd="$dn%g6ACRm8")->mysql:
     try:
         connection = mysql()
