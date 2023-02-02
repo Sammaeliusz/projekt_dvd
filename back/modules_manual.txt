@@ -3,9 +3,9 @@ Na końcu każdego pliku w którym utwarzamy połączenie powinno być jego zamk
 Dostępne funkcje:
     connection(name, passwd)->MySQLConnection
     check_mail(email)->bool
-    check_injection(tekst)->str
+    check_injection(tekst)->tekst bez injection
     check_passwd(passwd)->bool
-    checkdata(connection, typ, wartosc)->int
-    user_register(connection, login, email, passwd)->int
-    user_login(connection, name, passwd)->int
-    user_change_data(connection, user_id, data)->int
+    checkdata(connection, typ, wartosc)->bool
+    user_register(connection, login, email, passwd)->id_user/błąd
+    user_login(connection, name, passwd)->id_user/błąd
+    user_change_data(connection, user_id, data)->błąd/1 jeśli działa
