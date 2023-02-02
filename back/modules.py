@@ -35,8 +35,13 @@ def checkdata(connection:sql.connection.MySQLConnection, typ:str, wartosc:str)->
     return bool(wynik)
 def check_activity(connection:sql.connection.MySQLConnection, user_id:int)->int:
     curs = connection.cursor()
-    wynik = curs.query("SELECT status from `uzytkownicy` WHERE user_id = {user_id}")
-    return wynik
+    curs.execute(f"SELECT status from `uzytkownicy` WHERE id_user = {user_id}")
+    wynik = curs.fetchall()
+    curs.close()
+    if(wynik != []):
+        return wynik[0][0]
+    else:
+        return -6
 def user_register(connection:sql.connection.MySQLConnection, login:str, email:str, passwd:str)->int:
     curs = connection.cursor()
     if(check_mail(email)):
@@ -59,34 +64,40 @@ def user_register(connection:sql.connection.MySQLConnection, login:str, email:st
         return -1
 def user_login(connection:sql.connection.MySQLConnection, name:str, passwd:str)->int:
     curs = connection.cursor()
-    if(check_activity==0):
-        curs.execute(f"SELECT id_user FROM uzytkownicy WHERE (nazwa LIKE '{check_injection(name)}') or (haslo LIKE '{check_injection(passwd)}')")
-        wynik = curs.fetchall()
-        if(bool(wynik)):
+    curs.execute(f"SELECT id_user FROM uzytkownicy WHERE (nazwa LIKE '{check_injection(name)}') or (haslo LIKE '{check_injection(passwd)}')")
+    wynik = curs.fetchall()
+    if(bool(wynik)):
+        if(check_activity(connection, wynik[0][0])==0):
             curs.close()
             return wynik[0][0]
         else:
             curs.close()
-            return -4
+            return -5
     else:
-        return -5
+        curs.close()
+        return -4
 def user_change_data(connection:sql.connection.MySQLConnection, user_id:int, data:list)->int:
     curs = connection.cursor()
-    if(check_activity==0):
-        if(check_mail(data[2])):
-            if(check_passwd([data[3]])):
-                if(checkdata(connection, "nazwa", data[1]) or checkdata(connection, "email", data[2]) or checkdata(connection, "haslo", data[3])):
-                    curs.query(f"UPDATE `uzytkownicy` SET name = {check_injection(data[1])}, email = {check_injection(data[2])}, haslo= {check_injection(data[3])} WHERE user_id = {user_id};")
-                    return 1
-                else:
+    if(check_activity(connection, user_id)==0):
+        if(check_mail(data[1])):
+            if(check_passwd([data[2]])):
+                if(checkdata(connection, "nazwa", data[0]) or checkdata(connection, "email", data[1]) or checkdata(connection, "haslo", data[2])):
+                    curs.close()
                     return -3
+                else:
+                    curs.execute(f"UPDATE `uzytkownicy` SET nazwa = '{check_injection(data[0])}', email = '{check_injection(data[1])}', haslo= '{check_injection(data[2])}' WHERE id_user = {user_id};")
+                    connection.commit()
+                    curs.close()
+                    return 1
+                    
             else:
+                curs.close()
                 return -2
         else:
+            curs.close()
             return -1
     else:
+        curs.close()
         return -5
 def del_data(connection:sql.connection.MySQLConnection, user_id:int)->int:
     return -1
-conn = connection()
-user_change_data(conn, 1, )
