@@ -29,7 +29,7 @@ def check_passwd(passwd:str)->bool:
     return True
 def checkdata(connection:sql.connection.MySQLConnection, typ:str, wartosc:str)->bool:
     curs = connection.cursor()
-    curs.execute(f"SELECT {typ} FROM `uzytkownicy` where {typ} like '{wartosc}';")
+    curs.execute(f"SELECT {typ} FROM `uzytkownicy` where {typ} like '{wartosc} and status = 0';")
     wynik = curs.fetchall()
     curs.close()
     return bool(wynik)
@@ -100,4 +100,9 @@ def user_change_data(connection:sql.connection.MySQLConnection, user_id:int, dat
         curs.close()
         return -5
 def del_data(connection:sql.connection.MySQLConnection, user_id:int)->int:
-    return -1
+    curs = connection.cursor()
+    curs.execute(f"UPDATE `uzytkownicy` SET status = 1 WHERE id_user = {user_id}")
+    connection.commit()
+    curs.fetchall()
+    curs.close()
+    return 1
