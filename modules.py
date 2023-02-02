@@ -34,7 +34,6 @@ def checkdata(connection:sql.connection.MySQLConnection, typ:str, wartosc:str)->
     curs.close()
     return bool(wynik)
 def user_register(connection:sql.connection.MySQLConnection, login:str, email:str, passwd:str)->int:
-
     curs = connection.cursor()
     if(check_mail(email)):
         if(check_passwd(passwd)):
@@ -64,3 +63,21 @@ def user_login(connection:sql.connection.MySQLConnection, name:str, passwd:str)-
     else:
         curs.close()
         return -4
+def user_change_data(connection:sql.connection.MySQLConnection, user_id:int, data:list)->int:
+    curs = connection.cursor()
+    if(check_mail(data[2])):
+        if(check_passwd([data[3]])):
+            if(checkdata(connection, "nazwa", data[1]) or checkdata(connection, "email", data[2]) or checkdata(connection, "haslo", data[3])):
+                curs.query(f"UPDATE `wypozyczalnia` SET name = {check_injection(data[1])}, email = {check_injection(data[2])}, haslo= {check_injection(data[3])} WHERE user_id = {user_id};")
+                return 1
+            else:
+                return -3
+        else:
+            return -2
+    else:
+        return -1
+def del_data(connection:sql.connection.MySQLConnection, user_id:int)->int:
+    
+    return -1
+conn = connection()
+user_change_data(conn, 1, )
