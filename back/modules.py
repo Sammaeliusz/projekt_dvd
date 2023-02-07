@@ -2,7 +2,7 @@ import mysql.connector as sql
 from mysql.connector.connection import MySQLConnection as mysql
 from mysql.connector import errorcode
 import re
-def connection(name="serw", passwd="$dn%g6ACRm8")->mysql:
+def connectiontdb(name="serw", passwd="$dn%g6ACRm8")->mysql:
     try:
         connection = mysql()
         connection.connect(user=name, password=passwd, host='127.0.0.1', database='wypozyczalnia')
@@ -131,10 +131,10 @@ def ost_dod(connection:sql.connection.MySQLConnection, ilosc:int)->list:
     curs.execute(f"Select tytul from filmy order by id_film desc limit {ilosc}")
     wynik = curs.fetchall()
     return distable(wynik)
-def add_film(connection:sql.connection.MySQLConnection, tytul:str, gatunek:str, rezyser:str, rok_prod:int)->int:
+def add_film(connection:sql.connection.MySQLConnection, tytul:str, gatunek:str, rezyser:str, rok_prod:int, kat_wiek:int)->int:
     curs = connection.cursor()
     if(rok_prod>1995):
-        curs.execute(f"INSERT INTO `filmy`  VALUES (NULL, '{check_injection(tytul)}', '{check_injection(gatunek)}', '{check_injection(rezyser)}', {rok_prod});")
+        curs.execute(f"INSERT INTO `filmy`  VALUES (NULL, '{check_injection(tytul)}', '{check_injection(gatunek)}', {kat_wiek}, '{check_injection(rezyser)}', {rok_prod}, True);")
         connection.commit()
         curs.execute(f"SELECT id_film FROM `filmy` ORDER BY id_film DESC limit 1;")
         wynik = curs.fetchall()
@@ -146,7 +146,10 @@ def add_film(connection:sql.connection.MySQLConnection, tytul:str, gatunek:str, 
 def find(connection:sql.connection.MySQLConnection, kryterium:str, wartosc, tablica:str)->list:
     curs = connection.cursor()
     if(tablica == "filmy" or  tablica == "uzytkownicy" or tablica == "wypozyczenia"):
-        curs.execute(f"Select * from `{tablica}` where {kryterium} like {wartosc}")
+        if(isinstance(wartosc, int)==True):
+            curs.execute(f"Select * from `{tablica}` where {kryterium} like {wartosc}")
+        else:
+            curs.execute(f"Select * from `{tablica}` where {kryterium} like '{wartosc}'")
         wynik = curs.fetchall()
         curs.close()
         return ret_id(wynik)
@@ -158,4 +161,18 @@ def film_finder(connection:sql.connection.MySQLConnection, id:int)->list:
     curs.execute(f"Select * from `filmy` where id_film = {id}")
     wynik = curs.fetchall()
     return distable(wynik)
-conn = connection("root", "")
+def film_modifier(connection:sql.connection.MySQLConnection, id_film:int ,tytul:str, gatunek:str, rezyser:str, rok_prod:int, kat_wiek:int)->int:
+    curs = connection.cursor()
+    curs.execute(f"UPDATE `filmy` SET tytul = '{check_injection(tytul)}', gatunek = '{check_injection(gatunek)}', kat_wiek = {kat_wiek}, rezyser = '{check_injection(rezyser)}', rok_produkcji = {rok_prod} WHERE id_film = {id_film};")
+    connection.commit()
+    curs.fetchall()
+    curs.close()
+    return 1
+def film_delete(connection:sql.connection.MySQLConnection, id_film:int):
+    curs = connection.cursor()
+    curs.execute(f"UPDATE `filmy` SET dost = False WHERE id_film = {id_film}")
+    connection.commit()
+    curs.fetchall()
+    curs.close()
+    return 1
+conn = connectiontdb("root", "")
