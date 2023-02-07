@@ -5,10 +5,12 @@ Dostępne funkcje:
     check_mail(email)->bool
     check_injection(tekst)->tekst bez injection
     check_passwd(passwd)->bool
-    checkdata(connection, typ, wartosc)->bool
+    checkdata(connection, typ, wartosc, tabela)->bool
     user_register(connection, login, email, passwd)->id_user/błąd
     user_login(connection, name, passwd)->id_user/błąd
     user_change_data(connection, user_id, data)->błąd/1 jeśli działa
     del_data(connection, user_id)->bool:
     ost_dod(connection, ilosc)->lista_filmów
     add_film(connection, tytul, gatunek, rezyser, rok_prod)->id_film
+    find(connection, kryterium, wartosc, tablica)->list_id_film
+    film_finder(connection, id)->lista

@@ -17,11 +17,21 @@ def connection(name="serw", passwd="$dn%g6ACRm8")->mysql:
     return connection
 def distable(dane:list)->list:
     w = []
+    if(len(dane)==1):
+        if(len(dane[0])==1):
+            return dane[0][0]
+        else:
+            return dane[0]
     for i in dane:
         if(len(i)==1):
             w.append(i[0])
         else:
             w.append(i)
+    return w
+def ret_id(dane:list)->list:
+    w = []
+    for i  in dane:
+        w.append(i[0])
     return w
 def check_mail(email:str)->bool:
     p = re.compile(r"^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$")
@@ -35,7 +45,7 @@ def check_injection(tekst:str)->str:
         return tekst
 def check_passwd(passwd:str)->bool:
     return True
-def checkdata(connection:sql.connection.MySQLConnection, typ:str, wartosc:str)->bool:
+def checkdata_user(connection:sql.connection.MySQLConnection, typ:str, wartosc:str, table:str)->bool:
     curs = connection.cursor()
     curs.execute(f"SELECT {typ} FROM `uzytkownicy` where {typ} like '{wartosc} and status = 0';")
     wynik = curs.fetchall()
@@ -54,7 +64,7 @@ def user_register(connection:sql.connection.MySQLConnection, login:str, email:st
     curs = connection.cursor()
     if(check_mail(email)):
         if(check_passwd(passwd)):
-            if(checkdata(connection, "nazwa", login) or checkdata(connection, "email", email)):
+            if(checkdata_user(connection, "nazwa", login) or checkdata_user(connection, "email", email)):
                 curs.close()
                 return -3
             else:
@@ -89,7 +99,7 @@ def user_change_data(connection:sql.connection.MySQLConnection, user_id:int, dat
     if(check_activity(connection, user_id)==0):
         if(check_mail(data[1])):
             if(check_passwd([data[2]])):
-                if(checkdata(connection, "nazwa", data[0]) or checkdata(connection, "email", data[1])):
+                if(checkdata_user(connection, "nazwa", data[0]) or checkdata_user(connection, "email", data[1])):
                     curs.close()
                     return -3
                 else:
@@ -133,4 +143,19 @@ def add_film(connection:sql.connection.MySQLConnection, tytul:str, gatunek:str, 
     else:
         curs.close()
         return -7
+def find(connection:sql.connection.MySQLConnection, kryterium:str, wartosc, tablica:str)->list:
+    curs = connection.cursor()
+    if(tablica == "filmy" or  tablica == "uzytkownicy" or tablica == "wypozyczenia"):
+        curs.execute(f"Select * from `{tablica}` where {kryterium} like {wartosc}")
+        wynik = curs.fetchall()
+        curs.close()
+        return ret_id(wynik)
+    else:
+        curs.close()
+        return -8
+def film_finder(connection:sql.connection.MySQLConnection, id:int)->list:
+    curs = connection.cursor()
+    curs.execute(f"Select * from `filmy` where id_film = {id}")
+    wynik = curs.fetchall()
+    return distable(wynik)
 conn = connection("root", "")
