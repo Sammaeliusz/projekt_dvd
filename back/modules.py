@@ -134,5 +134,3 @@ def add_film(connection:sql.connection.MySQLConnection, tytul:str, gatunek:str, 
         curs.close()
         return -7
 conn = connection("root", "")
-add_film(conn, "Finding Jesus", "Animacja", "God", 2005)
-print(ost_dod(conn, 5))

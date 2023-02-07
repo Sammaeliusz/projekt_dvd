@@ -10,3 +10,5 @@ Dostępne funkcje:
     user_login(connection, name, passwd)->id_user/błąd
     user_change_data(connection, user_id, data)->błąd/1 jeśli działa
     del_data(connection, user_id)->bool:
+    ost_dod(connection, ilosc)->lista_filmów
+    add_film(connection, tytul, gatunek, rezyser, rok_prod)->id_film
