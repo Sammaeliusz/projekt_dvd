@@ -2,7 +2,6 @@ import mysql.connector as sql
 from mysql.connector.connection import MySQLConnection as mysql
 from mysql.connector import errorcode
 import re
-import modules_films as mf
 def connection(name="serw", passwd="$dn%g6ACRm8")->mysql:
     try:
         connection = mysql()
@@ -16,6 +15,14 @@ def connection(name="serw", passwd="$dn%g6ACRm8")->mysql:
             print(err)
     mysql.autocommit = True
     return connection
+def distable(dane:list)->list:
+    w = []
+    for i in dane:
+        if(len(i)==1):
+            w.append(i[0])
+        else:
+            w.append(i)
+    return w
 def check_mail(email:str)->bool:
     p = re.compile(r"^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$")
     return bool(p.search(email))
@@ -111,8 +118,21 @@ def wyp_filmy(connection:sql.connection.MySQLConnection, user_id:int)->list:
     curs.execute("Select ")
 def ost_dod(connection:sql.connection.MySQLConnection, ilosc:int)->list:
     curs = connection.cursor()
-    w = curs.execute(f"Select tytul from filmy order by id desc limit {ilosc}")
-    wynik = w.fetchall()
-    return wynik
-conn = connection()
-ost_dod(conn, 5)
+    curs.execute(f"Select tytul from filmy order by id_film desc limit {ilosc}")
+    wynik = curs.fetchall()
+    return distable(wynik)
+def add_film(connection:sql.connection.MySQLConnection, tytul:str, gatunek:str, rezyser:str, rok_prod:int)->int:
+    curs = connection.cursor()
+    if(rok_prod>1995):
+        curs.execute(f"INSERT INTO `filmy`  VALUES (NULL, '{check_injection(tytul)}', '{check_injection(gatunek)}', '{check_injection(rezyser)}', {rok_prod});")
+        connection.commit()
+        curs.execute(f"SELECT id_film FROM `filmy` ORDER BY id_film DESC limit 1;")
+        wynik = curs.fetchall()
+        curs.close()
+        return int(wynik[0][0])
+    else:
+        curs.close()
+        return -7
+conn = connection("root", "")
+add_film(conn, "Finding Jesus", "Animacja", "God", 2005)
+print(ost_dod(conn, 5))
