@@ -5,4 +5,4 @@
 -5 - konto nie jest aktywne
 -6 - uzytkownik o takim id nie istnieje
 -7 - podany rok jest wcześniejszy niż opracowanie standardu dvd
--8 - podana tablica nei znajduje się w bazie
+-8 - podana tablica nie znajduje się w bazie
