@@ -161,6 +161,11 @@ def film_finder(connection:sql.connection.MySQLConnection, id:int)->list:
     curs.execute(f"Select * from `filmy` where id_film = {id}")
     wynik = curs.fetchall()
     return distable(wynik)
+def user_finder(connection:sql.connection.MySQLConnection, id:int)->list:
+    curs = connection.cursor()
+    curs.execute(f"Select * from `uzytkownicy` where id_user = {id}")
+    wynik = curs.fetchall()
+    return distable(wynik)
 def film_modifier(connection:sql.connection.MySQLConnection, id_film:int ,tytul:str, gatunek:str, rezyser:str, rok_prod:int, kat_wiek:int)->int:
     curs = connection.cursor()
     curs.execute(f"UPDATE `filmy` SET tytul = '{check_injection(tytul)}', gatunek = '{check_injection(gatunek)}', kat_wiek = {kat_wiek}, rezyser = '{check_injection(rezyser)}', rok_produkcji = {rok_prod} WHERE id_film = {id_film};")
