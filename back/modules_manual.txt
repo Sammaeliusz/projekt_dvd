@@ -14,5 +14,6 @@ Dostępne funkcje:
     add_film(connection, tytul, gatunek, rezyser, rok_prod)->id_film
     find(connection, kryterium, wartosc, tablica)->list_id_film
     film_finder(connection, id)->lista
+    user_finder(connection, id)->lista
     film_modifier(connection, id_film ,tytul, gatunek, rezyser, rok_prod, kat_wiek)->error
     film_delete(connection, id_film)->error
