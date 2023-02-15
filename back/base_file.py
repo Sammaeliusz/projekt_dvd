@@ -1,6 +1,6 @@
 import flask
 from abc import ABC, abstractmethod
-from modules.modules import *
+from modules import *
 
 class App(flask.Flask):
     route_list = []

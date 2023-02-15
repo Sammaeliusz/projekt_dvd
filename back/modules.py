@@ -191,4 +191,3 @@ def find_unique(connection:sql.connection.MySQLConnection, kategoria:str, tablic
         curs.close()
         return -8
 conn = connectiontdb("root", "")
-print(find_unique(conn, "rezyser", "filmy"))
