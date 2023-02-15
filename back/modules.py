@@ -180,4 +180,15 @@ def film_delete(connection:sql.connection.MySQLConnection, id_film:int):
     curs.fetchall()
     curs.close()
     return 1
+def find_unique(connection:sql.connection.MySQLConnection, kategoria:str, tablica:str)->list:
+    curs = connection.cursor()
+    if(tablica == "filmy" or  tablica == "uzytkownicy" or tablica == "wypozyczenia"):
+        curs.execute(f"SELECT {kategoria} FROM {tablica} GROUP BY {kategoria}")
+        wynik = curs.fetchall()
+        curs.close()
+        return distable(wynik)
+    else:
+        curs.close()
+        return -8
 conn = connectiontdb("root", "")
+print(find_unique(conn, "rezyser", "filmy"))
