@@ -125,7 +125,9 @@ def del_data(connection:sql.connection.MySQLConnection, user_id:int)->int:
     return 1
 def wyp_filmy(connection:sql.connection.MySQLConnection, user_id:int)->list:
     curs = connection.cursor()
-    curs.execute("Select ")
+    curs.execute(f"Select id_film, termin_wypozycz, termin_zwrot from wypozyczenia where id_user = {user_id}")
+    wynik = curs.fetchall()
+    return (distable(wynik))
 def ost_dod(connection:sql.connection.MySQLConnection, ilosc:int)->list:
     curs = connection.cursor()
     curs.execute(f"Select tytul from filmy order by id_film desc limit {ilosc}")
