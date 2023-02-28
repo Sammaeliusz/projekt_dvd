@@ -192,4 +192,4 @@ def find_unique(connection:sql.connection.MySQLConnection, kategoria:str, tablic
     else:
         curs.close()
         return -8
-conn = connectiontdb("root", "")
+conn = connectiontdb()
