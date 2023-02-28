@@ -130,7 +130,14 @@ def wyp_filmy(connection:sql.connection.MySQLConnection, user_id:int)->list:
     return (distable(wynik))
 def ost_dod(connection:sql.connection.MySQLConnection, ilosc:int)->list:
     curs = connection.cursor()
-    curs.execute(f"Select tytul from filmy order by id_film desc limit {ilosc}")
+    curs.execute(f"select id_film from filmy order by id_film desc limit {ilosc}")
+    wynik =  distable(curs.fetchall())
+    w = ""
+    for i in range(len(wynik)):
+        w += str(i)
+        if i < len(wynik)-1:
+            w+= ", "
+    curs.execute(f"Select tytul from filmy where id_film in ({w}) group by tytul;")
     wynik = curs.fetchall()
     return distable(wynik)
 def add_film(connection:sql.connection.MySQLConnection, tytul:str, gatunek:str, rezyser:str, rok_prod:int, kat_wiek:int)->int:
