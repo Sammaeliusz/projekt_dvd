@@ -2,7 +2,7 @@ import mysql.connector as sql
 from mysql.connector.connection import MySQLConnection as mysql
 from mysql.connector import errorcode
 import re
-def connectiontdb(name="serw", passwd="$dn%g6ACRm8")->mysql:
+def connectiontdb(name="cli", passwd='$NaBu6')->mysql:
     try:
         connection = mysql()
         connection.connect(user=name, password=passwd, host='127.0.0.1', database='wypozyczalnia')
