@@ -45,7 +45,7 @@ def check_injection(tekst:str)->str:
         return tekst
 def check_passwd(passwd:str)->bool:
     return True
-def checkdata_user(connection:sql.connection.MySQLConnection, typ:str, wartosc:str, table:str)->bool:
+def checkdata_user(connection:sql.connection.MySQLConnection, typ:str, wartosc:str)->bool:
     curs = connection.cursor()
     curs.execute(f"SELECT {typ} FROM `uzytkownicy` where {typ} like '{wartosc} and status = 0';")
     wynik = curs.fetchall()
@@ -125,7 +125,7 @@ def del_data(connection:sql.connection.MySQLConnection, user_id:int)->int:
     return 1
 def wyp_filmy(connection:sql.connection.MySQLConnection, user_id:int)->list:
     curs = connection.cursor()
-    curs.execute(f"Select id_film, termin_wypozycz, termin_zwrot from wypozyczenia where id_user = {user_id}")
+    curs.execute(f"Select id_film, termin_wypozycz, termin_zwrot, data_zwrot from wypozyczenia where id_user = {user_id}")
     wynik = curs.fetchall()
     return (distable(wynik))
 def ost_dod(connection:sql.connection.MySQLConnection, ilosc:int)->list:

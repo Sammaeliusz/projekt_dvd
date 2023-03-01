@@ -1,5 +1,6 @@
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <style>
     html {
         background-color: #CABEF8;
@@ -173,11 +174,7 @@
         </table>
 
     </div>
-
-</body>
-</html>
-
-<script>
+    <script>
     function Zmiana() {
         var x = document.getElementById("myDIV");
         if (x.style.display === "none") {
@@ -186,4 +183,7 @@
             x.style.display = "none";
         }
     }
-</script>
+    </script>
+</body>
+</html>
+

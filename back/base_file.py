@@ -27,6 +27,6 @@ class Create(ABC):
         def fromTemplate(template:str) -> callable:
             return lambda : flask.Response(flask.stream_template(template))
 
-app = App(__name__, template_folder='material/projekt', static_folder='material/projekt')
+app = App(__name__, template_folder='./../front', static_folder='./../front')
 
 app.addroute(Create.flask.route(app, '/', Create.mainFunction.fromTemplate("index.html")))
