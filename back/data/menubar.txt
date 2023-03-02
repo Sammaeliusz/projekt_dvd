@@ -1,0 +1,7 @@
+<div class="nav">
+    <a href="logowanie"><button><img src="/data/proba.png" width="17.7" length="17.7"></button></a>
+    <button class="tablinks" onclick="">FAQ</button>
+    <button class="tablinks" onclick="">Kontakt</button>
+    <a href="zbiory"><button>Zbiory</button></a>
+    <a href="/"><button>Strona Główna</button></a>
+</div>
