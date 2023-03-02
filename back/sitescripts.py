@@ -57,7 +57,7 @@ def zmiana(function:callable) -> callable:
         if flask.request.method == 'POST':
             user=["","",""]
             if 'nazwa' in flask.request.form:
-                if (n:=flask.request.form['nazwa'])!="":
+                if (n:=flask.request.form['name'])!="":
                     user[0]=n
             if 'mail' in flask.request.form:
                 if (n:=flask.request.form['mail'])!="":

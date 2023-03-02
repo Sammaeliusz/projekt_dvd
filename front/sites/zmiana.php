@@ -21,17 +21,17 @@
         <form action='zmiana' target='_self' method='post'>
             <div class="okno">
                 <label class="etykieta">Nazwa użytkownika:</label>
-                <input name="name" type="text" autofocus required>
+                <input name="name" type="text" autofocus>
             </div>
 			
 			<div class="okno">
                 <label class="etykieta">E-mail:</label>
-                <input name="mail" type="email" required>
+                <input name="mail" type="email">
             </div>
             
             <div class="okno">
                 <label class="etykieta">Hasło:</label>
-                <input id="pass" name="password" type="password" required>
+                <input id="pass" name="passwd" type="password">
             </div>
             <button class="gotowe" type='submit'>Zmień</button>
         </form>

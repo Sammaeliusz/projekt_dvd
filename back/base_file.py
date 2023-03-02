@@ -74,7 +74,7 @@ class Create(ABC):
                 with open(getcwd()+"/../front/standard/menubar.txt", 'rb') as f:
                     return f.read().decode("utf-8")
 
-app = App(__name__, template_folder=getcwd()+'/../front/sites', static_folder=getcwd()+'/../front/data')
+app = App(__name__, template_folder='/projekt/front/templates/', static_folder='/projekt/front/data/')
 app.setSecret(b'dgf;hpo4[]t,drgtp[e45.g')
 
 #''.join(choice(ascii_letters) for i in range(32))
