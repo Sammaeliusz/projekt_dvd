@@ -82,7 +82,7 @@ def user_register(connection:sql.connection.MySQLConnection, login:str, email:st
         return -1
 def user_login(connection:sql.connection.MySQLConnection, mail:str, passwd:str)->int:
     curs = connection.cursor()
-    curs.execute(f"SELECT id_user FROM uzytkownicy WHERE (email LIKE '{check_injection(mail)}') or (haslo LIKE '{check_injection(passwd)}')")
+    curs.execute(f"SELECT id_user FROM uzytkownicy WHERE (email LIKE '{check_injection(mail)}') and (haslo LIKE '{check_injection(passwd)}')")
     wynik = curs.fetchall()
     if(bool(wynik)):
         if(check_activity(connection, wynik[0][0])==0):

@@ -78,7 +78,7 @@
         </table>
         </div>
         <div class="DVD">
-        <h2>Pozycje Wypożyczone W Przeszłości</h2>
+        <h2>Pozycje wypożyczone w przeszłości</h2>
         <table>
             <tr>
                 <th>Nazwa</th>

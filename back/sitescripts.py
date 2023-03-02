@@ -97,8 +97,8 @@ def userclick():
 
 def login(function:callable) -> callable:
     try:
-        if 'name' in flask.request.form and 'password' in flask.request.form:
-            if (n:=flask.request.form['name'])!="" and (n2:=flask.request.form['password'])!="":
+        if 'mail' in flask.request.form and 'password' in flask.request.form:
+            if (n:=flask.request.form['mail'])!="" and (n2:=flask.request.form['password'])!="":
                 if (id_user:=user_login(conn, n, n2)) > 0:
                     resp  = flask.redirect(flask.url_for('panel'))
                     resp.set_cookie('id', bytes(str(id_user), 'utf-8'))

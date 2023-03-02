@@ -20,8 +20,8 @@
     <div class="logowanie">
         <form action='logowanie' target='_self' method='post'>
             <div class="okno">
-                <label class="etykieta">Nazwa użytkownika:</label>
-                <input name="name" type="text" autofocus required>
+                <label class="etykieta">Email:</label>
+                <input name="mail" type="text" autofocus required>
             </div>
             
             <div class="okno">
