@@ -1,6 +1,5 @@
 import sys 
-sys.path.insert(0, '/projekt/back')
-activate_this = 
-with open(activate_this) as file_:
-    exec(file.read(), dict(__file__=activate_this))
+import logging
+sys.path.insert(0, '/projekt')
 from base_file import app as application
+application.secret_key = b'jfdslkfmdsho43u5y89430lef!#@$2'
