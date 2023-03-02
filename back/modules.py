@@ -2,7 +2,7 @@ import mysql.connector as sql
 from mysql.connector.connection import MySQLConnection as mysql
 from mysql.connector import errorcode
 import re
-def connectiontdb(name="root", passwd='')->mysql:
+def connectiontdb(name="cli", passwd='$NaBu6')->mysql:
     try:
         connection = mysql()
         connection.connect(user=name, password=passwd, host='127.0.0.1', database='wypozyczalnia')
@@ -125,7 +125,7 @@ def del_data(connection:sql.connection.MySQLConnection, user_id:int)->int:
     return 1
 def wyp_filmy(connection:sql.connection.MySQLConnection, user_id:int)->list:
     curs = connection.cursor()
-    curs.execute(f"Select id_film, termin_wypozycz, termin_zwrot, data_zwrot from wyporzyczenia where id_user = {user_id}")
+    curs.execute(f"Select id_film, termin_rent, termin_zwrot, data_zwrot from wypozyczenia where id_user = {user_id}")
     wynik = curs.fetchall()
     return (distable(wynik))
 def ost_dod(connection:sql.connection.MySQLConnection, ilosc:int)->list:
