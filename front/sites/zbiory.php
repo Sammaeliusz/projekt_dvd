@@ -1,7 +1,7 @@
 <html>
 <head>
 <style>
-        html {
+    html {
         background-color: #CABEF8;
         font-family: "Roboto";
     }
@@ -28,14 +28,44 @@
         background-color: #8552F7;
         color: #3600AD;
     }
-    </style>
+
+    .wybor {
+        text-align: center;
+        font-size: 40;
+        font-family: "Roboto";
+        color: #442AAD;
+    }
+
+    .wybor button {
+        font-family: inherit;
+        font-size: 20;
+        font-weight: bold;
+        display: block;
+        float: center;
+        margin: auto;
+        background-color: #442AAD;
+        color: #CABEF8;
+        padding: 20;
+        border-color: #CABEF8;
+        border-radius: 25px;
+        cursor: pointer;
+    }
+    a {
+        text-decoration: none;
+    }
+
+</style>
 </head>
 <body>
     <!-- MENU -->
     {{menubar}}
 
-    
-
+    <div class="wybor">
+        <p> W jaki sposób chcesz przeglądać nasze zbiory?</p>
+        <a href="kategorie.php"><button>Gatunek</button></a>
+        <a href="rezyser.php"><button>Reżyser</button></a>
+        <a href="rok.php"><button>Rok produkcji</button></a>
+    </div>
 
 </body>
 </html>
