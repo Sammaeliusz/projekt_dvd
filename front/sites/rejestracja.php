@@ -131,10 +131,10 @@
 
     <!-- Rejestracja -->
     <div class="rejestracja">
-        <form autocomplete="off">
+        <form method="POST" autocomplete="off">
             <div class="okno">
                 <label class="etykieta" for="username">Nazwa użytkownika</label>
-                <input class="" type="text" name="username" id="username" required />
+                <input class="" type="text" name="name" id="username" required />
             </div>
             
             <div class="okno">
@@ -144,11 +144,14 @@
 
             <div class="okno">
                 <label class="etykieta" for="password">Hasło</label>
-                <input class="" type="password" name="password" id="password" required/>
+                <input class="" type="password" name="password" id="password" required>
             </div>
-            <button class="gotowe" onclick="open('aktywacja.php')">ZAREJESTRUJ</button>
+            <button class="gotowe" type="submit">ZAREJESTRUJ</button>
         </form>
-        <p>Masz już u nas konto? <a class="logowanie" href="logowanie.php">Zaloguj się<a></p>
+		{% if error is defined %}
+			<p style="color:red">Błąd podczas rejestracji: Error {{error}}</p>
+		{% endif %}
+        <p>Masz już u nas konto? <a class="logowanie" href="logowanie">Zaloguj się<a></p>
     </div>
 
 </body>

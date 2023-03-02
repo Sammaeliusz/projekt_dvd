@@ -2,7 +2,7 @@ import mysql.connector as sql
 from mysql.connector.connection import MySQLConnection as mysql
 from mysql.connector import errorcode
 import re
-def connectiontdb(name="cli", passwd='$NaBu6')->mysql:
+def connectiontdb(name="root", passwd='')->mysql:
     try:
         connection = mysql()
         connection.connect(user=name, password=passwd, host='127.0.0.1', database='wypozyczalnia')
@@ -125,7 +125,7 @@ def del_data(connection:sql.connection.MySQLConnection, user_id:int)->int:
     return 1
 def wyp_filmy(connection:sql.connection.MySQLConnection, user_id:int)->list:
     curs = connection.cursor()
-    curs.execute(f"Select id_film, termin_wypozycz, termin_zwrot, data_zwrot from wypozyczenia where id_user = {user_id}")
+    curs.execute(f"Select id_film, termin_wypozycz, termin_zwrot, data_zwrot from wyporzyczenia where id_user = {user_id}")
     wynik = curs.fetchall()
     return (distable(wynik))
 def ost_dod(connection:sql.connection.MySQLConnection, ilosc:int)->list:
@@ -154,7 +154,7 @@ def add_film(connection:sql.connection.MySQLConnection, tytul:str, gatunek:str, 
         return -7
 def find(connection:sql.connection.MySQLConnection, kryterium:str, wartosc, tablica:str)->list:
     curs = connection.cursor()
-    if(tablica == "filmy" or  tablica == "uzytkownicy" or tablica == "wypozyczenia"):
+    if(tablica == "filmy" or  tablica == "uzytkownicy" or tablica == "wyporzyczenia"):
         if(isinstance(wartosc, int)==True):
             curs.execute(f"Select * from `{tablica}` where {kryterium} like {wartosc}")
         else:
@@ -191,7 +191,7 @@ def film_delete(connection:sql.connection.MySQLConnection, id_film:int):
     return 1
 def find_unique(connection:sql.connection.MySQLConnection, kategoria:str, tablica:str)->list:
     curs = connection.cursor()
-    if(tablica == "filmy" or  tablica == "uzytkownicy" or tablica == "wypozyczenia"):
+    if(tablica == "filmy" or  tablica == "uzytkownicy" or tablica == "wyporzyczenia"):
         curs.execute(f"SELECT {kategoria} FROM {tablica} GROUP BY {kategoria}")
         wynik = curs.fetchall()
         curs.close()

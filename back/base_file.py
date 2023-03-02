@@ -5,7 +5,7 @@ from datetime import date, timedelta
 from random import choice
 from string import ascii_letters
 from os import getcwd
-from sitescripts import index, panel, zmiana, userclick, login
+from sitescripts import index, panel, zmiana, userclick, login, register
 
 class App(flask.Flask):
     route_list = []
@@ -76,7 +76,8 @@ with open(getcwd()+"\\back\\data\\menubar.txt", 'rb') as f:
 
 #''.join(choice(ascii_letters) for i in range(32)
 app.addroute(Create.flask.route(app, '/', Create.addWrapper(index, Create.mainFunction.fromTemplate("index.php", menubar=menubar)), "index"))
-app.addroute(Create.flask.route(app, '/konto', Create.mainFunction.fromFunction(panel), 'panel'))
+app.addroute(Create.flask.route(app, '/panel', Create.mainFunction.fromFunction(panel), 'panel'))
 app.addroute(Create.flask.route(app, '/userclick', Create.mainFunction.fromFunction(userclick), 'userclick'))
 app.addroute(Create.flask.route(app, '/logowanie', Create.addWrapper(login, Create.mainFunction.fromTemplate("logowanie.php", menubar=menubar)), "login"))
 app.addroute(Create.flask.route(app, '/zmiana', Create.addWrapper(zmiana, Create.mainFunction.fromTemplate("zmiana.php", menubar=menubar)), "zmiana"))
+app.addroute(Create.flask.route(app, '/rejestracja', Create.addWrapper(register, Create.mainFunction.fromTemplate("rejestracja.php", menubar=menubar)), "register"))

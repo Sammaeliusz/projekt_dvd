@@ -105,13 +105,13 @@ def zmiana(function:callable) -> callable:
         if flask.request.method == 'POST':
             user=["","",""]
             if 'nazwa' in flask.request.form:
-                if {n:=flask.request.form['nazwa']}!="":
+                if (n:=flask.request.form['nazwa'])!="":
                     user[0]=n
             if 'mail' in flask.request.form:
-                if {n:=flask.request.form['mail']}!="":
+                if (n:=flask.request.form['mail'])!="":
                     user[1]=n
             if 'passwd' in flask.request.form:
-                if {n:=flask.request.form['passwd']}!="":
+                if (n:=flask.request.form['passwd'])!="":
                     user[2]=n
             user_change_data(conn, id, user)
             return flask.redirect(flask.url_for('panel'))
@@ -129,19 +129,37 @@ def userclick():
 def login(function:callable) -> callable:
     try:
         if 'name' in flask.request.form and 'password' in flask.request.form:
-            if {n:=flask.request.form['name']}!="" and {n2:=flask.request.form['password']}!="":
-                if {id_user:=user_login(conn, n, n2)} > 0:
+            if (n:=flask.request.form['name'])!="" and (n2:=flask.request.form['password'])!="":
+                if (id_user:=user_login(conn, n, n2)) > 0:
                     flask.session['id'] = id_user
                     flask.session['user_auth'] = "placeholder"
-                    flask.redirect(flask.url_for('panel'))
+                    print("hihi haha")
+                    return flask.redirect(flask.url_for('panel'))
                 else:
                     return function(error=id_user)
             else:
                 return function()
         else:
             return function()
-    except mysql.connector.Error as err:
+    except Exception as err:
         print(err)
         return function(error=err)
-        
+
+def register(function:callable) -> callable:
+    if 'name' in flask.request.form and 'password' in flask.request.form and 'email' in flask.request.form:
+        if (n:=flask.request.form['name'])!="" and (n2:=flask.request.form['password'])!="" and (n3:=flask.request.form['email'])!="":
+            if (id_user:=user_register(conn, n, n3, n2)) > 0:
+                print(id_user)
+                flask.session['id'] = id_user
+                flask.session['user_auth'] = "placeholder"
+                flask.redirect(flask.url_for('panel'))
+            else:
+                print(id_user)
+                return function(error=id_user)
+        else:
+            print("?2")
+            return function()
+    else:
+        print("?")
+        return function()
 

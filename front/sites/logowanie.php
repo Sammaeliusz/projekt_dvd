@@ -152,7 +152,7 @@
 		{% if error is defined %}
 			<p style="color:red">Błąd podczas logowania: Error {{error}}</p>
 		{% endif %}
-        <p>Nie masz jeszcze konta? <a class="rejestracja" href="rejestracja.php">Zarejestruj się!</a></p>
+        <p>Nie masz jeszcze konta? <a class="rejestracja" href="rejestracja">Zarejestruj się!</a></p>
     </div>    
 
 
