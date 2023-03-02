@@ -154,7 +154,7 @@ def add_film(connection:sql.connection.MySQLConnection, tytul:str, gatunek:str, 
         return -7
 def find(connection:sql.connection.MySQLConnection, kryterium:str, wartosc, tablica:str)->list:
     curs = connection.cursor()
-    if(tablica == "filmy" or  tablica == "uzytkownicy" or tablica == "wyporzyczenia"):
+    if(tablica == "filmy" or  tablica == "uzytkownicy" or tablica == "wypozyczenia"):
         if(isinstance(wartosc, int)==True):
             curs.execute(f"Select * from `{tablica}` where {kryterium} like {wartosc}")
         else:
@@ -191,7 +191,7 @@ def film_delete(connection:sql.connection.MySQLConnection, id_film:int):
     return 1
 def find_unique(connection:sql.connection.MySQLConnection, kategoria:str, tablica:str)->list:
     curs = connection.cursor()
-    if(tablica == "filmy" or  tablica == "uzytkownicy" or tablica == "wyporzyczenia"):
+    if(tablica == "filmy" or  tablica == "uzytkownicy" or tablica == "wypozyczenia"):
         curs.execute(f"SELECT {kategoria} FROM {tablica} GROUP BY {kategoria}")
         wynik = curs.fetchall()
         curs.close()
