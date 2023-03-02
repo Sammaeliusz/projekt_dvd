@@ -80,12 +80,13 @@ def zmiana(function:callable) -> callable:
                 if (n:=flask.request.form['passwd'])!="":
                     user[2]=n
             e = user_change_data(conn, id, user)
-            if e > 0:
+            if e < 0:
+                return function(error=e)
+            else:
                 return flask.redirect(flask.url_for('panel'))
+        return function()
     except Exception as err:
         print(err)
-    finally:
-        return function()
 
 def userclick():
     if flask.request.cookies.get('id') != None:
@@ -133,4 +134,10 @@ def register(function:callable) -> callable:
         print("?")
         return function()
 def zbiory(function:callable) -> callable:
+    return function()
+def gatunek(function:callable) -> callable:
+    return function()
+def rezyser(function:callable) -> callable:
+    return function()
+def rok(function:callable) -> callable:
     return function()

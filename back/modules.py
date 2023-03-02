@@ -47,10 +47,10 @@ def check_passwd(passwd:str)->bool:
     return True
 def checkdata_user(connection:sql.connection.MySQLConnection, typ:str, wartosc:str)->bool:
     curs = connection.cursor()
-    curs.execute(f"SELECT {typ} FROM `uzytkownicy` where {typ} like '{wartosc} and status = 0';")
+    curs.execute(f"SELECT {typ} FROM `uzytkownicy` where {typ} like '{wartosc}' and status = 0;")
     wynik = curs.fetchall()
     curs.close()
-    return bool(wynik)
+    return len(wynik)
 def check_activity(connection:sql.connection.MySQLConnection, user_id:int)->int:
     curs = connection.cursor()
     curs.execute(f"SELECT status from `uzytkownicy` WHERE id_user = {user_id}")
@@ -64,7 +64,7 @@ def user_register(connection:sql.connection.MySQLConnection, login:str, email:st
     curs = connection.cursor()
     if(check_mail(email)):
         if(check_passwd(passwd)):
-            if(checkdata_user(connection, "nazwa", login) or checkdata_user(connection, "email", email)):
+            if(checkdata_user(connection, "nazwa", login) == 0 or checkdata_user(connection, "email", email) == 0):
                 curs.close()
                 return -3
             else:
@@ -99,7 +99,7 @@ def user_change_data(connection:sql.connection.MySQLConnection, user_id:int, dat
     if(check_activity(connection, user_id)==0):
         if(check_mail(data[1])):
             if(check_passwd([data[2]])):
-                if(checkdata_user(connection, "nazwa", data[0]) or checkdata_user(connection, "email", data[1])):
+                if(checkdata_user(connection, "nazwa", data[0]) >1 or checkdata_user(connection, "email", data[1])>1):
                     curs.close()
                     return -3
                 else:

@@ -5,7 +5,7 @@ from datetime import date, timedelta
 from random import choice
 from string import ascii_letters
 from os import getcwd
-from sitescripts import index, panel, zmiana, userclick, login, register
+from sitescripts import index, panel, zmiana, userclick, login, register, rok, zbiory, gatunek, rezyser
 
 class App(flask.Flask):
     route_list = []
@@ -84,3 +84,7 @@ app.addroute(Create.flask.route(app, '/userclick',      Create.function.withFunc
 app.addroute(Create.flask.route(app, '/logowanie',      Create.Wrapper(login,    Create.function.withTemplate("logowanie.php",      menubar=Create.html.standard.menubar())), "login"))
 app.addroute(Create.flask.route(app, '/zmiana',         Create.Wrapper(zmiana,   Create.function.withTemplate("zmiana.php",         menubar=Create.html.standard.menubar())), "zmiana"))
 app.addroute(Create.flask.route(app, '/rejestracja',    Create.Wrapper(register, Create.function.withTemplate("rejestracja.php",    menubar=Create.html.standard.menubar())), "register"))
+app.addroute(Create.flask.route(app, '/gatunek',        Create.Wrapper(gatunek, Create.function.withTemplate("kategorie.php",       menubar=Create.html.standard.menubar())), "gatunek"))
+app.addroute(Create.flask.route(app, '/rezyser',        Create.Wrapper(rezyser, Create.function.withTemplate("rezyser.php",         menubar=Create.html.standard.menubar())), "rezyser"))
+app.addroute(Create.flask.route(app, '/rok',            Create.Wrapper(rok, Create.function.withTemplate("rok.php",                 menubar=Create.html.standard.menubar())), "rok"))
+app.addroute(Create.flask.route(app, '/zbiory',         Create.Wrapper(zbiory, Create.function.withTemplate("zbiory.php",           menubar=Create.html.standard.menubar())), "zbiory"))

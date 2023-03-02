@@ -299,6 +299,8 @@
         border-color: inherit;
         border-radius: 25px;
         cursor: pointer;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
 	.logowanie_1 {
         color: #CABEF8;

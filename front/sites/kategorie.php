@@ -105,13 +105,8 @@
 </head>
 <body>
     <!-- MENU -->
-    <div class="nav">
-        <a href="logowanie.php"><button><img src="proba.png" width="17.7" length="17.7"></button></a>
-        <button class="tablinks" onclick="">FAQ</button>
-        <button class="tablinks" onclick="">Kontakt</button>
-        <a href="zbiory.php"><button>Zbiory</button></a>
-        <a href="index.php"><button>Strona Główna</button></a>
-    </div>
+    {{menubar}}
+
 
     <div class="container-btn">
         <div class="searchbar">

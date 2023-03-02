@@ -62,9 +62,9 @@
 
     <div class="wybor">
         <p> W jaki sposób chcesz przeglądać nasze zbiory?</p>
-        <a href="kategorie.php"><button>Gatunek</button></a>
-        <a href="rezyser.php"><button>Reżyser</button></a>
-        <a href="rok.php"><button>Rok produkcji</button></a>
+        <a href="gatunek"><button>Gatunek</button></a>
+        <a href="rezyser"><button>Reżyser</button></a>
+        <a href="rok"><button>Rok produkcji</button></a>
     </div>
 
 </body>
