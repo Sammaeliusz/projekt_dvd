@@ -5,6 +5,9 @@
     function goToURL(adres) {
         window.open(adres);
     }
+    function back(){
+        location.href = './panel';
+    }
 </script>
 </head>
 <body>
@@ -33,7 +36,7 @@
                 <label class="etykieta">Hasło:</label>
                 <input id="pass" name="passwd" type="password">
             </div>
-            <button class="gotowe" type='submit'>Zmień</button>
+            <button class="gotowe" type='submit' onclick="back()">Zmień</button>
         </form>
 		{% if error is defined %}
 			<p class="p_1" style="color:red">Błąd podczas zmiany danych: Error {{error}}</p>

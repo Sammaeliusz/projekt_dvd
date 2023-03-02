@@ -34,6 +34,10 @@
     function Zmiana() {
         location.href = './zmiana'
     }
+    function zal(){
+    let x =document.cookie;
+    if (x.includes("zal=yes;"))
+        alert("Masz zaległe filmy!");}
 </script>
 
 </head>
@@ -57,7 +61,10 @@
                     <td>{{user[2]}}</td>
                 </tr>
             </table>
-            <button onclick="Zmiana()">Zmień dane</button>
+            <button class="gotowe" onclick="Zmiana()">Zmień dane</button>
+            <form action="" method="post">
+            <button class="gotowe" type="submit" name="logout" value="Wyloguj">Wyloguj</button>
+            </form>
         </div>
         <div class="DVD">
         <h2>Wypożyczone Pozycje</h2>
@@ -80,7 +87,5 @@
             {{swypp}}
         </table>
         </div>
-        <form action="" method="post">
-        <input type="submit" name="logout" value="Wyloguj">
-        </form>
+        <script>zal();</script>
 </body>

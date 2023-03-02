@@ -3,7 +3,9 @@
         background-color: #CABEF8;
         font-family: "Roboto";
     }
-
+    div, table, th, td{
+        color: #CABEF8;
+    }
     .nav {
         background-color: #442AAD;
         overflow: hidden;
@@ -190,6 +192,8 @@
 
     .DVD {
         margin-left: 150px;
+        margin-top: 25px;
+        margin-bottom: 25px;
         display: block;
         padding: 20;
         float: left;

@@ -17,7 +17,7 @@ def index(function:callable):
     return function()
 
 def panel(function:callable) -> callable:
-    if 'id' in flask.session:
+    if 'id' in flask.request.cookies:
         id = flask.request.cookies.get("id")
         user = user_finder(conn, id)
         flask.session['user'] = f"{user[1]}|{user[2]}|{user[3]}"
@@ -25,10 +25,19 @@ def panel(function:callable) -> callable:
         swyp = ""
         swypp = ""
         dzisiaj = date.today()
+        za = 0
         for i in wyp:
             film = film_finder(conn, i[0])
             if i[3] == None and i[2] != None :
-                czy_zalegly = "tak" if i[2]-dzisiaj < timedelta(0) else "nie"
+                if i[2]-dzisiaj < timedelta(0):
+                    czy_zalegly = "tak" 
+                    za += 1 
+                    if 'zal' not in flask.request.cookies:
+                        resp  = flask.redirect(flask.url_for('panel'))
+                        resp.set_cookie('zal', bytes(str("yes"), 'utf-8'))
+                        return resp
+                else: 
+                    czy_zalegly = "nie"
                 swyp += f'''
                 <tr>
                     <td>{film[1]}</td>
@@ -41,12 +50,18 @@ def panel(function:callable) -> callable:
                     <td>{film[1]}</td>
                     <td>{i[1].day}.{i[1].month}.{i[1].year}-{i[3].day}.{i[3].month}.{i[3].year}</td>
                 </tr>'''
+        if za == 0 and ('zal' in flask.request.cookies) and (flask.request.cookies.get("zal")=="yes"):
+            resp = flask.redirect(flask.url_for('panel'))
+            resp.set_cookie('zal', '', expires=0)
+            return resp
         if flask.request.method == 'POST':
             if (flask.request.form['logout']=="Wyloguj"):
                 flask.session.pop('id', None)
-                return flask.redirect(flask.url_for('index'))
+                resp = flask.redirect(flask.url_for('index'))
+                resp.set_cookie('id', '', expires=0)
+                return resp
         return function(user=user, swyp=swyp, swypp=swypp)
-    return "Coś nie działa"
+    return flask.redirect(flask.url_for('login'))
 
 def zmiana(function:callable) -> callable:
     try:
@@ -55,8 +70,7 @@ def zmiana(function:callable) -> callable:
             id = flask.request.cookies.get("id")
             user = user.split("|")
         if flask.request.method == 'POST':
-            user=["","",""]
-            if 'nazwa' in flask.request.form:
+            if 'name' in flask.request.form:
                 if (n:=flask.request.form['name'])!="":
                     user[0]=n
             if 'mail' in flask.request.form:
@@ -65,8 +79,9 @@ def zmiana(function:callable) -> callable:
             if 'passwd' in flask.request.form:
                 if (n:=flask.request.form['passwd'])!="":
                     user[2]=n
-            user_change_data(conn, id, user)
-            return flask.redirect(flask.url_for('panel'))
+            e = user_change_data(conn, id, user)
+            if e > 0:
+                return flask.redirect(flask.url_for('panel'))
     except Exception as err:
         print(err)
     finally:
@@ -104,9 +119,10 @@ def register(function:callable) -> callable:
         if (n:=flask.request.form['name'])!="" and (n2:=flask.request.form['password'])!="" and (n3:=flask.request.form['email'])!="":
             if (id_user:=user_register(conn, n, n3, n2)) > 0:
                 print(id_user)
-                flask.session['id'] = id_user
+                resp  = flask.redirect(flask.url_for('panel'))
+                resp.set_cookie('id', bytes(str(id_user), 'utf-8'))
                 flask.session['user_auth'] = "placeholder"
-                return flask.redirect(flask.url_for('panel'))
+                return resp
             else:
                 print(id_user)
                 return function(error=id_user)
@@ -116,4 +132,5 @@ def register(function:callable) -> callable:
     else:
         print("?")
         return function()
-
+def zbiory(function:callable) -> callable:
+    return function()
