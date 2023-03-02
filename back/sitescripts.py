@@ -16,9 +16,9 @@ def index(function:callable):
     #'''
     return function()
 
-def panel():
+def panel(function:callable) -> callable:
     if 'id' in flask.session:
-        id = flask.session["id"]
+        id = flask.request.cookies.get("id")
         user = user_finder(conn, id)
         flask.session['user'] = f"{user[1]}|{user[2]}|{user[3]}"
         wyp = wyp_filmy(conn, id)
@@ -45,62 +45,14 @@ def panel():
             if (flask.request.form['logout']=="Wyloguj"):
                 flask.session.pop('id', None)
                 return flask.redirect(flask.url_for('index'))
-        return Create.html.base.fromText('''
-        <script>
-        function Zmiana() {
-            location.href = './zmiana'
-        }
-        </script>''',f'''
-        <div class="powitanie">
-        <h1>Cześć, {user[1]}! Dobrze cię znów widzieć :)</h1>
-        </div>
-
-        <!-- Informacje o użytkowniku -->
-        <div class="informacje">
-            <table>
-                <tr>
-                    <td>Nazwa użytkownika: </td>
-                    <td>{user[1]}</td>
-                </tr>
-                <tr>
-                    <td>Adres e-mail: </td>
-                    <td>{user[2]}</td>
-                </tr>
-            </table>
-            <button onclick="Zmiana()">Zmień dane</button>
-        </div>
-        <div class="DVD">
-        <h2>Wypożyczone Pozycje</h2>
-        <table>
-            <tr>
-                <th>Nazwa</th>
-                <th>Okres wypożyczenia</th>
-                <th>Czy Film jest zaległy?</th>
-            </tr>
-            '''+swyp+'''
-        </table>
-        </div>
-        <div class="DVD">
-        <h2>Pozycje Wypożyczone W Przeszłości</h2>
-        <table>
-            <tr>
-                <th>Nazwa</th>
-                <th>Okres wypożyczenia</th>
-            </tr>
-            '''+swypp+'''
-        </table>
-        </div>
-        <form action="" method="post">
-        <input type="submit" name="logout" value="Wyloguj">
-        </form>
-        ''')
+        return function(user=user, swyp=swyp, swypp=swypp)
     return "Coś nie działa"
 
 def zmiana(function:callable) -> callable:
     try:
         if 'user' in flask.session:
             user = flask.session['user']
-            id = flask.session['id']
+            id = flask.request.cookies.get("id")
             user = user.split("|")
         if flask.request.method == 'POST':
             user=["","",""]
@@ -121,9 +73,10 @@ def zmiana(function:callable) -> callable:
         return function()
 
 def userclick():
-    if 'user' in flask.session:
+    if flask.request.cookies.get('id') != None:
         return flask.redirect(flask.url_for('panel'))
     else:
+        print("asda")
         return flask.redirect(flask.url_for('login'))
 
 def login(function:callable) -> callable:
@@ -131,10 +84,11 @@ def login(function:callable) -> callable:
         if 'name' in flask.request.form and 'password' in flask.request.form:
             if (n:=flask.request.form['name'])!="" and (n2:=flask.request.form['password'])!="":
                 if (id_user:=user_login(conn, n, n2)) > 0:
-                    flask.session['id'] = id_user
+                    resp  = flask.redirect(flask.url_for('panel'))
+                    resp.set_cookie('id', bytes(str(id_user), 'utf-8'))
+                    #flask.session['id'] = id_user
                     flask.session['user_auth'] = "placeholder"
-                    print("hihi haha")
-                    return flask.redirect(flask.url_for('panel'))
+                    return resp
                 else:
                     return function(error=id_user)
             else:
@@ -152,7 +106,7 @@ def register(function:callable) -> callable:
                 print(id_user)
                 flask.session['id'] = id_user
                 flask.session['user_auth'] = "placeholder"
-                flask.redirect(flask.url_for('panel'))
+                return flask.redirect(flask.url_for('panel'))
             else:
                 print(id_user)
                 return function(error=id_user)

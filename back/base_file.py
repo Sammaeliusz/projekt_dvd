@@ -29,23 +29,23 @@ class Create(ABC):
             def f(*args, **kwargs):
                 return base_function(*args, **kwargs)
             return f
-    class mainFunction(ABC):
+    class function(ABC):
         @abstractmethod
-        def fromTemplate(template:str, **kwargs) -> callable:
-            return lambda **kwg : flask.Response(flask.stream_template(template, **{**kwargs, **kwg}))
+        def withTemplate(template:str, **kwargs) -> callable:
+            return lambda **kwg : flask.make_response(flask.stream_template(template, **{**kwargs, **kwg}))
 
         @abstractmethod
-        def fromFunction(function:callable) -> callable:
-            return lambda : flask.Response(function())
+        def withFunction(function:callable) -> callable:
+            return lambda : flask.make_response(function())
 
     @abstractmethod
-    def addWrapper(wrapper:callable, function:callable) -> callable:
+    def Wrapper(wrapper:callable, function:callable) -> callable:
         return lambda : wrapper(function)
 
     class html(ABC):
         class base(ABC):
             @abstractmethod
-            def fromFunctions(head:callable,body:callable) -> str:
+            def withFunctions(head:callable,body:callable) -> str:
                 a, b = head(), body()
                 return f'''
                     <html>
@@ -57,7 +57,7 @@ class Create(ABC):
                     </body>
                     </html>
                 '''
-            def fromText(head:str, body:str) -> str:
+            def withText(head:str, body:str) -> str:
                 return f'''
                     <html>
                     <head>
@@ -68,16 +68,19 @@ class Create(ABC):
                     </body>
                     </html>
                 '''
+        class standard(ABC):
+            @abstractmethod
+            def menubar():
+                with open(getcwd()+"\\..\\front\\standard\\menubar.txt", 'rb') as f:
+                    return f.read().decode("utf-8")
 
-app = App(__name__, template_folder=getcwd()+'\\front\\sites', static_folder=getcwd()+'\\front\\data')
+app = App(__name__, template_folder=getcwd()+'\\..\\front\\sites', static_folder=getcwd()+'\\..\\front\\data')
 app.setSecret(b'dgf;hpo4[]t,drgtp[e45.g')
-with open(getcwd()+"\\back\\data\\menubar.txt", 'rb') as f:
-    menubar = f.read().decode("utf-8")
 
-#''.join(choice(ascii_letters) for i in range(32)
-app.addroute(Create.flask.route(app, '/', Create.addWrapper(index, Create.mainFunction.fromTemplate("index.php", menubar=menubar)), "index"))
-app.addroute(Create.flask.route(app, '/panel', Create.mainFunction.fromFunction(panel), 'panel'))
-app.addroute(Create.flask.route(app, '/userclick', Create.mainFunction.fromFunction(userclick), 'userclick'))
-app.addroute(Create.flask.route(app, '/logowanie', Create.addWrapper(login, Create.mainFunction.fromTemplate("logowanie.php", menubar=menubar)), "login"))
-app.addroute(Create.flask.route(app, '/zmiana', Create.addWrapper(zmiana, Create.mainFunction.fromTemplate("zmiana.php", menubar=menubar)), "zmiana"))
-app.addroute(Create.flask.route(app, '/rejestracja', Create.addWrapper(register, Create.mainFunction.fromTemplate("rejestracja.php", menubar=menubar)), "register"))
+#''.join(choice(ascii_letters) for i in range(32))
+app.addroute(Create.flask.route(app, '/',               Create.Wrapper(index,    Create.function.withTemplate("index.php",          menubar=Create.html.standard.menubar())), "index"))
+app.addroute(Create.flask.route(app, '/panel',          Create.Wrapper(panel,    Create.function.withTemplate("panel.php",          menubar=Create.html.standard.menubar())), 'panel'))
+app.addroute(Create.flask.route(app, '/userclick',      Create.function.withFunction(userclick), 'userclick'))
+app.addroute(Create.flask.route(app, '/logowanie',      Create.Wrapper(login,    Create.function.withTemplate("logowanie.php",      menubar=Create.html.standard.menubar())), "login"))
+app.addroute(Create.flask.route(app, '/zmiana',         Create.Wrapper(zmiana,   Create.function.withTemplate("zmiana.php",         menubar=Create.html.standard.menubar())), "zmiana"))
+app.addroute(Create.flask.route(app, '/rejestracja',    Create.Wrapper(register, Create.function.withTemplate("rejestracja.php",    menubar=Create.html.standard.menubar())), "register"))
