@@ -71,10 +71,10 @@ class Create(ABC):
         class standard(ABC):
             @abstractmethod
             def menubar():
-                with open(getcwd()+"\\..\\front\\standard\\menubar.txt", 'rb') as f:
+                with open(getcwd()+"/../front/standard/menubar.txt", 'rb') as f:
                     return f.read().decode("utf-8")
 
-app = App(__name__, template_folder=getcwd()+'\\..\\front\\sites', static_folder=getcwd()+'\\..\\front\\data')
+app = App(__name__, template_folder=getcwd()+'/../front/sites', static_folder=getcwd()+'/../front/data')
 app.setSecret(b'dgf;hpo4[]t,drgtp[e45.g')
 
 #''.join(choice(ascii_letters) for i in range(32))
