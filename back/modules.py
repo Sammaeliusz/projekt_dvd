@@ -44,6 +44,7 @@ def check_injection(tekst:str)->str:
     else:
         return tekst
 def check_passwd(passwd:str)->bool:
+    haslo_regex = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')
     return True
 def checkdata_user(connection:sql.connection.MySQLConnection, typ:str, wartosc:str)->bool:
     curs = connection.cursor()
