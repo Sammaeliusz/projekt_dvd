@@ -1,0 +1,10 @@
+[main]
+local = "zmiana/zmiana.php"
+name = "change Page"
+route = "/zmiana"
+
+[data]
+
+[script]
+local = "/zmiana.py"
+name = "zmiana"

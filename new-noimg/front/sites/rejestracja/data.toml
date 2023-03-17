@@ -1,0 +1,10 @@
+[main]
+local = "rejestracja/rejestracja.php"
+name = "register Page"
+route = "/rejestracja"
+
+[data]
+
+[script]
+local = "/register.py"
+name = "register"

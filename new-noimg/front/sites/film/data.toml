@@ -1,0 +1,6 @@
+[main]
+local = "film/film.php"
+name = "movie Page"
+route = "/filmy"
+
+[data]

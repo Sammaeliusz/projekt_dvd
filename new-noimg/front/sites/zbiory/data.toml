@@ -1,0 +1,6 @@
+[main]
+local = "zbiory/zbiory.php"
+name = "zbiory Page"
+route = "/zbiory"
+
+[data]
