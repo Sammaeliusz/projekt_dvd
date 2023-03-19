@@ -62,11 +62,18 @@
     a {
         text-decoration: none;
     }
-
+    .container{
+        display: flex;
+    }
+    .btns{
+        flex: 1;
+    }
 </style>
 </head>
 <body>
     <!-- MENU -->
+
+    {{menubar}}
     <div class="nav">
         <button class="tablinks" onclick="">Nazwa/Logo firmy</button>
         <a href="zbiory.php"><button>Zbiory</button></a>
@@ -75,15 +82,91 @@
 
     <!-- Intro -->
     <div class="intro">
-        <h1>Witaj po stronie administratora!</h1>
+        <h1>Witaj administratorze {{user[1]}}</h1>
     </div>
-
+    <!-- Po kliknięciu w któryś z guzików pojawia się odpowiedni div -->
     <div class="wybor">
         <p>Co chcesz teraz zrobić?</p>
-        <a href="uzytkownicy.php"><button>Użytkownicy</button></a>
-        <a href="zbiory.php"><button>Zbiory</button></a>
+        <div class="container">
+            <div class="btns">
+                <button>Użytkownicy</button>
+            </div>
+            <div class="btns">
+                <button>Zbiory</button>
+            </div>
+        </div>
     </div>
 
+    <div class="Users">
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Nazwa</th>
+                <th>Czy zaległe?</th>
+                <th>Zaległe filmy</th>
+                <th>Ban:</th>
+            </tr>
+            <tr>
+                <td>{{Id}}</td>
+                <td>{{Nazwa}}</td>
+                <td>{{zalagle_bool}}</td>
+                <td>{{zalegle_list}}</td>
+                <td><button>Banuj</button></td>
+            </tr>
+        </table>
+    </div>
+    <div class="Films">
+        <table>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Tytuł
+                </th>
+                <th>
+                    Gatunek
+                </th>
+                <th>
+                    Kategoria Wiekowa
+                </th>
+                <th>
+                    Reżyser
+                </th>
+                <th>
+                    Rok Produkcji
+                </th>
+                <th>
+                    Ilość
+                </th>
+                <th>Modyfikuj:/Dodaj:</th>
+                <th>
+                    Usuń:
+                </th>
+            </tr>
+            <tr>
+                <td>{{id}}</td>
+                <td><input type="text" name="tytul" id="" value={{tytul}}></td>
+                <td><input type="text" name="gatunek" value={{gatunek}}></td>
+                <td><input type="text" name="kat_wiek" value={{kat_wiek}}></td>
+                <td><input type="text" name="rezyser" value={{rezyser}}></td>
+                <td><input type="text" name="rok_prod" value={{rok_prod}}></td>
+                <td><input type="text" name="ilosc" value={{ilosc}}></td>
+                <td><button>Modyfikuj film</button></td>
+                <td><button>Usuń film</button></td>
+            </tr>
+            <tr>
+                <td>{{id}}</td>
+                <td><input type="text" name="tytul" id="" value={{tytul}}></td>
+                <td><input type="text" name="gatunek" value={{gatunek}}></td>
+                <td><input type="text" name="kat_wiek" value={{kat_wiek}}></td>
+                <td><input type="text" name="rezyser" value={{rezyser}}></td>
+                <td><input type="text" name="rok_prod" value={{rok_prod}}></td>
+                <td><input type="text" name="ilosc" value={{ilosc}}></td>
+                <td><button>Dodaj film</button></td>
+            </tr>
+        </table>
+    </div>
  
 </body>
 </html>
