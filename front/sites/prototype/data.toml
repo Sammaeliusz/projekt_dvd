@@ -1,0 +1,6 @@
+[main]
+local = "prototype/prototype.html"
+name = "prototype"
+route = "/prototype"
+
+[data]

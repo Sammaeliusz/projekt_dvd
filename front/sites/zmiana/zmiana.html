@@ -1,0 +1,82 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+		<link rel="stylesheet" href="/static/zmiana/basic.css">
+		<script>
+			function userclick(){
+				if(document.cookie.search('id')!=-1){
+					window.location.href = '/panel'
+				}else{
+					window.location.href = '/logowanie'
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<!-- MENU -->
+		<div class="navholder">
+			<div class="navbar">
+				<div class="right">
+					<div class="tablink">
+						<a><button class="tabbutt" onclick="userclick()"><img src="static/images/proba.png" class="userclick"></button></a>
+					</div>
+					<div class="tablink">
+						<a href="#"><button class="tabbutt" onclick="">FAQ</button></a>
+					</div>
+					<div class="tablink">
+						<a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
+					</div>
+					<div class="tablink">
+						<a href="zbiory"><button class="tabbutt" onclick="">Zbiory</button></a>
+					</div>
+					<div class="tablink">
+						<a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
+					</div>
+				</div>
+				<div class="left">
+					<div class="tablink">
+						<a href="#"><button class="tabbutt" onclick="">______________________________</button></a>
+					</div>
+					<div class="tablink">
+						<a href="#"><button class="tabbutt" onclick="">O</button></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Intro -->
+		<div class="intro">
+			<h1>Zmiana danych użytkownika</h1>
+		</div>
+
+		<!-- Zmiana -->
+		<div class="basicformbox">
+			<div class="intro">
+				Zmiana danych
+			</div>
+			<form action='zmiana' target='_self' method='post'>
+				<div class="window">
+					<input name="name" type="text" autofocus required>
+					<label for="">Username:</label>
+				</div>
+				<div class="window">
+					<input name="mail" type="text" autofocus required>
+					<label for="">Email:</label>
+				</div>
+				<div class="window">
+					<input name="password" type="password" required>
+					<label for="">Hasło:</label>
+				</div>
+				<div>
+					<button class="basicbutton" type='submit'>Zmień Dane</button>
+				</div>
+			</form>
+			% try:
+			% 	error
+				<p style="color:red">Błąd podczas zmiany danych: Error {{error}}</p>
+			% except:
+			%	pass
+		</div>
+	</body>
+</html>
