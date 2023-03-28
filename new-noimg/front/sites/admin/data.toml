@@ -1,6 +1,0 @@
-[main]
-local = "admin/admin.php"
-name = "admin Page"
-route = "/admin"
-
-[data]

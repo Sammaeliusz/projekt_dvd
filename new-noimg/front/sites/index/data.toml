@@ -1,6 +1,0 @@
-[main]
-local = "index/index.html"
-name = "main Page"
-route = "/"
-
-[data]
