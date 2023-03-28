@@ -1,0 +1,23 @@
+rental:
+	id_rent - id wypożyczenia
+	id_movie - id filmu
+	id_user - id użytkownika który wypożyczył
+	rent_date - data wypożyczenia filmu
+	expect_return - ostateczna data zwrotu
+	real_return - rzeczywista data zwrotu (jeżeli nastąpiła)
+
+movie:
+	id_movie - id filmu
+	title - tytuł
+	genre - gatunek
+	director - reżyser
+	production_year - rok produkcji
+
+users:
+	id_user - id użytkownika
+	login - nazwa użytkownika
+	email - adres poczty
+	password - hasło
+	penalty - bilans kar (zadłużenie)
+	is_admin - czy jest administratorem
+	status - status

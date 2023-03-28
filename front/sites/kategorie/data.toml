@@ -1,0 +1,6 @@
+[main]
+local = "kategorie/kategorie.php"
+name = "categories Page"
+route = "/kategorie"
+
+[data]
