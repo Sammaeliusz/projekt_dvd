@@ -5,11 +5,21 @@ from utils import *
 
 def wrapper(function:callable, sql:SQL, **kwg) -> callable:
     movies = sql.movies_recent(8)
-    answer = [Struct({
-            "name":x[0][1],
-            "categories":x[0][2],
-            "director":x[0][4],
-            "production":x[0][5],
-            "file":f"static/Filmy/{x[0][1].replace(' ', '-')}.png"
-        }) for x in movies]
+    if not movies.isInfo():
+        print(movies.list())
+        answer = [Struct({
+                "name":x[1],
+                "categories":x[2],
+                "director":x[4],
+                "production":x[5],
+                "file":f"static/Filmy/{x[1].replace(' ', '-')}.png"
+            }) for x in movies.list()]
+    else:
+        answer = [Struct({
+                "name":"",
+                "categories":"",
+                "director":"",
+                "production":0,
+                "file":"#"
+            })]
     return function(movies = answer)
