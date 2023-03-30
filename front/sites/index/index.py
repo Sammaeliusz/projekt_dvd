@@ -5,8 +5,7 @@ from utils import *
 
 def wrapper(function:callable, sql:SQL, **kwg) -> callable:
     movies = sql.movies_recent(8)
-    if not movies.isInfo():
-        print(movies.list())
+    if movies.isUsefull():
         answer = [Struct({
                 "name":x[1],
                 "categories":x[2],

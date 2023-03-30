@@ -11,6 +11,27 @@
 					window.location.href = '/logowanie'
 				}
 			}
+			function leftmenu(){
+				if(!lmb){
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "0px"
+					lmb = true;
+				}
+				else{
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "-310px"
+					lmb = false;
+				}
+			}
+			var lmb = false;
+			window.onload = function (){
+				console.log("keu");
+				document.body.onscroll = function () {
+						var nb = document.getElementById("navhold")
+						var lm = document.getElementById("leftmenu")
+						nb.style.top = window.scrollY
+						lm.style.top = "calc("+window.scrollY+"px + 50px)"
+					}}
 			function Zmiana() {
 				location.href = './zmiana'
 			}
@@ -32,7 +53,7 @@
 	</head>
 	<body>
 		<!-- MENU -->
-		<div class="navholder">
+		<div class="navholder" id="navhold">
 			<div class="navbar">
 				<div class="right">
 					<div class="tablink">
@@ -61,14 +82,26 @@
 				</div>
 			</div>
 		</div>
-
-		<div class="intro">
-			<h1>Cześć, {{user[1]}}! Dobrze cię znów widzieć :)</h1>
+		
+		<div class="leftmenu" id="leftmenu">
+			<div class="lml">
+				<div class="lmltab">
+					<p>Menu</p>
+				</div>
+				<div class="lmltab">
+					<a><button>Panel użytkownika</button></a>
+				</div>
+				<div class="lmltab">
+					<a><button>Panel administratora</button></a>
+				</div>
+			</div>
+			<div class="lmb">
+				<button onclick="leftmenu()">n</button>
+			</div>
 		</div>
-
-		<!-- Informacje o użytkowniku -->
-		<div class="content">
-			<div class="box w35">
+		<div class="topmain">
+			
+			<div class="mwl">
 				<div class="info">
 					<table>
 						<tr>
@@ -88,37 +121,38 @@
 					</div>
 				</div>
 			</div>
-			<div class="box list">
-				<div class="box choice">
-					<table>
-						<tr>
-							<th><button onclick="actual()"><h2><<< Aktualnie wypożyczone</h2></button></th>
-							<th><button onclick="history()"><h2>Historia wypożyczania >>></h2></button></th>
-						</tr>
-					</table>
+			<div class="mbr">
+				<div class="intro">
+					<h1>Cześć, {{user[1]}}! Dobrze cię znów widzieć :)</h1>
 				</div>
-				<div class="inrow" id="inrow">
-					<div class="box rent" id="actual">
-						<div class="dataTable">
-							<table>
-								<tr class="position">
-									<th class="name"><p>Nazwa</p></th>
-									<th class="data"><p>Okres wypożyczenia</p></th>
-									<th class="iss"><p>Zaległy?</p></th>
-								</tr>
-								{{swyp}}
-							</table>
-						</div>
+				<div class="list">
+					<div class="choice">
+						<button onclick="actual()"><<< Aktualnie wypożyczone</button>
+						<button onclick="history()">Historia wypożyczania >>></button>
 					</div>
-					<div class="box rent" id="history">
-						<div class="dataTable">
-							<table>
-								<tr class="position">
-									<th class="name">Nazwa</th>
-									<th class="data">Okres wypożyczenia</th>
-								</tr>
-								{{swypp}}
-							</table>
+					<div class="inrow" id="inrow">
+						<div class="rent" id="actual">
+							<div class="dataTable">
+								<table>
+									<tr class="position">
+										<th class="name"><p>Nazwa</p></th>
+										<th class="data"><p>Okres wypożyczenia</p></th>
+										<th class="iss"><p>Zaległy?</p></th>
+									</tr>
+									{{swyp}}
+								</table>
+							</div>
+						</div>
+						<div class="rent" id="history">
+							<div class="dataTable">
+								<table>
+									<tr class="position">
+										<th class="name">Nazwa</th>
+										<th class="data">Okres wypożyczenia</th>
+									</tr>
+									{{swypp}}
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
