@@ -4,6 +4,7 @@ from mysql.connector import errorcode
 import re
 from sys import stdout
 from datetime import datetime as datef
+from codebase.uses import Struct, sqlAnswer
 
 basic = {
     "username":"cli",
@@ -105,171 +106,212 @@ class SQL:
         return [i[0] for i in data]
 
     def mail_check(self, mail:str) -> bool:
-        return bool(re.compile(r"^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$").search(mail))
+        return bool(re.compile(".+@.+\..+").search(mail))
 
     def protection(self, question:str) -> str:
-        return question[:- answer.span()[0]] if bool(answer:=re.compile(r".* or .*").search(question)) else question
+        return question[:- answer.span()[0]] if bool(answer:=re.compile(r".* or .*", re.I).search(question)) else question
 
     def password_check(self, password:str) -> bool:
         return bool(re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$').search(password))
 
-    def userdata_check(self, chap:str, value:str) -> bool:
+    def userdata_check(self, chap:str, value:str) -> sqlAnswer:
         if(cursor:=self.cursor()):
             answer = self.select(cursor, f"SELECT {chap} FROM `uzytkownicy` where {chap} like '{value}' and status = 0;")
             cursor.close()
             self.__log__(-1002)
         else:
-            answer = []
             self.__log__(-200)
-        return bool(len(answer))
+        return sqlAnswer(self.__codes__[-200])
 
-    def inactivity_check(self, user_id:int) -> bool:
-        cursor = self.cursor()
-        if(answer:=self.select(cursor, f"SELECT status from `uzytkownicy` WHERE id_user = {user_id}") != []):
-            cursor.close()
-            self.__log__(-1003)
-            return bool(answer)
+    def inactivity_check(self, user_id:int) -> sqlAnswer:
+        if(cursor:=self.cursor()):
+            if(answer:=self.select(cursor, f"SELECT status from `uzytkownicy` WHERE id_user = {user_id}") != []):
+                cursor.close()
+                self.__log__(-1003)
+                return sqlAnswer(answer)
+            else:
+                cursor.close()
+                self.__log__(-6, notes=f"user_id -> {user_id}")
+                return sqlAnswer(self.__codes__[-6])
         else:
-            cursor.close()
-            self.__log__(-6, notes=f"user_id -> {user_id}")
-            return False
+            self.__log__(-200)
+        return sqlAnswer(self.__codes__[-200])
 
-    def new_user(self, username:str, mail:str, password:str) -> int:
+    def new_user(self, username:str, mail:str, password:str) -> sqlAnswer:
         if not self.mail_check(mail):
             self.__log__(-1, notes=f"wrong mail provided -> {mail}")
-            return -1
+            return sqlAnswer(self.__codes__[-1])
         elif not self.password_check(password):
             self.__log__(-2, notes=f"wrong password provided -> {password}")
-            return -1
+            return sqlAnswer(self.__codes__[-2])
         elif not self.userdata_check("email", mail):
             self.__log__(-3, notes=f"registration with mail -> {mail}")
-            return -1
+            return sqlAnswer(self.__codes__[-3])
         else:
-            cursor = self.cursor()
-            cursor.execute(f"INSERT INTO `uzytkownicy`  VALUES (NULL, '{self.protection(username)}', '{self.protection(mail)}', '{self.protection(password)}', NULL, NULL, 0);")
+            if(cursor:=self.cursor()):
+                cursor.execute(f"INSERT INTO `uzytkownicy`  VALUES (NULL, '{self.protection(username)}', '{self.protection(mail)}', '{self.protection(password)}', NULL, NULL, 0);")
+                self.connection.commit()
+                self.__log__(-1004)
+                answer = self.select(cursor, f"SELECT id_user FROM `uzytkownicy` ORDER BY id_user DESC limit 1;")
+                cursor.close()
+                return sqlAnswer(answer)
+            else:
+                self.__log__(-200)
+            return sqlAnswer(self.__codes__[-200])
+
+    def login_user(self, mail:str, password:str) -> sqlAnswer:
+        if(cursor:=self.cursor()):
+            if not bool(answer:=self.select(cursor, f"SELECT id_user FROM uzytkownicy WHERE (email LIKE '{self.protection(mail)}') and (haslo LIKE '{self.protection(password)}')")):
+                cursor.close()
+                self.__log__(-4, notes=f"wrond password or/and mail provided -> pass:{password} mail:{mail}")
+                return sqlAnswer(self.__codes__[-4])
+            elif not self.inactivity_check(answer[0][0]):
+                cursor.close()
+                self.__log__(-5, notes=f"inactive user id -> {answer[0][0]}")
+                return sqlAnswer(self.__codes__[-5])
+            else:
+                self.__log__(-1005, notes=f"logged user id -> {answer[0][0]}")
+                cursor.close()
+                return sqlAnswer(answer)
+        else:
+            self.__log__(-200)
+        return sqlAnswer(self.__codes__[-200])
+
+    def userdata_change(self, user_id:int, username:str, mail:str, password:str) -> sqlAnswer:
+        if(cursor:=self.cursor()):
+            if not self.mail_check(mail):
+                self.__log__(-1, notes=f"wrong mail provided -> {mail}")
+                return sqlAnswer(self.__codes__[-1])
+            elif not self.password_check(password):
+                self.__log__(-2, notes=f"wrong password provided -> {password}")
+                return sqlAnswer(self.__codes__[-2])
+            elif not self.userdata_check("email", mail):
+                self.__log__(-3, notes=f"user data change with mail -> {mail}")
+                return sqlAnswer(self.__codes__[-3])
+            elif not self.inactivity_check(user_id):
+                self.__log__(-5, notes=f"inactive user id -> {user_id}")
+                return sqlAnswer(self.__codes__[-5])
+            else:
+                cursor.execute(f"UPDATE `uzytkownicy` SET nazwa = '{self.protection(username)}', email = '{self.protection(mail)}', haslo = '{self.protection(password)}' WHERE id_user = {user_id};")
+                self.connection.commit()
+                cursor.close()
+                self.__log__(-1006, notes=f"new user data -> username:{self.protection(username)} mail:{self.protection(mail)} password:{self.protection(password)} :: with an id -> {user_id}")
+                return sqlAnswer(True)
+        else:
+            self.__log__(-200)
+        return sqlAnswer(self.__codes__[-200])
+
+    def data_delete(self, user_id:int) -> sqlAnswer:
+        if(cursor:=self.cursor()):
+            cursor.execute(f"UPDATE `uzytkownicy` SET status = 1 WHERE id_user = {user_id}")
             self.connection.commit()
-            self.__log__(-1004)
-            answer = self.select(cursor, f"SELECT id_user FROM `uzytkownicy` ORDER BY id_user DESC limit 1;")
             cursor.close()
-            return answer
-
-    def login_user(self, mail:str, password:str) -> int:
-        cursor = self.cursor()
-        if not bool(answer:=self.select(cursor, f"SELECT id_user FROM uzytkownicy WHERE (email LIKE '{self.protection(mail)}') and (haslo LIKE '{self.protection(password)}')")):
-            cursor.close()
-            self.__log__(-4, notes=f"wrond password or/and mail provided -> pass:{password} mail:{mail}")
-            return -1
-        elif not self.inactivity_check(answer[0][0]):
-            cursor.close()
-            self.__log__(-5, notes=f"inactive user id -> {answer[0][0]}")
-            return -1
+            self.__log__(-1007, notes=f"deleted user id -> {user_id}")
+            return sqlAnswer(True)
         else:
-            self.__log__(-1005, notes=f"logged user id -> {answer[0][0]}")
-            cursor.close()
-            return answer[0][0]
+            self.__log__(-200)
+        return sqlAnswer(self.__codes__[-200])
 
-    def userdata_change(self, user_id:int, username:str, mail:str, password:str) -> bool:
-        cursor = self.cursor()
-        if not self.mail_check(mail):
-            self.__log__(-1, notes=f"wrong mail provided -> {mail}")
-            return False
-        elif not self.password_check(password):
-            self.__log__(-2, notes=f"wrong password provided -> {password}")
-            return False
-        elif not self.userdata_check("email", mail):
-            self.__log__(-3, notes=f"user data change with mail -> {mail}")
-            return False
-        elif not self.inactivity_check(user_id):
-            self.__log__(-5, notes=f"inactive user id -> {user_id}")
-            return False
+    def movies_rented(self, user_id:int) -> sqlAnswer:
+        if(cursor:=self.cursor()):
+            answer = self.select(cursor, f"SELECT id_film, termin_rent, termin_zwrot, data_zwrot from wypozyczenia where id_user = {user_id}")
+            cursor.close()
+            self.__log__(-1008, notes=f"of user id -> {user_id}")
+            return sqlAnswer(answer)
         else:
-            cursor.execute(f"UPDATE `uzytkownicy` SET nazwa = '{self.protection(username)}', email = '{self.protection(mail)}', haslo = '{self.protection(password)}' WHERE id_user = {user_id};")
-            self.connection.commit()
-            cursor.close()
-            self.__log__(-1006, notes=f"new user data -> username:{self.protection(username)} mail:{self.protection(mail)} password:{self.protection(password)} :: with an id -> {user_id}")
-            return True
+            self.__log__(-200)
+        return sqlAnswer(self.__codes__[-200])
 
-    def data_delete(self, user_id:int) -> bool:
-        cursor = self.cursor()
-        cursor.execute(f"UPDATE `uzytkownicy` SET status = 1 WHERE id_user = {user_id}")
-        self.connection.commit()
-        cursor.close()
-        self.__log__(-1007, notes=f"deleted user id -> {user_id}")
-        return True
-
-    def movies_rented(self, user_id:int) -> list:
-        cursor = self.cursor()
-        answer = self.distable(self.select(cursor, f"SELECT id_film, termin_rent, termin_zwrot, data_zwrot from wypozyczenia where id_user = {user_id}"))
-        cursor.close()
-        self.__log__(-1008, notes=f"of user id -> {user_id}")
-        return answer
-
-    def movies_add(self, title:str, genre:str, director:str, production:int, age:int) -> bool:
+    def movies_add(self, title:str, genre:str, director:str, production:int, age:int) -> sqlAnswer:
         if(production>1995):
-            cursor = self.cursor()
-            cursor.execute(f"INSERT INTO `filmy`  VALUES (NULL, '{self.protection(title)}', '{self.protection(genre)}', {age}, '{self.protection(director)}', {production}, True);")
-            self.connection.commit()
-            cursor.close()
-            self.__log__(-1010, notes=f"movie data -> title:{self.protection(title)} genre:{self.protection(genre)} age:{age} director:{self.protection(director)} production_year:{production}")
-            return True
+            if(cursor:=self.cursor()):
+                cursor.execute(f"INSERT INTO `filmy`  VALUES (NULL, '{self.protection(title)}', '{self.protection(genre)}', {age}, '{self.protection(director)}', {production}, True);")
+                self.connection.commit()
+                cursor.close()
+                self.__log__(-1010, notes=f"movie data -> title:{self.protection(title)} genre:{self.protection(genre)} age:{age} director:{self.protection(director)} production_year:{production}")
+                return sqlAnswer(True)
+            else:
+                self.__log__(-200)
+            return sqlAnswer(self.__codes__[-200])
         else:
             self.__log__(-7, notes=f"year provided -> {production}")
-            return False
+            return sqlAnswer(self.__codes__[-7])
 
-    def movies_find(self, criterion:str, value:int | str, table:str) -> list:
+    def movies_find(self, criterion:str, value:int | str, table:str) -> sqlAnswer:
         if not table in ["filmy", "uzytkownicy", "wypozyczenia"]:
             self.__log__(-8, notes=f"criterion provided -> {criterion}")
-            return []
-        cursor = self.cursor()
-        answer = self.select(cursor, f"SELECT * from `{table}` where {criterion} like {value}") if isinstance(value, int) else self.select(cursor, f"SELECT * from `{table}` where {criterion} like '{value}'")
-        cursor.close()
-        self.__log__(-1011, notes=f"searched for movies with -> criterion:{criterion} value:{value} :: in table -> {table}")
-        return self.return_id(answer)
+            return sqlAnswer(self.__codes__[-8])
+        if(cursor:=self.cursor()):
+            answer = self.select(cursor, f"SELECT * from `{table}` where {criterion} like {value}") if isinstance(value, int) else self.select(cursor, f"SELECT * from `{table}` where {criterion} like '{value}'")
+            cursor.close()
+            self.__log__(-1011, notes=f"searched for movies with -> criterion:{criterion} value:{value} :: in table -> {table}")
+            return sqlAnswer(answer)
+        else:
+            self.__log__(-200)
+        return sqlAnswer(self.__codes__[-200])
 
-    def movie_finder(self, id:int) -> list:
-        cursor = self.cursor()
-        answer = self.select(cursor, f"SELECT * from `filmy` where id_film = {id}")
-        cursor.close()
-        return answer
+    def movie_finder(self, movie_id:int) -> sqlAnswer:
+        if(cursor:=self.cursor()):
+            answer = self.select(cursor, f"SELECT * from `filmy` where id_film = {movie_id}")
+            cursor.close()
+            return sqlAnswer(answer)
+        else:
+            self.__log__(-200)
+        return sqlAnswer(self.__codes__[-200])
 
-    def user_finder(self, id:int) -> list:
-        cursor = self.cursor()
-        answer = self.select(cursor, f"SELECT * from `uzytkownicy` where id_user = {id}")
-        cursor.close()
-        return answer
+    def user_finder(self, user_id:int) -> sqlAnswer:
+        if(cursor:=self.cursor()):
+            answer = self.select(cursor, f"SELECT * from `uzytkownicy` where id_user = {user_id}")
+            cursor.close()
+            return sqlAnswer(answer)
+        else:
+            self.__log__(-200)
+        return sqlAnswer(self.__codes__[-200])
 
-    def movice_change(self, movie_id:int, title:str, genre:str, director:str, production:int, age:int) -> bool:
-        cursor = self.cursor()
-        cursor.execute(f"UPDATE `filmy` SET tytul = '{self.protection(title)}', gatunek = '{self.protection(genre)}', kat_wiek = {age}, rezyser = '{self.protection(director)}', rok_produkcji = {production} WHERE id_film = {movie_id};")
-        self.connection.commit()
-        cursor.close()
-        return True
+    def movice_change(self, movie_id:int, title:str, genre:str, director:str, production:int, age:int) -> sqlAnswer:
+        if(cursor:=self.cursor()):
+            cursor.execute(f"UPDATE `filmy` SET tytul = '{self.protection(title)}', gatunek = '{self.protection(genre)}', kat_wiek = {age}, rezyser = '{self.protection(director)}', rok_produkcji = {production} WHERE id_film = {movie_id};")
+            self.connection.commit()
+            cursor.close()
+            return sqlAnswer(True)
+        else:
+            self.__log__(-200)
+        return sqlAnswer(self.__codes__[-200])
 
-    def movies_recent(self, amount:int) -> list:
-        cursor = self.cursor()
-        ids = self.distable(self.select(cursor, f"select id_film from filmy order by id_film desc limit {amount}"))
-        cursor.close()
-        answer = []
-        for x in ids:
-            answer.append(self.movie_finder(int(x)))
-        self.__log__(-1009, notes=f"found {amount} recent movies")
-        return answer
+    def movies_recent(self, amount:int) -> sqlAnswer:
+        if(cursor:=self.cursor()):
+            ids = self.select(cursor, f"select id_film from filmy order by id_film desc limit {amount}")
+            cursor.close()
+            answer = []
+            for x in ids:
+                answer.append(self.movie_finder(int(x[0])).list())
+            self.__log__(-1009, notes=f"found {amount} recent movies")
+            return sqlAnswer(answer)
+        else:
+            self.__log__(-200)
+        return sqlAnswer(self.__codes__[-200])
 
-    def film_delete(self, movie_id:int) -> bool:
-        cursor = self.cursor()
-        cursor.execute(f"UPDATE `filmy` SET dost = False WHERE id_film = {movie_id}")
-        self.connection.commit()
-        cursor.close()
-        return True
+    def film_delete(self, movie_id:int) -> sqlAnswer:
+        if(cursor:=self.cursor()):
+            cursor.execute(f"UPDATE `filmy` SET dost = False WHERE id_film = {movie_id}")
+            self.connection.commit()
+            cursor.close()
+            return sqlAnswer(True)
+        else:
+            self.__log__(-200)
+        return sqlAnswer(self.__codes__[-200])
 
-    def find_unique(self, category:str, table:str) -> list:
+    def find_unique(self, category:str, table:str) -> sqlAnswer:
         if not table in ["filmy", "uzytkownicy", "wypozyczenia"]:
             self.__log__(-8, notes=f"category provided -> {category}")
-            return []
+            return sqlAnswer(self.__codes__[-8])
         else:
-            cursor = self.cursor()
-            answer = self.distable(self.select(cursor, f"SELECT {category} FROM {table} GROUP BY {category}"))
-            cursor.close()
-            return answer
+            if(cursor:=self.cursor()):
+                answer = self.select(cursor, f"SELECT {category} FROM {table} GROUP BY {category}")
+                cursor.close()
+                return sqlAnswer(answer)
+            else:
+                self.__log__(-200)
+            return sqlAnswer(self.__codes__[-200])
         
             
