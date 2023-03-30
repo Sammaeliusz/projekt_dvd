@@ -84,4 +84,13 @@ class sqlAnswer:
     def getError(self) -> str:
         if self.isInfo():
             return self.data[0]
+
+    def isUsefull(self) -> bool:
+        return not self.isInfo() and self.hasData()
+
+    def getBool(self) -> bool:
+        if isinstance(self.data, bool):
+            return self.data
+        else:
+            return False
             

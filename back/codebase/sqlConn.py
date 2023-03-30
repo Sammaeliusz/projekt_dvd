@@ -15,35 +15,7 @@ basic = {
 
 class SQL:
 
-    __codes__ = {
-        #WRITE BETTER DESCRIPTION IN FUTURE
-
-        #SETUP TRANSLATION
-        -1:["bad mail","ERROR"],
-        -2:["bad pass","ERROR"],
-        -3:["simmilar data found","ERROR"],
-        -4:["wrong pass","ERROR"],
-        -5:["user inactive","ERROR"],
-        -6:["user does not exists","ERROR"],
-        -7:["too early","ERROR"],
-        -8:["bad table","ERROR"],
-        -100:["sql-bad user or pass","ERROR"],
-        -101:["sql-bad database","ERROR"],
-        -102:["sql-unspecified error","ERROR"],
-        -1000:["ok","INFO"],
-        -1001:["connection with database established","INFO"],
-        -1002:["checked userdata","INFO"],
-        -1003:["checked activity status","INFO"],
-        -1004:["created new user","INFO"],
-        -1005:["user logged","INFO"],
-        -1006:["changed userdata","INFO"],
-        -1007:["deleted user data (set to inactive)","INFO"],
-        -1008:["searched for rented movies","INFO"],
-        -1009:["searched for recent movies","INFO"],
-        -1010:["added a movie","INFO"],
-        -1011:["searched for movies","INFO"],
-        #ADD MORE IN FUTURE
-        }
+    __codes__ = {}
 
     def __log__(self, code:int, notes=""):
         self.stream("[{1}] {2} {0} {3}".format(*[*self.__codes__[code], datef.now().strftime("us:%f => %H:%M:%Ss >>>"), f"::: {notes}\n" if len(notes) > 0 else "\n"]))
@@ -119,9 +91,10 @@ class SQL:
             answer = self.select(cursor, f"SELECT {chap} FROM `uzytkownicy` where {chap} like '{value}' and status = 0;")
             cursor.close()
             self.__log__(-1002)
+            return sqlAnswer(True)
         else:
             self.__log__(-200)
-        return sqlAnswer(self.__codes__[-200])
+            return sqlAnswer(self.__codes__[-200])
 
     def inactivity_check(self, user_id:int) -> sqlAnswer:
         if(cursor:=self.cursor()):
@@ -185,10 +158,10 @@ class SQL:
             elif not self.password_check(password):
                 self.__log__(-2, notes=f"wrong password provided -> {password}")
                 return sqlAnswer(self.__codes__[-2])
-            elif not self.userdata_check("email", mail):
-                self.__log__(-3, notes=f"user data change with mail -> {mail}")
+            elif not self.userdata_check("email", mail).getBool():
+                self.__log__(-3, notes=f"user data change with name -> {username}")
                 return sqlAnswer(self.__codes__[-3])
-            elif not self.inactivity_check(user_id):
+            elif not self.inactivity_check(user_id).getBool:
                 self.__log__(-5, notes=f"inactive user id -> {user_id}")
                 return sqlAnswer(self.__codes__[-5])
             else:
