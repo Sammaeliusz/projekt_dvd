@@ -14,7 +14,7 @@ body{
 .navholder .navbar{
 	width:100%;
 	display:flex;
-	#justify-content: flex-start;
+	justify-content: flex-start;
 	align-items:stretch;
 	direction:rtl;
 	justify-content: space-between;
@@ -29,7 +29,6 @@ body{
 	direction:revert;
 	align-items:stretch;
 }
-
 .navholder .navbar * .tablink a{
 	text-decoration:none;
 	font-weight:bold;
@@ -124,4 +123,10 @@ body{
 	z-index: 0;
 	top:0;
 	left:0;
+}
+.container{
+	display: flex;
+}
+.btns{
+	flex: 1;
 }

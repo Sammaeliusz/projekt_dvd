@@ -4,3 +4,7 @@ name = "admin Page"
 route = "/admin"
 
 [data]
+
+[script]
+local = "/admin.py"
+name = "admin"
