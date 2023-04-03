@@ -2,7 +2,7 @@
 <head>
 	<meta charset="utf-8">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-    <link rel="stylesheet" href="basic.css">
+    <link rel="stylesheet" href="/static/admin/basic.css">
 <script>
     function users(){
         su.visibility = "visible";
@@ -49,50 +49,52 @@
             </div>
         </div>
     </div>
+        <!-- Intro -->
+    <div class="content">
+        <div class="intro">
+            <h1>Witaj {{user}}</h1>
+        </div>
 
-    <!-- Intro -->
-    <div class="intro">
-        <h1>Witaj {{user[1]}}</h1>
-    </div>
-
-    <div class="wybor">
-        <p>Co chcesz teraz zrobić?</p>
-        <div class="container">
-            <div class="btns" id="users">
-                <button>Użytkownicy</button>
-            </div>
-            <div class="btns" id="films">
-                <button>Zbiory</button>
+        <div class="wybor">
+            <h2>Co chcesz teraz zrobić?</h2>
+            <div class="container">
+                <div class="btns" id="users">
+                    <button>Użytkownicy</button>
+                </div>
+                <div class="btns" id="films">
+                    <button>Zbiory</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="list_u">
-        <table>
-            <tr>
-                <th>Id</th>
-                <th>Nazwa</th>
-                <th>Czy zaległe?</th>
-                <th>Zaległe filmy</th>
-                <th>Ban:</th>
-            </tr>
-            
-        </table>
-    </div>
-    <div id="list_f">
-        <table>
-            <tr>
-                <th>Id</th>
-                <th>Tytuł</th>
-                <th>Gatunek</th>
-                <th>Kategoria Wiekowa</th>
-                <th>Reżyser</th>
-                <th>Rok Produkcji</th>
-                <th>Ilość</th>
-                <th>Modyfikuj:/Dodaj:</th>
-                <th>Usuń:</th>
-            </tr>
-        </table>
+        <div id="list_u">
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Nazwa</th>
+                    <th>Czy zaległe?</th>
+                    <th>Zaległe filmy</th>
+                    <th>Ban:</th>
+                </tr>
+                {{!user_table}}
+            </table>
+        </div>
+        <div id="list_f">
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Tytuł</th>
+                    <th>Gatunek</th>
+                    <th>Kategoria Wiekowa</th>
+                    <th>Reżyser</th>
+                    <th>Rok Produkcji</th>
+                    <th>Ilość</th>
+                    <th>Modyfikuj:/Dodaj:</th>
+                    <th>Usuń:</th>
+                </tr>
+                {{!film_table}}
+            </table>
+        </div>
     </div>
  <script>
     document.querySelector("#list_u").style.visibility = "hidden";

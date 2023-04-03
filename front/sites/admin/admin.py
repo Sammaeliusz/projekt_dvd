@@ -37,4 +37,4 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
           </tr>
      """
      
-     return function()
+     return function(user="Admin", film_table="", user_table="")
