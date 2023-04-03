@@ -10,6 +10,8 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
         if not question.isInfo():
             bottle.response.set_cookie('id', str(question.getId()))
             bottle.response.set_cookie("user_auth", "placeholder")
+            if question.admin():
+                return redirect('/admin')
             return redirect('/panel')
         else:
             return function(error=question.getError(), data=kwg.data)
