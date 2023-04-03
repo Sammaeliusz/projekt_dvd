@@ -20,10 +20,34 @@
 </head>
 <body>
     <!-- MENU -->
-    <div class="nav">
-        <button class="tablinks" onclick="">Nazwa/Logo firmy</button>
-        <a href="zbiory.php"><button>Zbiory</button></a>
-        <a href="uzytkownicy.php"><button>Użytkownicy</button></a>
+    <div class="navholder" id="navhold">
+        <div class="navbar">
+            <div class="right">
+                <div class="tablink">
+                    <a><button class="tabbutt" onclick="userclick()"><img src="static/images/proba.png" class="userclick"></button></a>
+                </div>
+                <div class="tablink">
+                    <a href="#"><button class="tabbutt" onclick="">FAQ</button></a>
+                </div>
+                <div class="tablink">
+                    <a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
+                </div>
+                <div class="tablink">
+                    <a href="zbiory"><button class="tabbutt" onclick="">Zbiory</button></a>
+                </div>
+                <div class="tablink">
+                    <a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
+                </div>
+            </div>
+            <div class="left">
+                <div class="tablink">
+                    <a href="#"><button class="tabbutt" onclick="">______________________________</button></a>
+                </div>
+                <div class="tablink">
+                    <a href="#"><button class="tabbutt" onclick="">O</button></a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Intro -->
