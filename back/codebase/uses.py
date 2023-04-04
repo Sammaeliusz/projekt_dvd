@@ -89,8 +89,8 @@ class sqlAnswer:
         return not self.isInfo() and self.hasData()
 
     def getBool(self) -> bool:
-        if isinstance(self.data, bool):
-            return self.data
+        if self.data[0]==1:
+            return True
         else:
             return False
             

@@ -231,7 +231,14 @@ class SQL:
         else:
             self.__log__(-200)
         return sqlAnswer(self.__codes__[-200])
-
+    def all_movie(self) -> sqlAnswer:
+        if(cursor:=self.cursor()):
+            answer = self.select(cursor, f"SELECT * from `filmy`")
+            cursor.close()
+            return sqlAnswer(answer)
+        else:
+            self.__log__(-200)
+        return sqlAnswer(self.__codes__[-200])
     def user_finder(self, user_id:int) -> sqlAnswer:
         if(cursor:=self.cursor()):
             answer = self.select(cursor, f"SELECT * from `uzytkownicy` where id_user = {user_id}")
@@ -288,14 +295,14 @@ class SQL:
             return sqlAnswer(self.__codes__[-200])
     def getStatus(self, id:int) ->sqlAnswer:
             if(cursor:=self.cursor()):
-                answer = self.select(cursor, f"Select status from uzytkownicy where id = {id}")
+                answer = self.select(cursor, f"Select status from uzytkownicy where id_user = {id}")
                 cursor.close()
                 return sqlAnswer(answer)
             else:
                 self.__log__(-200)
     def admin(self, id:int) -> sqlAnswer:
         if(cursor:=self.cursor()):
-            answer = self.select(cursor, f"Select czy_admin from uzytkownicy where id = {id}")
+            answer = self.select(cursor, f"Select czy_admin from uzytkownicy where id_user = {id}")
             cursor.close()
             return sqlAnswer(answer)
         else:
