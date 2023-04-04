@@ -12,6 +12,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
         print(us_id)
         user = sql.user_finder(us_id)
         if not user.isInfo():
+            print(user.list())
             bottle.response.set_cookie('user', str(f"{user.list()[1]}|{user.list()[2]}|{user.list()[3]}"))
             rented = sql.movies_rented(us_id)
             if not rented.isInfo() and rented.hasData():

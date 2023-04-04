@@ -23,24 +23,29 @@ class Struct:
 
 class sqlAnswer:
     def __init__(self, data, base=False):
-        if isinstance(data, list) and len(data) > 0:
-            if isinstance(data[0], bool):
+        self.data = [None]
+        for i in data:
+            if isinstance(data, list) and len(data) > 0:
+                if isinstance(i, bool):
+                    if data:
+                        self.data = i[0]
+                    else:
+                        self.data = base
+                elif isinstance(i, list) and len(data) > 0:
+                    if self.data[0]==None:
+                        self.data=[[y for y in x] for x in data]
+                    else:
+                        self.data.append([[y for y in x] for x in data])
+                else:
+                    if isinstance(i, tuple):
+                        self.data=([x for x in i])
+                    else:
+                        self.data=([x for x in data])
+            else:
                 if data:
-                    self.data = data[0][0]
+                    self.data = data
                 else:
                     self.data = base
-            elif isinstance(data[0], list) and len(data) > 0:
-                self.data = [[y for y in x] for x in data]
-            else:
-                if isinstance(data[0], tuple):
-                    self.data = [x for x in data[0]]
-                else:
-                    self.data = [x for x in data]
-        else:
-            if data:
-                self.data = data
-            else:
-                self.data = base
 
     def struct(self):
         return Struct({'data':self.data})

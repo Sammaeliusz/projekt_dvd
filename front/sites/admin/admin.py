@@ -18,9 +18,8 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
      print(ad.list())
      if ad.getBool():
           am = sql.all_movie()
-          bm = am.list()
           k = 0
-          while isinstance(bm, list):
+          for bm in am.list():
                print(bm)
                film_table += f"""
                     <tr>
@@ -35,7 +34,6 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                          <td><button>Usuń film</button></td>
                     </tr>
                     """
-               bm = am.list()
                k+=1
           nid = k
           film_table += f"""
