@@ -11,17 +11,19 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                <td><button>Banuj</button></td>
           </tr>
           """
-     film_table = ""
-     user_table = ""
+     film_tab = ""
+     user_tab = ""
      us_id = bottle.request.get_cookie("id")
      ad = sql.admin(us_id)
      print(ad.list())
-     if ad.getBool():
+     if ad:
           am = sql.all_movie()
           k = 0
           for bm in am.list():
-               print(bm)
-               film_table += f"""
+               print(film_tab)
+               if bm == None:
+                    break
+               film_tab += f"""
                     <tr>
                          <td>{bm[0]}</td>
                          <td><input type="text" name="tytul" id="" value={bm[1]}></td>
@@ -36,7 +38,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                     """
                k+=1
           nid = k
-          film_table += f"""
+          film_tab += f"""
           <tr>
                <td>{nid}</td>
                <td><input type="text" name="tytul" id="" value=></td>
@@ -48,6 +50,6 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                <td><button>Dodaj film</button></td>
           </tr>
           """  
-          return function(user="Admin", film_table=film_table, user_table=user_table)
+          return function(user="Admin", film_table=film_tab, user_table=user_tab)
      else:
           return redirect('/panel')

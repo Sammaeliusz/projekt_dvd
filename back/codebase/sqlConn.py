@@ -65,15 +65,7 @@ class SQL:
             return cursor.fetchall()
         else:
             return False
-
-    def distable(self, data:list) -> list:
-        if len(data) == 1:
-            if len(data[0]) == 1:
-                return data[0][0]
-            else:
-                return data[0]
-        return [i[0] if len(i) == 1 else i for i in data]
-
+        
     def return_id(self, data:list) -> list:
         return [i[0] for i in data]
 

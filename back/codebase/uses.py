@@ -22,35 +22,44 @@ class Struct:
         return True if attr in self.__dict__.keys() else False
 
 class sqlAnswer:
-    def __init__(self, data, base=False):
-        self.data = [None]
-        for i in data:
-            if isinstance(data, list) and len(data) > 0:
-                if isinstance(i, bool):
-                    if data:
-                        self.data = i[0]
-                    else:
-                        self.data = base
-                elif isinstance(i, list) and len(data) > 0:
-                    if self.data[0]==None:
-                        self.data=[[y for y in x] for x in data]
-                    else:
-                        self.data.append([[y for y in x] for x in data])
-                else:
-                    if isinstance(i, tuple):
-                        self.data=([x for x in i])
-                    else:
-                        self.data=([x for x in data])
+    def __init__(self, data:list, base=False):
+        if isinstance(data, bool):
+            self.data+=data
+        elif len(data) == 1:
+            if isinstance(data[0], (list, tuple)):
+                self.data += self.__init__(list(data[0]), base=True)
+            elif base:
+                self.data += data[0]
             else:
-                if data:
-                    self.data = data
-                else:
-                    self.data = base
+                self.data += data
+        elif len(data)>1:
+            data = list(data)
+            for x, y in enumerate(data):
+                if isinstance(data[x], (list, tuple)):
+                    data[x] = self.__init__(y, base=True)
+            self.data =  data
+        else:
+            self.data=False
+    def distable(self, data:list, re=False) -> list:
+        if len(data) == 1:
+            if isinstance(data[0], (list, tuple)):
+                return distable(self, list(data[0]), base=True)
+            elif re:
+                return data[0]
+            else:
+                return data
+        elif len(data)>1:
+            data = list(data)
+            for x, y in enumerate(data):
+                if isinstance(data[x], (list, tuple)):
+                    data[x] = distable(self, y, re=True)
+            return data
 
     def struct(self):
         return Struct({'data':self.data})
 
     def list(self):
+        print(self.data)
         return self.data if isinstance(self.data, list) else [self.data]
 
     def getId(self) -> int:
@@ -92,10 +101,3 @@ class sqlAnswer:
 
     def isUsefull(self) -> bool:
         return not self.isInfo() and self.hasData()
-
-    def getBool(self) -> bool:
-        if self.data[0]==1:
-            return True
-        else:
-            return False
-            
