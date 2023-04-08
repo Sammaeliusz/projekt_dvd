@@ -14,6 +14,16 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
           if data != None:
                data = data.split(";")
                oper = data.pop()
+               img = data.pop()
+               if oper == "mod":
+                    sql.movie_change(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+                    return redirect('/admin')
+               elif oper == "add":
+                    sql.movie_add(data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+                    return redirect('/admin')
+               elif oper == "del":
+                    sql.movie_delete(data[0])
+                    return redirect('/admin')
                print(data)
                print(oper)
           for bm in am.getList():
@@ -22,13 +32,13 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                     break
                film_tab += f"""
                     <tr>
-                         <td>{bm[0]}</td>
+                         <td><input type="number" class="film{bm[0]}"name="id" hidden value="{bm[0]}">{bm[0]}</td>
                          <td><input type="text" class="film{bm[0]}" name="tytul" id="" value="{bm[1]}"></td>
                          <td><input type="text" class="film{bm[0]}" name="gatunek" value="{bm[2]}"></td>
-                         <td><input type="text" class="film{bm[0]}" name="kat_wiek" value="{bm[3]}"></td>
+                         <td><input type="number" class="film{bm[0]}" name="kat_wiek" value="{bm[3]}"></td>
                          <td><input type="text" class="film{bm[0]}" name="rezyser" value="{bm[4]}"></td>
-                         <td><input type="text" class="film{bm[0]}" name="rok_prod" value="{bm[5]}"></td>
-                         <td><input type="text" class="film{bm[0]}" name="ilosc" value="{bm[6]}"></td>
+                         <td><input type="number" class="film{bm[0]}" name="rok_prod" value="{bm[5]}"></td>
+                         <td><input type="number" class="film{bm[0]}" name="ilosc" value="{bm[6]}"></td>
                          <td><textarea name="opis" id="" class="film{bm[0]}" cols="50" rows="2">{bm[7]}</textarea></td>
                          <td><img src={fil} width="50" height="75"><input type="file" name="obraz" class="film{bm[0]}" id="" accept=".png"></td>
                          <td><button class="filmmod" id="mod{bm[0]}">Modyfikuj film</button></td>
@@ -39,13 +49,13 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
           nid = k+1
           film_tab += f"""
           <tr>
-               <td>{nid}</td>
+               <td><input type="number" class="film{nid}"name="id" hidden value="{nid}">{nid}</td>
                <td><input type="text" class="film{nid}"name="tytul" id="" value=></td>
                <td><input type="text" class="film{nid}"name="gatunek" value=></td>
-               <td><input type="text" class="film{nid}"name="kat_wiek" value=></td>
+               <td><input type="number" class="film{nid}"name="kat_wiek" value=></td>
                <td><input type="text" class="film{nid}"name="rezyser" value=></td>
-               <td><input type="text" class="film{nid}"name="rok_prod" value=></td>
-               <td><input type="text" class="film{nid}"name="ilosc" value=></td>
+               <td><input type="number" class="film{nid}"name="rok_prod" value=></td>
+               <td><input type="number" class="film{nid}"name="ilosc" value=></td>
                <td><textarea name="opis" class="film{nid}"id="" cols="50" rows="2"></textarea></td>
                <td><input type="file" class="film{nid} name="obraz" id="" accept=".png"></td>
                <td><button class="filmadd" id="add{nid}">Dodaj film</button></td>
