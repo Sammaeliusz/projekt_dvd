@@ -16,6 +16,35 @@
         su.visibility = "hidden";
         su.height = "0";
    }
+   function datasend(){
+        dataid = event.target.id;
+        datafield = document.querySelectorAll(".film"+dataid[3]);
+        data = ""
+        datafield.forEach(e => {
+            data += e.value;
+            data += ";";
+        })
+        data+=dataid.substr(0, 3)
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', '/admin')
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+        // send request
+        fd='data='+data
+        xhr.send(fd)
+             
+   }
+   window.onload = function (){
+        ml = document.querySelectorAll(".filmmod");
+        dl = document.querySelectorAll(".filmdel");
+        ml.forEach(element => {
+            element.addEventListener("click", datasend)
+        });
+        dl.forEach(element => {
+            element.addEventListener("click", datasend)
+        });
+        document.querySelector(".filmadd").addEventListener("click", datasend)
+   }
 </script>
 </head>
 <body>
@@ -89,6 +118,8 @@
                     <th>Reżyser</th>
                     <th>Rok Produkcji</th>
                     <th>Ilość</th>
+                    <th>Opis</th>
+                    <th>Zdjęcie</th>
                     <th>Modyfikuj:/Dodaj:</th>
                     <th>Usuń:</th>
                 </tr>
