@@ -215,7 +215,9 @@ class SQL:
     def login_user(self, mail:str, password:str) -> Answer:
         
         if(cursor:=self.cursor()):
-            if not bool(answer:=Answer(self.select(cursor, f"SELECT id FROM `user` WHERE (mail LIKE '{self.protection(mail)}') AND (password LIKE '{self.protection(password)}');"))):
+            answer = Answer(self.select(cursor, f"SELECT id FROM `user` WHERE (mail LIKE '{self.protection(mail)}') AND (password LIKE '{self.protection(password)}');"))
+            print(answer.getList())
+            if not answer.isUsefull():
                 cursor.close()
                 self.__log__(-4, notes=f"wrond password or/and mail provided -> pass:{password} mail:{mail}")
                 return Answer(self.__codes__[-4])
@@ -238,17 +240,23 @@ class SQL:
 
     #changes data of a user
     def userdata_change(self, user_id:int, username:str, mail:str, password:str) -> Answer:
-        
+        print(self.userdata_check("mail", mail).getBool())
         if(cursor:=self.cursor()):
+            if mail=="":
+                mail = self.user_finder(user_id).getList()[2]
+            if username=="":
+                username = self.user_finder(user_id).getList()[1]
+            if password=="":
+                password = self.user_finder(user_id).getList()[3]
             if not self.mail_check(mail):
                 self.__log__(-1, notes=f"wrong mail provided -> {mail}")
                 return Answer(self.__codes__[-1])
             
-            elif not self.password_check(password):
+            elif not self.password_check(password) and password != "":
                 self.__log__(-2, notes=f"wrong password provided -> {password}")
                 return Answer(self.__codes__[-2])
             
-            elif not self.userdata_check("mail", mail).getBool():
+            elif self.userdata_check("mail", mail).getBool():
                 self.__log__(-3, notes=f"user data change with name -> {username}")
                 return Answer(self.__codes__[-3])
             
@@ -256,6 +264,7 @@ class SQL:
                 self.__log__(-5, notes=f"inactive user id -> {user_id}")
                 return Answer(self.__codes__[-5])
             
+
             cursor.execute(f"UPDATE `user` SET username = '{self.protection(username)}', mail = '{self.protection(mail)}', password = '{self.protection(password)}' WHERE id = {user_id};")
             self.connection.commit()
             cursor.close()
@@ -308,7 +317,7 @@ class SQL:
         
         if(int(production)>1995):
             if(cursor:=self.cursor()):
-                cursor.execute(f"INSERT INTO `movie`  VALUES (NULL, '{self.protection(title)}', '{self.protection(tags)}', {age}, '{self.protection(director)}', {production}, {stock}, '{self.protection(description)}');")
+                cursor.execute(f"INSERT INTO `movie`  VALUES (NULL, '{self.protection(title)}', '{self.protection(tags)}', {age}, '{self.protection(director)}', {production}, {stock}, 1, '{self.protection(description)}');")
                 self.connection.commit()
                 cursor.close()
                 self.__log__(-1010, notes=f"movie data -> title:{self.protection(title)} tags:{self.protection(tags)} age:{age} director:{self.protection(director)} production_year:{production}")

@@ -2,7 +2,7 @@
 -2:bad pass:ERROR
 -3:simmilar data found:ERROR
 -4:wrong pass:ERROR
--5:user inactive:ERROR
+-5:user have been baned:ERROR
 -6:user does not exists:ERROR
 -7:too early:ERROR
 -8:bad table:ERROR
