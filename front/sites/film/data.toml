@@ -1,6 +1,10 @@
 [main]
-local = "film/film.php"
+local = "film/film.html"
 name = "movie Page"
-route = "/filmy"
+route = "/film"
 
 [data]
+
+[script]
+local = "/film.py"
+name = "film"

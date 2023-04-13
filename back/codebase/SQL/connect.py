@@ -363,9 +363,6 @@ class SQL:
 
 
     #Changes data of a movie
-    #
-    #   TO BE UPDATED
-    #
     def movie_change(self, movie_id:int, title:str, genre:str, age:int, director:str, production:int, stock:int, desctiption:str) -> Answer:
         if(cursor:=self.cursor()):
             cursor.execute(f"UPDATE `movie` SET title = '{self.protection(title)}', tags = '{self.protection(genre)}', age = {age}, director = '{self.protection(director)}', production = {production}, stock={stock}, description='{self.protection(desctiption)}' WHERE id = {movie_id};")
@@ -381,7 +378,7 @@ class SQL:
     def movies_recent(self, amount:int) -> Answer:
         
         if(cursor:=self.cursor()):
-            ids = self.select(cursor, f"SELECT id FROM movie ORDER BY id DESC LIMIT {amount}")
+            ids = self.select(cursor, f"SELECT id FROM movie where on_stock=1 ORDER BY id DESC LIMIT {amount}")
             cursor.close()
             answer = []
             
@@ -399,7 +396,7 @@ class SQL:
     def movie_delete(self, movie_id:int) -> Answer:
         
         if(cursor:=self.cursor()):
-            cursor.execute(f"DELETE FROM `movie` WHERE id = {movie_id}")
+            cursor.execute(f"UPDATE movie SET on_stock=0 WHERE id={movie_id}")
             self.connection.commit()
             cursor.close()
             return Answer(True)
@@ -414,7 +411,9 @@ class SQL:
         if not table in ["movie", "user", "rent", "tags"]:
             self.__log__(-8, notes=f"not good table name")
             return Answer(self.__codes__[-8])
-        
+        if table == "movie":
+            table+=" where on_stock=1"
+        print(table)
         if(cursor:=self.cursor()):
             answer = self.select(cursor, f"SELECT * FROM {table}")
             cursor.close()
