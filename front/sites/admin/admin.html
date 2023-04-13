@@ -17,33 +17,59 @@
         su.height = "0";
    }
    function datasend(){
-        dataid = event.target.id;
-        datafield = document.querySelectorAll(".film"+dataid[3]);
+        dataids = event.target.id;
+        dataid="";
+        for(i = 3; i< dataids.length; i++){
+            dataid+=dataids[i];
+        }
+        console.log(dataid)
+        datafield = document.querySelectorAll(".film"+dataid);
         data = ""
         datafield.forEach(e => {
             data += e.value;
             data += ";";
         })
-        data+=dataid.substr(0, 3)
+        data+=dataids.substr(0, 3)
         const xhr = new XMLHttpRequest()
         xhr.open('POST', '/admin')
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
         // send request
         fd='data='+data
+        console.log(fd)
         xhr.send(fd)
-             
+   }
+   function ban(){
+        banid = event.target.id;
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', '/admin')
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+        // send request
+        fd='banid='+banid
+        console.log(fd)
+        xhr.send(fd)
    }
    window.onload = function (){
         ml = document.querySelectorAll(".filmmod");
         dl = document.querySelectorAll(".filmdel");
+        bu = document.querySelectorAll(".ban");
         ml.forEach(element => {
             element.addEventListener("click", datasend)
         });
         dl.forEach(element => {
             element.addEventListener("click", datasend)
         });
+        bu.forEach(element => {
+            element.addEventListener("click", ban)
+        });
         document.querySelector(".filmadd").addEventListener("click", datasend)
+   }
+   function checkCookie(){
+        if(document.cookie.search('redi')!=-1){
+            document.cookie = "red=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            location.reload();
+        }
    }
 </script>
 </head>
@@ -82,6 +108,7 @@
     <div class="content">
         <div class="intro">
             <h1>Witaj {{user}}</h1>
+            <button onclick="window.location.href = '/panel'"> Wróć do panelu użytkownika</button>
         </div>
         <div class="wybor">
             <h2>Co chcesz teraz zrobić?</h2>
@@ -133,6 +160,7 @@
     document.querySelector("#films").addEventListener("click", films);
     su = document.querySelector("#list_u").style;
     sf = document.querySelector("#list_f").style;
+    window.setInterval(checkCookie, 1000);
  </script>
 </body>
 </html>
