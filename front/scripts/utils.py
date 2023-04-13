@@ -3,8 +3,10 @@ from sys import path as system_path
 
 from io import BytesIO
 from datetime import date, timedelta
-from codebase.sqlConn import SQL
-from codebase.uses import Struct
+from codebase.SQL.connect import SQL
+from codebase.Tools.structure import Struct
+from codebase.SQL.answer import Answer
+from codebase.Error.error import Error, Info
 
 def redirect(location:str) -> bottle.Response:
     try:

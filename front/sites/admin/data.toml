@@ -1,5 +1,5 @@
 [main]
-local = "admin/admin.php"
+local = "admin/admin.html"
 name = "admin Page"
 route = "/admin"
 

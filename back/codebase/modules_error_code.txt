@@ -1,8 +1,0 @@
--1 - podany email jest niepoprawny
--2 - podane hasło nie spełni wymagań
--3 - podane dane już znajdują się w bazie danych
--4 - podane hasło nie pasuje do podanego loginu
--5 - konto nie jest aktywne
--6 - uzytkownik o takim id nie istnieje
--7 - podany rok jest wcześniejszy niż opracowanie standardu dvd
--8 - podana tablica nie znajduje się w bazie

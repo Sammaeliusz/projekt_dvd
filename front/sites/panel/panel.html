@@ -37,7 +37,7 @@
 			}
 			function zal(){
 			let x =document.cookie;
-			if (x.includes("zal=yes;"))
+			if (x.includes("zal=yes"))
 				alert("Masz zaległe filmy!");}
 			function actual(){
 			document.getElementById("inrow").style.transform = "translatex(25%)";
@@ -118,6 +118,7 @@
 						<form action="" method="post">
 							<button class="bob" type="submit" name="logout" value="Wyloguj">Wyloguj</button>
 						</form>
+						{{!admin}}
 					</div>
 				</div>
 			</div>
@@ -139,7 +140,7 @@
 										<th class="data"><p>Okres wypożyczenia</p></th>
 										<th class="iss"><p>Zaległy?</p></th>
 									</tr>
-									{{swyp}}
+									{{!swyp}}
 								</table>
 							</div>
 						</div>
@@ -150,7 +151,7 @@
 										<th class="name">Nazwa</th>
 										<th class="data">Okres wypożyczenia</th>
 									</tr>
-									{{swypp}}
+									{{!swypp}}
 								</table>
 							</div>
 						</div>
@@ -158,5 +159,6 @@
 				</div>
 			</div>
 		</div>
+		<script> zal() </script>
 	</body>
 </html>
