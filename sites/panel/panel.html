@@ -1,0 +1,164 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+		<link rel="stylesheet" href="/static/panel/basic.css">
+		<script>
+			function userclick(){
+				if(document.cookie.search('id')!=-1){
+					window.location.href = '/panel'
+				}else{
+					window.location.href = '/logowanie'
+				}
+			}
+			function leftmenu(){
+				if(!lmb){
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "0px"
+					lmb = true;
+				}
+				else{
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "-310px"
+					lmb = false;
+				}
+			}
+			var lmb = false;
+			window.onload = function (){
+				console.log("keu");
+				document.body.onscroll = function () {
+						var nb = document.getElementById("navhold")
+						var lm = document.getElementById("leftmenu")
+						nb.style.top = window.scrollY
+						lm.style.top = "calc("+window.scrollY+"px + 50px)"
+					}}
+			function Zmiana() {
+				location.href = './zmiana'
+			}
+			function zal(){
+			let x =document.cookie;
+			if (x.includes("zal=yes"))
+				alert("Masz zaległe filmy!");}
+			function actual(){
+			document.getElementById("inrow").style.transform = "translatex(25%)";
+			document.getElementById("actual").style.transform = "translatex(0%)";
+			document.getElementById("history").style.transform = "translatex(5%)"
+			}
+			function history(){
+			document.getElementById("inrow").style.transform = "translatex(-25%)";
+			document.getElementById("actual").style.transform = "translatex(-5%)";
+			document.getElementById("history").style.transform = "translatex(0%)"
+			}
+		</script>
+	</head>
+	<body>
+		<!-- MENU -->
+		<div class="navholder" id="navhold">
+			<div class="navbar">
+				<div class="right">
+					<div class="tablink">
+						<a><button class="tabbutt" onclick="userclick()"><img src="static/images/proba.png" class="userclick"></button></a>
+					</div>
+					<div class="tablink">
+						<a href="#"><button class="tabbutt" onclick="">FAQ</button></a>
+					</div>
+					<div class="tablink">
+						<a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
+					</div>
+					<div class="tablink">
+						<a href="zbiory"><button class="tabbutt" onclick="">Zbiory</button></a>
+					</div>
+					<div class="tablink">
+						<a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
+					</div>
+				</div>
+				<div class="left">
+					<div class="tablink">
+						<a href="#"><button class="tabbutt" onclick="">______________________________</button></a>
+					</div>
+					<div class="tablink">
+						<a href="#"><button class="tabbutt" onclick="">O</button></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="leftmenu" id="leftmenu">
+			<div class="lml">
+				<div class="lmltab">
+					<p>Menu</p>
+				</div>
+				<div class="lmltab">
+					<a><button>Panel użytkownika</button></a>
+				</div>
+				<div class="lmltab">
+					<a><button>Panel administratora</button></a>
+				</div>
+			</div>
+			<div class="lmb">
+				<button onclick="leftmenu()">n</button>
+			</div>
+		</div>
+		<div class="topmain">
+			
+			<div class="mwl">
+				<div class="info">
+					<table>
+						<tr>
+							<td>Nazwa użytkownika: </td>
+							<td class="answer">{{user[1]}}</td>
+						</tr>
+						<tr>
+							<td>Adres e-mail: </td>
+							<td class="answer">{{user[2]}}</td>
+						</tr>
+					</table>
+					<div class="butts">
+						<button class="bob" onclick="Zmiana()">Zmień dane</button>
+						<form action="" method="post">
+							<button class="bob" type="submit" name="logout" value="Wyloguj">Wyloguj</button>
+						</form>
+						{{!admin}}
+					</div>
+				</div>
+			</div>
+			<div class="mbr">
+				<div class="intro">
+					<h1>Cześć, {{user[1]}}! Dobrze cię znów widzieć :)</h1>
+				</div>
+				<div class="list">
+					<div class="choice">
+						<button onclick="actual()"><<< Aktualnie wypożyczone</button>
+						<button onclick="history()">Historia wypożyczania >>></button>
+					</div>
+					<div class="inrow" id="inrow">
+						<div class="rent" id="actual">
+							<div class="dataTable">
+								<table>
+									<tr class="position">
+										<th class="name"><p>Nazwa</p></th>
+										<th class="data"><p>Okres wypożyczenia</p></th>
+										<th class="iss"><p>Zaległy?</p></th>
+									</tr>
+									{{!swyp}}
+								</table>
+							</div>
+						</div>
+						<div class="rent" id="history">
+							<div class="dataTable">
+								<table>
+									<tr class="position">
+										<th class="name">Nazwa</th>
+										<th class="data">Okres wypożyczenia</th>
+									</tr>
+									{{!swypp}}
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script> zal() </script>
+	</body>
+</html>

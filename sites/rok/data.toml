@@ -1,0 +1,6 @@
+[main]
+local = "rok/rok.php"
+name = "year Page"
+route = "/rok"
+
+[data]

@@ -1,0 +1,10 @@
+[main]
+local = "panel/panel.html"
+name = "panel Page"
+route = "/panel"
+
+[data]
+
+[script]
+local = "/panel.py"
+name = "panel"

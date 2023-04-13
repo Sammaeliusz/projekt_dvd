@@ -1,0 +1,10 @@
+[main]
+local = "index/index.html"
+name = "main Page"
+route = "/"
+
+[data]
+
+[script]
+local = "/index.py"
+name = "index"
