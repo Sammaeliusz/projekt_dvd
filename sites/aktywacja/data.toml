@@ -1,6 +1,0 @@
-[main]
-local = "aktywacja/aktywacja.php"
-name = "activate Page"
-route = "/aktywacja"
-
-[data]

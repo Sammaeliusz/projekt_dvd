@@ -1,6 +1,0 @@
-[main]
-local = "reset/reset.php"
-name = "reset Page"
-route = "/reset"
-
-[data]
