@@ -3,9 +3,10 @@ from bottle import url
 
 #from codebase.modules import *
 #from codebase.sitescripts import funclist as fl
-from codebase.sqlConn import SQL
-import codebase.uses as Uses
-from codebase.sites import Site
+from codebase.SQL.connect import SQL
+from codebase.SQL.answer import Answer
+from codebase.Tools.structure import Struct
+from codebase.Tools.sites import Site
 
 from abc import ABC, abstractmethod
 from datetime import date, timedelta
@@ -20,7 +21,11 @@ session_opts = {
     }
 
 class Application(bottle.Bottle):
+
     route_list = []
+    SQL_Connection: SQL
+    frontD: str
+    
     def __init__(self, sql:SQL,secret="", static_folder="./../front/data", template_folder="./../front/sites", front_folder="./../front", old_setup=False):
         super()
         bottle.debug(True)
@@ -39,10 +44,15 @@ class Application(bottle.Bottle):
         else:
             self.setup(template_folder)
 
+
     def addroute(self, route:callable):
         self.route_list.append(route)
+
+        
     def setSecret(self, secret_key):
         self.secret = secret_key
+
+        
     def old_setup(self):
         self.addroute(Create.bottle.route(self, '/',               Create.function.withTemplate("index.php",          menubar=Create.html.standard.menubar()), "index"))
         self.addroute(Create.bottle.route(self, '/panel',          Create.function.withTemplate("panel.php",          wrapper=fl['panel'], menubar=Create.html.standard.menubar()), 'panel'))
@@ -54,6 +64,7 @@ class Application(bottle.Bottle):
         self.addroute(Create.bottle.route(self, '/rezyser',        Create.function.withTemplate("rezyser.php",        menubar=Create.html.standard.menubar()), "rezyser"))
         self.addroute(Create.bottle.route(self, '/rok',            Create.function.withTemplate("rok.php",            menubar=Create.html.standard.menubar()), "rok"))
         self.addroute(Create.bottle.route(self, '/zbiory',         Create.function.withTemplate("zbiory.php",         wrapper=fl['zbiory'], menubar=Create.html.standard.menubar()), "zbiory"))
+
 
     def setup(self, path:str):
         self.sites = []
@@ -140,8 +151,7 @@ class Create(ABC):
         class standard(ABC):
             @abstractmethod
             def menubar():
-                with open("./../front/standard/menubar.txt", 'rb') as f:
-                    return f.read().decode("utf-8")
+                return "deprived"
 if __name__=="__main__":
     app = Application(template_folder='/projekt/front/templates/', static_folder='/projekt/front/data/')
     app.setSecret(b'dgf;hpo4[]t,drgtp[e45.g')
