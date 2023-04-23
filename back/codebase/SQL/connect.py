@@ -9,6 +9,7 @@ from datetime import datetime as datef
 from ..SQL.answer import Answer
 from ..Error.error import MessageCreator, Error, Info
 from ..Tools.structure import Struct
+from ..Tools.log import loggingSession as logSes
 
 
 #SQL class
@@ -25,19 +26,20 @@ class SQL:
 
     #Return to the stream message
     def __log__(self, code:int, notes=""):
-        self.stream("[{1}] {2} {0} {3}".format(*[self.__codes__[code].getMessage(), self.__codes__[code].getType(), datef.now().strftime("us:%f => %H:%M:%Ss >>>"), f"::: {notes}\n" if len(notes) > 0 else "\n"]))
+        self.logSes.log(Struct({"type":self.__codes__[code].getType(), "message":self.__codes__[code].getMessage(), "notes":f"::: {notes}" if len(notes) > 0 else ""}))
 
 
     #initializer
     def __init__(self, username:str, password:str, hostname:str, databaseName:str, stream=stdout.write, **data):
-        
+
         self.username = username
         self.password = password
         self.hostname = hostname
         self.dbName = databaseName
-        self.stream = stream
         self.connection = mysql()
         self.established = False
+
+        self.logSes = logSes('SQL', 10, "[{type}] {message} {notes}", stream, Struct({"type":"ERROR", "message":"no message", "notes":""}))
 
         with open('codebase/Error/sql.error', 'r') as f:
             y = [y.split(':') for y in f.readlines()]
@@ -216,7 +218,6 @@ class SQL:
         
         if(cursor:=self.cursor()):
             answer = Answer(self.select(cursor, f"SELECT id FROM `user` WHERE (mail LIKE '{self.protection(mail)}') AND (password LIKE '{self.protection(password)}');"))
-            print(answer.getList())
             if not answer.isUsefull():
                 cursor.close()
                 self.__log__(-4, notes=f"wrond password or/and mail provided -> pass:{password} mail:{mail}")
@@ -240,23 +241,17 @@ class SQL:
 
     #changes data of a user
     def userdata_change(self, user_id:int, username:str, mail:str, password:str) -> Answer:
-        print(self.userdata_check("mail", mail).getBool())
+        
         if(cursor:=self.cursor()):
-            if mail=="":
-                mail = self.user_finder(user_id).getList()[2]
-            if username=="":
-                username = self.user_finder(user_id).getList()[1]
-            if password=="":
-                password = self.user_finder(user_id).getList()[3]
             if not self.mail_check(mail):
                 self.__log__(-1, notes=f"wrong mail provided -> {mail}")
                 return Answer(self.__codes__[-1])
             
-            elif not self.password_check(password) and password != "":
+            elif not self.password_check(password):
                 self.__log__(-2, notes=f"wrong password provided -> {password}")
                 return Answer(self.__codes__[-2])
             
-            elif self.userdata_check("mail", mail).getBool():
+            elif not self.userdata_check("mail", mail).getBool():
                 self.__log__(-3, notes=f"user data change with name -> {username}")
                 return Answer(self.__codes__[-3])
             
@@ -264,7 +259,6 @@ class SQL:
                 self.__log__(-5, notes=f"inactive user id -> {user_id}")
                 return Answer(self.__codes__[-5])
             
-
             cursor.execute(f"UPDATE `user` SET username = '{self.protection(username)}', mail = '{self.protection(mail)}', password = '{self.protection(password)}' WHERE id = {user_id};")
             self.connection.commit()
             cursor.close()
@@ -317,7 +311,7 @@ class SQL:
         
         if(int(production)>1995):
             if(cursor:=self.cursor()):
-                cursor.execute(f"INSERT INTO `movie`  VALUES (NULL, '{self.protection(title)}', '{self.protection(tags)}', {age}, '{self.protection(director)}', {production}, {stock}, 1, '{self.protection(description)}');")
+                cursor.execute(f"INSERT INTO `movie`  VALUES (NULL, '{self.protection(title)}', '{self.protection(tags)}', {age}, '{self.protection(director)}', {production}, {stock}, '{self.protection(description)}');")
                 self.connection.commit()
                 cursor.close()
                 self.__log__(-1010, notes=f"movie data -> title:{self.protection(title)} tags:{self.protection(tags)} age:{age} director:{self.protection(director)} production_year:{production}")
@@ -372,6 +366,9 @@ class SQL:
 
 
     #Changes data of a movie
+    #
+    #   TO BE UPDATED
+    #
     def movie_change(self, movie_id:int, title:str, genre:str, age:int, director:str, production:int, stock:int, desctiption:str) -> Answer:
         if(cursor:=self.cursor()):
             cursor.execute(f"UPDATE `movie` SET title = '{self.protection(title)}', tags = '{self.protection(genre)}', age = {age}, director = '{self.protection(director)}', production = {production}, stock={stock}, description='{self.protection(desctiption)}' WHERE id = {movie_id};")
@@ -387,7 +384,7 @@ class SQL:
     def movies_recent(self, amount:int) -> Answer:
         
         if(cursor:=self.cursor()):
-            ids = self.select(cursor, f"SELECT id FROM movie where on_stock=1 ORDER BY id DESC LIMIT {amount}")
+            ids = self.select(cursor, f"SELECT id FROM movie ORDER BY id DESC LIMIT {amount}")
             cursor.close()
             answer = []
             
@@ -405,7 +402,7 @@ class SQL:
     def movie_delete(self, movie_id:int) -> Answer:
         
         if(cursor:=self.cursor()):
-            cursor.execute(f"UPDATE movie SET on_stock=0 WHERE id={movie_id}")
+            cursor.execute(f"DELETE FROM `movie` WHERE id = {movie_id}")
             self.connection.commit()
             cursor.close()
             return Answer(True)
@@ -420,9 +417,7 @@ class SQL:
         if not table in ["movie", "user", "rent", "tags"]:
             self.__log__(-8, notes=f"not good table name")
             return Answer(self.__codes__[-8])
-        if table == "movie":
-            table+=" where on_stock=1"
-        print(table)
+        
         if(cursor:=self.cursor()):
             answer = self.select(cursor, f"SELECT * FROM {table}")
             cursor.close()

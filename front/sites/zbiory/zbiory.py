@@ -5,7 +5,7 @@ from utils import *
 
 def wrapper(function:callable, sql:SQL, **kwg) -> callable:
     
-    movies = sql.movies_recent(8)
+    movies = sql.movies_recent(99999)
     
     if movies.isUsefull():
         answer = [Struct({

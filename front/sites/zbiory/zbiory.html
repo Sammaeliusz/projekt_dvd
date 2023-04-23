@@ -2,7 +2,7 @@
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-		<link rel="stylesheet" href="static/film/basic.css">
+		<link rel="stylesheet" href="static/zbiory/basic.css">
 		<script>
 		function userclick(){
 			if(document.cookie.search('id')!=-1){
@@ -90,23 +90,41 @@
 			
 			<div class="mwl">
 				<div class="intro">
-					<h2>{{movie[1]}}</h2>
+					<h2>Sprawdź nasze najnowsze pozycje!</h2>
 				</div>
 				<div class="movies">
 					<div class="cards">
-						<p>{{movie[7]}}</p>
-						<p>kategorie: {{movie[2]}}</p>
-						<p>kategoria wiekowa: {{movie[3]}}+</p>
-						<p>reżyser: {{movie[4]}}</p>
-						<p>rok wydania: {{movie[5]}}</p>
-						<p>na stanie: {{movie[6]}}</p>
+					% for x in movies:
+						<form action="/film" method="get">
+							<button name="mid" value="{{x.id}}">
+								<div class="buthold">
+									<div class="imghold"><img src={{x.file}} alt="{{x.name}}"></div>
+									<table>
+										<tr>
+											<th>Nazwa</th>
+											<td>{{x.name}}</td>
+										</tr>
+										<tr>
+											<th>Reżyser</th>
+											<td>{{x.director}}</td>
+										</tr>
+										<tr>
+											<th>Categories</th>
+											<td>{{x.categories}}</td>
+										</tr>
+										<tr>
+											<th>Rok produkcji</th>
+											<td>{{x.production}}</td>
+										</tr>
+									</table>
+								</div>
+							</button>
+						</form>
+					% end
 					</div>
 				</div>
 			</div>
 			<div class="mbr">
-				<div class="intro">
-					<img src="static/Filmy/{{movie[1].replace(' ', '-')}}.png">
-				</div>
 			</div>
 		</div>
 	</body>

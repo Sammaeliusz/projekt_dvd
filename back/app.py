@@ -23,6 +23,7 @@ session_opts = {
 class Application(bottle.Bottle):
 
     route_list = []
+    error_list = []
     SQL_Connection: SQL
     frontD: str
     
@@ -48,32 +49,33 @@ class Application(bottle.Bottle):
     def addroute(self, route:callable):
         self.route_list.append(route)
 
+    def adderror(self, error:callable):
+        self.error_list.append(error)
+
         
     def setSecret(self, secret_key):
         self.secret = secret_key
 
         
     def old_setup(self):
-        self.addroute(Create.bottle.route(self, '/',               Create.function.withTemplate("index.php",          menubar=Create.html.standard.menubar()), "index"))
-        self.addroute(Create.bottle.route(self, '/panel',          Create.function.withTemplate("panel.php",          wrapper=fl['panel'], menubar=Create.html.standard.menubar()), 'panel'))
-        self.addroute(Create.bottle.route(self, '/userclick',      Create.function.rawFunction(fl['userclick']), 'userclick'))
-        self.addroute(Create.bottle.route(self, '/logowanie',      Create.function.withTemplate("logowanie.php",      wrapper=fl['login'], menubar=Create.html.standard.menubar()), "login"))
-        self.addroute(Create.bottle.route(self, '/zmiana',         Create.function.withTemplate("zmiana.php",         wrapper=fl['zmiana'], menubar=Create.html.standard.menubar()), "zmiana"))
-        self.addroute(Create.bottle.route(self, '/rejestracja',    Create.function.withTemplate("rejestracja.php",    wrapper=fl['register'], menubar=Create.html.standard.menubar()), "register"))
-        self.addroute(Create.bottle.route(self, '/gatunek',        Create.function.withTemplate("kategorie.php",      menubar=Create.html.standard.menubar()), "gatunek"))
-        self.addroute(Create.bottle.route(self, '/rezyser',        Create.function.withTemplate("rezyser.php",        menubar=Create.html.standard.menubar()), "rezyser"))
-        self.addroute(Create.bottle.route(self, '/rok',            Create.function.withTemplate("rok.php",            menubar=Create.html.standard.menubar()), "rok"))
-        self.addroute(Create.bottle.route(self, '/zbiory',         Create.function.withTemplate("zbiory.php",         wrapper=fl['zbiory'], menubar=Create.html.standard.menubar()), "zbiory"))
-
+        pass
 
     def setup(self, path:str):
         self.sites = []
         for x in [f.path.replace('\\', '/') for f in scandir(path) if f.is_dir()]:
-            if x.split('/')[-1] not in ['Filmy']:
+            if x.split('/')[-1] not in ['Filmy','.Errors']:
                 self.sites.append(Create.Site(self.SQL_Connection, x, x.split('/')[-1], menubar=Create.html.standard.menubar()))
 
         for x in self.sites:
             self.addroute(Create.bottle.route(self, x.route, Create.function.withSite(x), x.name))
+
+        self.errors = []
+        path = path + '\\.Errors'.replace('\\', '/')
+        for x in [f.path.replace('\\', '/') for f in scandir(path) if f.is_dir()]:
+            self.errors.append(Create.Site(self.SQL_Connection, x, x.split('/')[-1]))
+
+        for x in self.errors:
+            self.adderror(Create.bottle.error(self, int(x.route), Create.function.withESite(x), x.name))
 
     def runApp(self, host="", port=8080, debug=False):
         bottle.run(host=host, port=port)
@@ -98,6 +100,11 @@ class Create(ABC):
             def f(*args, **kwargs):
                 return base_function(*args, **kwargs)
             return f
+        def error(app:bottle.Bottle, error:int, base_function:callable, *args, **kwargs) -> callable:
+            @bottle.error(error)
+            def f(*args, **kwargs):
+                return base_function(*args, **kwargs)
+            return f
         
         @abstractmethod
         def dynamicRoute(app:bottle.Bottle, route:str, base_function:callable,route_id:str, methods=['GET','POST'], *args, **kwargs) -> callable:
@@ -110,6 +117,11 @@ class Create(ABC):
         @abstractmethod
         def withSite(thisSite:Site, wrapper=(lambda n, **kwg: n(**kwg)), statuscode=200) -> callable:
             return lambda : wrapper(thisSite.Answer(statuscode))
+        
+        @abstractmethod
+        def withESite(thisSite:Site, wrapper=(lambda n, *args, **kwg: n(*args, **kwg))) -> callable:
+            return lambda *args, **kwargs: wrapper(thisSite.Answer(int(thisSite.route)))
+        
         @abstractmethod
         def withTemplate(template:str, wrapper=(lambda n: n()), **kwargs) -> callable:
             return lambda : wrapper(lambda **kwg : bottle.Response(body=bottle.template(template, **Create.usefull.MergeDict(kwargs, kwg)), headers = {'Content-Type': 'text/html'}, status_code = 200))
@@ -153,17 +165,4 @@ class Create(ABC):
             def menubar():
                 return "deprived"
 if __name__=="__main__":
-    app = Application(template_folder='/projekt/front/templates/', static_folder='/projekt/front/data/')
-    app.setSecret(b'dgf;hpo4[]t,drgtp[e45.g')
-
-    #''.join(choice(ascii_letters) for i in range(32))
-    app.addroute(Create.bottle.route(app, '/',               Create.function.withTemplate("index.php",          wrapper=index, menubar=Create.html.standard.menubar()), "index"))
-    app.addroute(Create.bottle.route(app, '/panel',          Create.function.withTemplate("panel.php",          wrapper=panel, menubar=Create.html.standard.menubar()), 'panel'))
-    app.addroute(Create.bottle.route(app, '/userclick',      Create.function.withFunction(userclick), 'userclick'))
-    app.addroute(Create.bottle.route(app, '/logowanie',      Create.function.withTemplate("logowanie.php",      wrapper=login, menubar=Create.html.standard.menubar()), "login"))
-    app.addroute(Create.bottle.route(app, '/zmiana',         Create.function.withTemplate("zmiana.php",         wrapper=zmiana, menubar=Create.html.standard.menubar()), "zmiana"))
-    app.addroute(Create.bottle.route(app, '/rejestracja',    Create.function.withTemplate("rejestracja.php",    wrapper=register, menubar=Create.html.standard.menubar()), "register"))
-    app.addroute(Create.bottle.route(app, '/gatunek',        Create.function.withTemplate("kategorie.php",      wrapper=gatunek, menubar=Create.html.standard.menubar()), "gatunek"))
-    app.addroute(Create.bottle.route(app, '/rezyser',        Create.function.withTemplate("rezyser.php",        wrapper=rezyser, menubar=Create.html.standard.menubar()), "rezyser"))
-    app.addroute(Create.bottle.route(app, '/rok',            Create.function.withTemplate("rok.php",            wrapper=rok, menubar=Create.html.standard.menubar()), "rok"))
-    app.addroute(Create.bottle.route(app, '/zbiory',         Create.function.withTemplate("zbiory.php",         wrapper=zbiory, menubar=Create.html.standard.menubar()), "zbiory"))
+    pass

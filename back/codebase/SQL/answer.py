@@ -99,7 +99,7 @@ class Answer:
             return self.data.getMessage()
 
     def isUsefull(self) -> bool:
-        return (not self.isError() or not self.isInfo()) and self.hasData()
+        return not self.isError() and not self.isInfo() and self.hasData()
 
     def getBool(self) -> bool:
         if isinstance(self.data, bool):

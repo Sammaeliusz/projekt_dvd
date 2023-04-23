@@ -35,6 +35,99 @@
 		</script>
 	</head>
 	<body>
+		<div class="navigation-bar" id="navhold">
+			<div class="navigation-block">
+				<div class="right-side">
+					<div class="navigation-tab">
+						<a><button onclick="userclick()"><img src="static/images/proba.png"></button></a>
+					</div>
+					<div class="navigation-tab">
+						<a href="#"><button class="tabbutt" onclick="">FAQ</button></a>
+					</div>
+					<div class="navigation-tab">
+						<a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
+					</div>
+					<div class="navigation-tab">
+						<a href="zbiory"><button class="tabbutt" onclick="">Zbiory</button></a>
+					</div>
+					<div class="navigation-tab">
+						<a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
+					</div>
+				</div>
+				<div class="left-side">
+					<div class="navigation-tab">
+						<a href="#"><button class="tabbutt" onclick="">______________________________</button></a>
+					</div>
+					<div class="navigation-tab">
+						<a href="#"><button class="tabbutt" onclick="">O</button></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="menu-left" id="leftmenu">
+			<div class="menu-left-holder">
+				<div class="menu-left-tab">
+					<p>Menu</p>
+				</div>
+				<div class="menu-left-tab">
+					<a><button>HaHa1</button></a>
+				</div>
+				<div class="menu-left-tab">
+		
+				</div>
+				<div class="menu-left-tab">
+		
+				</div>
+			</div>
+			<div class="menu-left-button">
+				<button onclick="leftmenu()">=</button>
+			</div>
+		</div>
+		
+		<div class="holder-left">
+			<div class="intro">
+				<h2>Sprawdź nasze najnowsze pozycje!</h2>
+			</div>
+			<div class="movie-cards">
+				<div class="movie-cards-holder">
+				% for x in movies:
+					<form action="/film" method="get">
+						<button name="mid" value="{{x.id}}">
+							<div class="movie-cards-button">
+								<div class="movie-cards-image"><img src={{x.file}} alt="{{x.name}}"></div>
+								<table>
+									<tr>
+										<th>Nazwa</th>
+										<td>{{x.name}}</td>
+									</tr>
+									<tr>
+										<th>Reżyser</th>
+										<td>{{x.director}}</td>
+									</tr>
+									<tr>
+										<th>Categories</th>
+										<td>{{x.categories}}</td>
+									</tr>
+									<tr>
+										<th>Rok produkcji</th>
+										<td>{{x.production}}</td>
+									</tr>
+								</table>
+							</div>
+						</button>
+					</form>
+				% end
+				</div>
+			</div>
+		</div>
+		<div class="holder-right">
+			<div class="intro">
+				<h1>Najlepsza platforma do wypożyczania DVD na świecie!</h1>
+				<p>Nieograniczona oferta filmów, seriali, programów i nie tylko. Oglądaj wszędzie. Pobierz ulubione tytuły i oglądaj offline. Zapisz ulubione tytuły, aby zawsze mieć coś do obejrzenia.</p>
+			</div>
+		</div>
+		<!--
 		<div class="navholder" id="navhold">
 			<div class="navbar">
 				<div class="right">
@@ -92,42 +185,12 @@
 				<div class="intro">
 					<h2>Sprawdź nasze najnowsze pozycje!</h2>
 				</div>
-				<div class="movies">
-					<div class="cards">
-					% for x in movies:
-						<button onclick="">
-							<div class="buthold">
-								<div class="imghold"><img src={{x.file}}></div>
-								<table>
-									<tr>
-										<th>Nazwa</th>
-										<td>{{x.name}}</td>
-									</tr>
-									<tr>
-										<th>Reżyser</th>
-										<td>{{x.director}}</td>
-									</tr>
-									<tr>
-										<th>Categories</th>
-										<td>{{x.categories}}</td>
-									</tr>
-									<tr>
-										<th>Rok produkcji</th>
-										<td>{{x.production}}</td>
-									</tr>
-								</table>
-							</div>
-						</button>
-					% end
-					</div>
-				</div>
+				
 			</div>
 			<div class="mbr">
-				<div class="intro">
-					<h1>Najlepsza platforma do wypożyczania DVD na świecie!</h1>
-					<p>Nieograniczona oferta filmów, seriali, programów i nie tylko. Oglądaj wszędzie. Pobierz ulubione tytuły i oglądaj offline. Zapisz ulubione tytuły, aby zawsze mieć coś do obejrzenia.</p>
-				</div>
+				
 			</div>
 		</div>
+		!-->
 	</body>
 </html>

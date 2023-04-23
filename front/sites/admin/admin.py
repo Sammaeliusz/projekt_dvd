@@ -19,14 +19,19 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                     oper = data.pop()
                if len(data)>=7:
                     img = data.pop()
-               file = bottle.request.files.get(f'obraz')  # Pobierz plik z formularza
-               print(file)
-               if file and file.filename.endswith('.png'):
-                    filename = file.filename
-                    file.save(filename)
-                    print('Plik {filename} został przesłany i zapisany na serwerze.')
-               else:
-                    print('Niepoprawny format pliku.')
+                    
+               file = bottle.request.files.get('obraz')  # Pobierz plik z formularza
+               if file:
+                    fname, fext = path.splitext(file.filename)
+                    if fext != '.png':
+                         print('Niepoprawny format pliku.')
+                    else:
+                         save_path = "../front/data/Filmy"
+                         if not path.exists(save_path):
+                            makedirs(save_path)
+                         file.save(f'{save_path}/{file.filename}')
+                         print('Plik {filename} został przesłany i zapisany na serwerze.')
+                         
                if oper == "mod":
                     sql.movie_change(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
                     bottle.response.set_cookie('red', "redi")
@@ -51,9 +56,8 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                     sql.user_delete(banid)
                     bottle.response.set_cookie('red', "redi")
                     return redirect('/admin')
-          print(am.getList())
           for bm in am.getList():
-               fil = f"static/Filmy/{bm[1].replace(' ', '-').replace(':', '')}.png"
+               fil = f"static/Filmy/{bm[1].replace(' ', '-')}.png"
                if bm == None:
                     break
                film_tab += f"""
@@ -66,7 +70,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                               <td><input type="text" class="film{bm[0]}" name="rezyser" value="{bm[4]}"></td>
                               <td><input type="number" class="film{bm[0]}" name="rok_prod" value="{bm[5]}"></td>
                               <td><input type="number" class="film{bm[0]}" name="ilosc" value="{bm[6]}"></td>
-                              <td><textarea name="opis" id="" class="film{bm[0]}" cols="50" rows="2">{bm[8]}</textarea></td>
+                              <td><textarea name="opis" id="" class="film{bm[0]}" cols="50" rows="2">{bm[7]}</textarea></td>
                               <td><img src={fil} width="50" height="75"><input type="file" name="obraz" class="film{bm[0]}" id="" accept=".png"></td>
                               <td><button class="filmmod" id="mod{bm[0]}" type="submit">Modyfikuj film</button></td>
                               <td><button class="filmdel" id="del{bm[0]}">Usuń film</button></td>
