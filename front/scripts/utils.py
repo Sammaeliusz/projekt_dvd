@@ -2,6 +2,7 @@ import bottle
 from sys import path as system_path
 
 from io import BytesIO
+from os import path, makedirs
 from datetime import date, timedelta
 from codebase.SQL.connect import SQL
 from codebase.Tools.structure import Struct
