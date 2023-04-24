@@ -4,6 +4,7 @@ name = "main Page"
 route = "/"
 
 [data]
+title = "renteDvd"
 
 [script]
 local = "/index.py"
