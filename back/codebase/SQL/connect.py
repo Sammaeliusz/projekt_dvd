@@ -123,7 +123,7 @@ class SQL:
     #regex check for SQL injection
     def protection(self, question:str) -> str:
         
-        return question[:- answer.span()[0]] if bool(answer:=re.compile(r".* or .*", re.I).search(question)) else question
+        return question[:- answer.span()[0]] if bool(answer:=re.compile(r".* or .*|.*%.*", re.I).search(question)) else question
 
 
     #regex check for valid password
