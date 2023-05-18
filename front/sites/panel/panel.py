@@ -10,9 +10,17 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
             bottle.response.set_cookie('id', '', expires=0)
             bottle.response.set_cookie('zal', '', expires=0)
             return redirect('/')
-        elif bottle.request.forms.get('delete', None) == "Usun":
-            q = sql.user_del(us_id)
+    data = bottle.request.forms.get('delete', None)
+    print(data)
+    if data != None:
+        q = sql.user_del(us_id)
+        bottle.response.set_cookie('id', '', expires=0)
+        bottle.response.set_cookie('zal', '', expires=0)
+        print(q.getMessage())
+        if q.getMessage()!=-6:
             return function(error=q.getMessage())
+        else:
+            return redirect('/')
     
     if us_id:
         user = sql.user_finder(us_id)

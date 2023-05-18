@@ -52,11 +52,11 @@
 			function sendData(){
 				if (confirm("Czy na pewno chcesz usunąć konto?")){
 					const xhr = new XMLHttpRequest()
-        			xhr.open('POST', '/admin')
+        			xhr.open('POST', '/panel')
         			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
         			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
         			// send request
-        			fd='delete=Usun'
+        			fd='delete=Usun;'
         			xhr.send(fd)
 				}
 			}
@@ -131,6 +131,12 @@
 							<button class="bob" type="submit" name="logout" value="Wyloguj">Wyloguj</button>
 						</form>
 						{{!admin}}
+						% try:
+						% 	error
+							<p style="color:red">Błąd podczas logowania: Error {{error}}</p>
+						% except:
+						%	pass
+						%	end
 					</div>
 				</div>
 			</div>
