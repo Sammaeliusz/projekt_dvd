@@ -53,11 +53,11 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                     bottle.response.set_cookie('red', "redi")
                     return redirect('/admin')
                else:
-                    sql.user_delete(banid)
+                    sql.user_ban(banid)
                     bottle.response.set_cookie('red', "redi")
                     return redirect('/admin')
           for bm in am.getList():
-               fil = f"static/Filmy/{bm[1].replace(' ', '-')}.png"
+               fil = f"static/Filmy/{bm[1].replace(' ', '-').replace(':', '')}.png"
                if bm == None:
                     break
                film_tab += f"""
@@ -108,10 +108,17 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                             zf += f.getList()[1]+", "
                else:
                     z = "brak"
+               if sql.admin(bu[0]).getList()[0]==1:
+                    us = "Użytkownik usunął konto"
+               elif sql.inactivity_check(bu[0]).getList()[0]!=1:
+                    us="Konto jest zbanowane"
+               else:
+                    us="Konto jest aktywne"
                user_tab += f"""
                     <tr>
                          <td>{bu[0]}</td>
                          <td>{bu[1]}</td>
+                         <td>{us}</td>
                          <td>{mr.hasData()}</td>
                          <td>{zf}</td>
                          <td><button class="ban" id="{bu[0]}">{bou}anuj</button></td>
