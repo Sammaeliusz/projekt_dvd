@@ -1,0 +1,10 @@
+[main]
+local = "logowanie/logowanie.html"
+name = "login Page"
+route = "/logowanie"
+
+[data]
+
+[script]
+local = "/logowanie.py"
+name = "logowanie"

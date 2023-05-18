@@ -1,0 +1,6 @@
+[main]
+local = "rezyser/rezyser.php"
+name = "caster Page"
+route = "/rezyser"
+
+[data]

@@ -1,0 +1,10 @@
+[main]
+local = "admin/admin.html"
+name = "admin Page"
+route = "/admin"
+
+[data]
+
+[script]
+local = "/admin.py"
+name = "admin"

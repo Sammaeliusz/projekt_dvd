@@ -1,0 +1,10 @@
+[main]
+local = "zbiory/zbiory.html"
+name = "zbiory Page"
+route = "/zbiory"
+
+[data]
+
+[script]
+local = "/zbiory.py"
+name = "zbiory"

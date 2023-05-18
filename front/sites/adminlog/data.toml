@@ -1,0 +1,6 @@
+[main]
+local = "adminlog/adminlog.php"
+name = "adminlog Page"
+route = "/log"
+
+[data]

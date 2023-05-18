@@ -1,0 +1,10 @@
+[main]
+local = "film/film.html"
+name = "movie Page"
+route = "/film"
+
+[data]
+
+[script]
+local = "/film.py"
+name = "film"

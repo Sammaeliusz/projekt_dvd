@@ -1,5 +1,14 @@
 <div class="nav">
-    <a href="userclick"><button><img src="/data/proba.png" width="17.7" length="17.7"></button></a>
+    <button class="tablinks" onclick="userclick()"><img src="/static/proba.png" width="17.7" length="17.7"></button>
+	<script>
+		function userclick(){
+			if(document.cookie.search('id')!=-1){
+				window.location.href = '/panel'
+			}else{
+				window.location.href = '/logowanie'
+			}
+		}
+	</script>
     <button class="tablinks" onclick="">FAQ</button>
     <button class="tablinks" onclick="">Kontakt</button>
     <a href="zbiory"><button>Zbiory</button></a>

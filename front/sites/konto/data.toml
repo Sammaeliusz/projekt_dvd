@@ -1,0 +1,6 @@
+[main]
+local = "konto/konto.php"
+name = "account Page"
+route = "/konto"
+
+[data]

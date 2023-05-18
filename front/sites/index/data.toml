@@ -1,0 +1,11 @@
+[main]
+local = "index/index.html"
+name = "main Page"
+route = "/"
+
+[data]
+title = "renteDvd"
+
+[script]
+local = "/index.py"
+name = "index"
