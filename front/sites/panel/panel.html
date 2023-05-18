@@ -49,6 +49,17 @@
 			document.getElementById("actual").style.transform = "translatex(-5%)";
 			document.getElementById("history").style.transform = "translatex(0%)"
 			}
+			function sendData(){
+				if (confirm("Czy na pewno chcesz usunąć konto?")){
+					const xhr = new XMLHttpRequest()
+        			xhr.open('POST', '/admin')
+        			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+        			// send request
+        			fd='delete=Usun'
+        			xhr.send(fd)
+				}
+			}
 		</script>
 	</head>
 	<body>
@@ -115,9 +126,9 @@
 					</table>
 					<div class="butts">
 						<button class="bob" onclick="Zmiana()">Zmień dane</button>
+						<button class="bob" onclick="sendData()">Usuń konto</button>
 						<form action="" method="post">
 							<button class="bob" type="submit" name="logout" value="Wyloguj">Wyloguj</button>
-							<button class="bob" type="submit" name="delete" value="Usun">Usuń konto</button>
 						</form>
 						{{!admin}}
 					</div>
