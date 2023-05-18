@@ -5,7 +5,6 @@ from mysql.connector import errorcode
 import re
 from sys import stdout
 from datetime import datetime as datef
-from datetime import timedelta as timed
 
 from ..SQL.answer import Answer
 from ..Error.error import MessageCreator, Error, Info
@@ -88,7 +87,7 @@ class SQL:
 
 
     #wrapper for SELECT
-    def execute(self, cursor:sql.cursor.MySQLCursor, command:str) -> list:
+    def select(self, cursor:sql.cursor.MySQLCursor, command:str) -> list:
         
         if cursor:
             cursor.execute(command)
@@ -123,7 +122,7 @@ class SQL:
     #regex check for SQL injection
     def protection(self, question:str) -> str:
         
-        return question[:- answer.span()[0]] if bool(answer:=re.compile(r".* or .*|.*%.*", re.I).search(question)) else question
+        return question[:- answer.span()[0]] if bool(answer:=re.compile(r".* or .*|.*%.*|.*\\.*", re.I).search(question)) else question
 
 
     #regex check for valid password
@@ -136,7 +135,7 @@ class SQL:
     def userdata_check(self, typ:str, value:str) -> Answer:
         
         if(cursor:=self.cursor()):
-            answer = self.execute(cursor, f"SELECT {typ} FROM `user` WHERE {typ} LIKE '{value}' AND active = 1;")
+            answer = self.select(cursor, f"SELECT {typ} FROM `user` WHERE {typ} LIKE '{value}' AND active = 1;")
             cursor.close()
             self.__log__(-1002)
             return Answer(answer)
@@ -150,7 +149,7 @@ class SQL:
     def inactivity_check(self, user_id:int) -> Answer:
         
         if(cursor:=self.cursor()):
-            if(answer:=self.execute(cursor, f"SELECT active FROM `user` WHERE id = {user_id}")):
+            if(answer:=self.select(cursor, f"SELECT active FROM `user` WHERE id = {user_id}")):
                 cursor.close()
                 self.__log__(-1003)
                 return Answer(answer)
@@ -203,7 +202,7 @@ class SQL:
                 cursor.execute(f"INSERT INTO `user`  VALUES (NULL, '{self.protection(username)}', '{self.protection(mail)}', '{self.protection(password)}', 0, 1, b'{privilages}');")
                 self.connection.commit()
                 self.__log__(-1004)
-                answer = self.execute(cursor, f"SELECT id FROM `user` ORDER BY id DESC LIMIT 1;")
+                answer = self.select(cursor, f"SELECT id FROM `user` ORDER BY id DESC LIMIT 1;")
                 cursor.close()
                 return Answer(answer)
             
@@ -218,12 +217,16 @@ class SQL:
     def login_user(self, mail:str, password:str) -> Answer:
         
         if(cursor:=self.cursor()):
-            answer = Answer(self.execute(cursor, f"SELECT id FROM `user` WHERE (mail LIKE '{self.protection(mail)}') AND (password LIKE '{self.protection(password)}');"))
+            answer = Answer(self.select(cursor, f"SELECT id FROM `user` WHERE (mail LIKE '{self.protection(mail)}') AND (password LIKE '{self.protection(password)}');"))
             if not answer.isUsefull():
                 cursor.close()
                 self.__log__(-4, notes=f"wrond password or/and mail provided -> pass:{password} mail:{mail}")
                 return Answer(self.__codes__[-4])
-            
+            elif self.admin(answer.getId()).getList()[0]==1:
+                print(self.admin(answer.getId()).getList()[0])
+                cursor.close()
+                self.__log__(-6, notes=f"user does not exists id -> {answer.getId()}")
+                return Answer(self.__codes__[-6])
             elif self.inactivity_check(answer.getId()).getList()[0]!=1:
                 cursor.close()
                 self.__log__(-5, notes=f"inactive user id -> {answer.getId()}")
@@ -273,7 +276,7 @@ class SQL:
 
 
     #deletes user, by setting his activity status to False
-    def user_delete(self, user_id:int) -> Answer:
+    def user_ban(self, user_id:int) -> Answer:
         
         if(cursor:=self.cursor()):
             cursor.execute(f"UPDATE `user` SET active = 0 WHERE id = {user_id};")
@@ -286,7 +289,18 @@ class SQL:
             self.__log__(-200)
             
         return Answer(self.__codes__[-200])
-
+    def user_del(self, user_id:int)->Answer:
+        if(cursor:=self.cursor()):
+            r = self.movies_rented(user_id)
+            rlist = r.hasData()
+            if not rlist:
+                cursor.execute(f"UPDATE `user` SET privilages = 1 WHERE id = {user_id};")
+                self.connection.commit()
+                cursor.close()
+                self.__log__(-1008, notes=f"deleted user id -> {user_id}")
+                return Answer(True)
+        else:
+            self.__log__(-200)
     def activeUser(self) -> Answer:
         if(cursor:=self.cursor()):
             ans = cursor.execute(f"Select * from user where active = 1")
@@ -296,7 +310,7 @@ class SQL:
     def movies_rented(self, user_id:int) -> Answer:
         
         if(cursor:=self.cursor()):
-            answer = self.execute(cursor, f"SELECT `movie`, `rent`, `return`, `real_return` FROM `rents` WHERE user = {user_id};")
+            answer = self.select(cursor, f"SELECT `movie`, `rent`, `return`, `real_return` FROM `rents` WHERE user = {user_id};")
             cursor.close()
             self.__log__(-1008, notes=f"of user id -> {user_id}")
             return Answer(answer)
@@ -333,7 +347,7 @@ class SQL:
         return Answer(False)
     
         if(cursor:=self.cursor()):
-            answer = self.execute(cursor, f"SELECT * FROM `movie` WHERE {tags} LIKE {value}") if isinstance(value, int) else self.execute(cursor, f"SELECT * FROM `movie` WHERE {criterion} LIKE '{value}'")
+            answer = self.select(cursor, f"SELECT * FROM `movie` WHERE {tags} LIKE {value}") if isinstance(value, int) else self.select(cursor, f"SELECT * FROM `movie` WHERE {criterion} LIKE '{value}'")
             cursor.close()
             self.__log__(-1011, notes=f"searched for movies with -> criterion:{criterion} value:{value} :: in table -> {table}")
             return Answer(answer)
@@ -346,7 +360,7 @@ class SQL:
     def movie_finder(self, movie_id:int) -> Answer:
         
         if(cursor:=self.cursor()):
-            answer = self.execute(cursor, f"SELECT * FROM `movie` WHERE id = {movie_id}")
+            answer = self.select(cursor, f"SELECT * FROM `movie` WHERE id = {movie_id}")
             cursor.close()
             return Answer(answer)
         
@@ -358,7 +372,7 @@ class SQL:
     def user_finder(self, user_id:int) -> Answer:
         
         if(cursor:=self.cursor()):
-            answer = self.execute(cursor, f"SELECT * FROM `user` where id = {user_id}")
+            answer = self.select(cursor, f"SELECT * FROM `user` where id = {user_id}")
             cursor.close()
             return Answer(answer)
 
@@ -385,7 +399,7 @@ class SQL:
     def movies_recent(self, amount:int) -> Answer:
         
         if(cursor:=self.cursor()):
-            ids = self.execute(cursor, f"SELECT id FROM movie ORDER BY id DESC LIMIT {amount}")
+            ids = self.select(cursor, f"SELECT id FROM movie ORDER BY id DESC LIMIT {amount}")
             cursor.close()
             answer = []
             
@@ -420,7 +434,7 @@ class SQL:
             return Answer(self.__codes__[-8])
         
         if(cursor:=self.cursor()):
-            answer = self.execute(cursor, f"SELECT * FROM {table}")
+            answer = self.select(cursor, f"SELECT * FROM {table}")
             cursor.close()
             return Answer(answer)
 
@@ -428,40 +442,15 @@ class SQL:
         return Answer(self.__codes__[-200])
     def getStatus(self, id:int) ->Answer:
             if(cursor:=self.cursor()):
-                answer = self.execute(cursor, f"Select active from user where id = {id}")
+                answer = self.select(cursor, f"Select active from user where id = {id}")
                 cursor.close()
                 return Answer(answer)
             else:
                 self.__log__(-200)
     def admin(self, id:int) -> Answer:
         if(cursor:=self.cursor()):
-            answer = self.execute(cursor, f"Select privilages from user where id = {id}")
+            answer = self.select(cursor, f"Select privilages from user where id = {id}")
             cursor.close()
-            print(answer)
             return Answer(answer)
         else:
             self.__log__(-200)       
-    def rent(self, id_u:int, id_f:int)->Answer:
-        date = datef.today().date()
-        if(cursor:=self.cursor()):
-            nstock = self.execute(cursor, f"select stock from movie where id={id_f}")
-            if nstock.isUsefull:
-                nstock -= 1
-                self.execute(cursor, f"insert into rents values (Null, {id_f}, {id_u}, {date}, {date+timed(14)}, Null )")
-                self.execute(cursor, f"update movie set stock={nstock} where {id_f}")
-            cursor.close()
-            return Answer(True)
-        else:
-            self.__log__(-200)
-    def deRent(self, id_r:int, id_f:int)->Answer:
-        date = datef.today().date()
-        if(cursor:=self.cursor()):
-            nstock = self.execute(cursor, f"select stock from movie where id={id_f}")
-            if nstock.isUsefull:
-                nstock += 1
-                self.execute(cursor, f"update rents set real_return={date} where id={id_r}")
-                self.execute(cursor, f"update movie set stock={nstock} where {id_f}")
-            cursor.close()
-            return Answer(True)
-        else:
-            self.__log__(-200)
