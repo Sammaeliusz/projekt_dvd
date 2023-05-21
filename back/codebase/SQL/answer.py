@@ -22,7 +22,7 @@ class Answer:
                 self.data = base
                 self.flags = f"B:0:0"
 
-    def __unlist__(self, l:(list, tuple)) -> list:
+    def __unlist__(self, l:list| tuple) -> list:
         if len(l) == 1:
             if isinstance(l[0], (list, tuple)):
                 return self.__unlist__(l[0])
@@ -39,7 +39,7 @@ class Answer:
         return self.flags.split(':')
 
     def getList(self) -> list:
-        return self.data if isinstance(self.data, list) else [self.data]
+        return self.data if isinstance(self.data, list) else [self.data] if not self.data == None else []
 
     def getSelf(self):
         return self.data

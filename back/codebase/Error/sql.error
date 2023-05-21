@@ -1,25 +1,49 @@
--1:bad mail:ERROR
--2:bad pass:ERROR
--3:simmilar data found:ERROR
--4:wrong pass:ERROR
--5:user inactive:ERROR
--6:user does not exists:ERROR
--7:too early:ERROR
--8:bad table:ERROR
--100:sql-bad user or pass:ERROR
--101:sql-bad database:ERROR
--102:sql-unspecified error:ERROR
--200:sql-no connection, responded with predefinied output:ERROR
--1000:ok:INFO
--1001:connection with database established:INFO
--1002:checked userdata:INFO
--1003:checked activity status:INFO
--1004:created new user:INFO
--1005:user logged:INFO
--1006:changed userdata:INFO
--1007:deleted user data (set to inactive):INFO
--1008:searched for rented movies:INFO
--1009:searched for recent movies:INFO
--1010:added a movie:INFO
--1011:searched for movies:INFO
--1012:user deleted:INFO
+-1:SQL - bad user or pass while connecting:ERROR
+-2:SQL - bad database provided while connecting:ERROR
+-3:SQL - no connection respond hardcoded:ERROR
+-4:SQL - database responded with isufficient data:ERROR
+-5:SQL - provided wrong table name:ERROR
+-6:SQL - failed to establish a connection with database:ERROR
+-7:SQL - connction with database established:INFO
+-8:SQL - provided wrong datatypes:ERROR
+-10:SQL - Unspecified SQL Error:ERROR
+-1001:USER - wrong mail provided:ERROR
+-1002:USER - wrong mail or password provided:ERROR
+-1003:USER - found simmilar data, rejected input:ERROR
+-1004:USER - user inactive:ERROR
+-1005:USER - user doesn't exist:ERROR
+-1006:USER - user already banned:INFO
+-1007:USER - user has been banned:INFO
+-1008:USER - failed to unban user:ERROR
+-1009:USER - user has been unbanned:INFO
+-1010:USER - user already not banned:INFO
+-1011:USER - user is banned:ERROR
+-1012:USER - checked user ban status:INFO
+-1013:USER - failed to check userdata:ERROR
+-1014:USER - failed to check activity status:ERROR
+-1015:USER - failed to create new user:ERROR
+-1016:USER - checked userdata:INFO
+-1017:USER - checked activity status:INFO
+-1018:USER - created new user:INFO
+-1019:USER - user logged:INFO
+-1020:USER - changed userdata:INFO
+-1021:USER - deleted user data and set to inactive:INFO
+-1022:USER - checked if user exists:INFO
+-1023:USER - user active:INFO
+-1024:USER - failed to ban user:ERROR
+-1025:USER - failed to unban user:ERROR
+-1026:USER - failed to login user:ERROR
+-1027:USER - wrong password provided:ERROR
+-1028:USER - user has been deactivated:INFO
+-1029:USER - failed to deactivate user:ERROR
+-1030:USER - failed to delete user data:ERROR
+-2000:MOVIE - production date of movie older than 1996:ERROR
+-2001:MOVIE - failed to set-up tags for a movie:ERROR
+-2002:MOVIE - failed to create a movie:ERROR
+-2003:MOVIE - created new movie:INFO
+-2004:MOVIE - movie doesn't exist:ERROR
+-3000:TAG - wrong tag id provided:ERROR
+-3001:TAG - failed to bind tag:ERROR
+-3001:TAG - failed to unbind tag:ERROR
+-10000:BASE - ok:INFO
+-10001:BASE - not ok:ERROR

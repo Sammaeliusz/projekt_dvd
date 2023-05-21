@@ -1,10 +1,12 @@
 import tomllib
 import app
+#from sys import setrecursionlimit
 
 from codebase.SQL.connect import SQL
 from codebase.Tools.structure import Struct
 
 if __name__=="__main__":
+    #setrecursionlimit(2000)
     with open("config.conf", "rb") as f:
         config = tomllib.load(f)
         main = config["main"]

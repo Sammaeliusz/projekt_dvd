@@ -1,0 +1,3 @@
+[main]
+list = ['dvd_rent.conf']
+priority = [10]
