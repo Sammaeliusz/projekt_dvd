@@ -4,19 +4,18 @@
 	--button-hover-background: rgb(54, 108, 180);
 	--button-hover-shadow: inset 0 0 10px rgba(50,50,50,0.5);
 	--button-hover-color: rgba(25,25,25,1);
-	--button-active:;
 	
 	--main-background: rgba(65,65,65,1);
 	--main-color: rgb(255,255,255);
 	--main-border: rgb(25,25,25);
+	--main-shadow: 5px 5px 0px 0px rgba(0,0,0,0.5);
 	
 	--menu-left-background: linear-gradient(170deg, rgba(15,15,15,1) 0, rgba(30,30,30,1) 100%);
 	--menu-left-button: linear-gradient(170deg,rgba(30,30,30,1) 0, rgba(15,15,15,1) 100%);
 	
 	--nav-background: linear-gradient(170deg, rgba(15,15,15,1) 0, rgba(30,30,30,1) 50%, rgba(15,15,15,1) 100%);
 	
-	--left-background: var(--button-hover-background);
-	
+	--left-background: var(--button-hover-background);	
 }
 
 html{
@@ -25,9 +24,7 @@ html{
 	height:100%;
 	
 	overflow:hidden;
-}
 
-html{
 	scrollbar-width: none;
 }
 
@@ -323,8 +320,9 @@ body{
 	height:fit-content;
 	
 	border-radius:5px;
+	box-shadow: var(--main-shadow);
 	
-	flex-wrap:wrap;
+	flex-direction: column;
 	
 	background:var(--left-background);
 }
@@ -388,16 +386,15 @@ body{
 	z-index:8;
 	
 	width: calc(100% - 10px);
-	max-height: 20%;
+	height:inherit;
 	
 	left: 5px;
-	
-	align-items:flex-start;
-	justify-content:center;
 }
 
 
 .holder-left .intro h2{
+	display: flex;
+	position: relative;
 	font-family: 'Roboto';
 	font-size:35px;
 	font-weight:bold;
@@ -408,7 +405,6 @@ body{
 	text-shadow: 2px 2px 15px rgba(0,0,0,0.76);
 }
 
-!to continue
 .holder-left .movie-card-list{
 	display:flex;
 	position:relative;
@@ -418,7 +414,8 @@ body{
 	width: calc(100% - 10px);
 	height:fit-content;
 
-	left:5px;
+	margin:5px;
+	align-self:flex-start;
 }
 
 .holder-left .movie-card-list .movie-card-list-holder{
