@@ -4,6 +4,7 @@ name = "register Page"
 route = "/rejestracja"
 
 [data]
+title = "Rejestracja w serwisie"
 
 [script]
 local = "/register.py"

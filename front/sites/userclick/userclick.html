@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pl">                                                                                                                                                                                                                                                                                                                                                        <html>
+	<head>
+		<meta charset="utf-8">
+		<title>{{title}}</title>
+		
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+		<link rel="stylesheet" href="static/index/basic.css">
+		
+		<meta name="viewport" initial-scale="1.0">
+		<meta name="description" content="Lokalny Projekt klasowy wypożyczalnia DVD">
+		<meta name="theme-color" content="#366cb4">
+	</head>
+	<body>
+		<div class="holder-left">
+			
+		</div>
+		<div class="holder-right">
+			
+		</div>
+		
+		<script>
+			function userclick(){
+				window.open('/userclick', '_self')
+			}
+			function leftmenu(){
+				if(!lmb){
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "0px"
+					lmb = true;
+				}
+				else{
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "-310px"
+					lmb = false;
+				}
+			}
+			var lmb = false;
+			window.onload = function (){
+				console.log("keu");
+				document.body.onscroll = function () {
+						var nb = document.getElementById("navhold")
+						var lm = document.getElementById("leftmenu")
+						nb.style.top = window.scrollY
+						lm.style.top = "calc("+window.scrollY+"px + 50px)"
+					}}
+			</script>
+
+	</body>
+</html>

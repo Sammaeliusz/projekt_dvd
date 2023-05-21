@@ -1,0 +1,11 @@
+[main]
+local = "userclick/userclick.html"
+name = "userclick Page"
+route = "/userclick"
+
+[data]
+title = "userclick"
+
+[script]
+local = "/userclick.py"
+name = "userclick"

@@ -14,7 +14,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                 "categories":x[2],
                 "director":x[4],
                 "production":x[5],
-                "file":f"static/Filmy/{x[1].replace(' ', '-').replace(':', '')}.png"
+                "file":f"static/Filmy/{x[1].replace(' ', '-')}.png"
             }) for x in movies.getList()]
 
     else:

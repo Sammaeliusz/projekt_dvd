@@ -34,6 +34,7 @@
         xhr.open('POST', '/admin')
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+        // send request
         fd='data='+data
         console.log(fd)
         xhr.send(fd)
@@ -44,6 +45,7 @@
         xhr.open('POST', '/admin')
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+        // send request
         fd='banid='+banid
         console.log(fd)
         xhr.send(fd)
@@ -125,7 +127,6 @@
                 <tr>
                     <th>Id</th>
                     <th>Nazwa</th>
-                    <th>Informacje o koncie</th>
                     <th>Czy zaległe?</th>
                     <th>Zaległe filmy</th>
                     <th>Ban:</th>

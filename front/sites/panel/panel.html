@@ -49,16 +49,6 @@
 			document.getElementById("actual").style.transform = "translatex(-5%)";
 			document.getElementById("history").style.transform = "translatex(0%)"
 			}
-			function sendData(){
-				if (confirm("Czy na pewno chcesz usunąć konto?")){
-					const xhr = new XMLHttpRequest()
-        			xhr.open('POST', '/panel')
-        			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-        			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
-        			fd='delete=Usun;'
-        			xhr.send(fd)
-				}
-			}
 		</script>
 	</head>
 	<body>
@@ -125,17 +115,10 @@
 					</table>
 					<div class="butts">
 						<button class="bob" onclick="Zmiana()">Zmień dane</button>
-						<button class="bob" onclick="sendData()">Usuń konto</button>
 						<form action="" method="post">
 							<button class="bob" type="submit" name="logout" value="Wyloguj">Wyloguj</button>
 						</form>
 						{{!admin}}
-						% try:
-						% 	error
-							<p style="color:red">Błąd podczas logowania: Error {{error}}</p>
-						% except:
-						%	pass
-						%	end
 					</div>
 				</div>
 			</div>

@@ -8,7 +8,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
     kwg = Struct(kwg)
     
     if (mail:=bottle.request.forms.get('mail', None)) and (password:=bottle.request.forms.get('password', None)):
-        question = sql.login_user(mail, password)
+        question = sql.user_login(mail, password)
         
         if not question.isError():
             print(question.getList())

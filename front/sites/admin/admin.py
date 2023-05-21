@@ -53,11 +53,11 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                     bottle.response.set_cookie('red', "redi")
                     return redirect('/admin')
                else:
-                    sql.user_ban(banid)
+                    sql.user_delete(banid)
                     bottle.response.set_cookie('red', "redi")
                     return redirect('/admin')
           for bm in am.getList():
-               fil = f"static/Filmy/{bm[1].replace(' ', '-').replace(':', '')}.png"
+               fil = f"static/Filmy/{bm[1].replace(' ', '-')}.png"
                if bm == None:
                     break
                film_tab += f"""
@@ -70,7 +70,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                               <td><input type="text" class="film{bm[0]}" name="rezyser" value="{bm[4]}"></td>
                               <td><input type="number" class="film{bm[0]}" name="rok_prod" value="{bm[5]}"></td>
                               <td><input type="number" class="film{bm[0]}" name="ilosc" value="{bm[6]}"></td>
-                              <td><textarea name="opis" id="" class="film{bm[0]}" cols="50" rows="2">{bm[8]}</textarea></td>
+                              <td><textarea name="opis" id="" class="film{bm[0]}" cols="50" rows="2">{bm[7]}</textarea></td>
                               <td><img src={fil} width="50" height="75"><input type="file" name="obraz" class="film{bm[0]}" id="" accept=".png"></td>
                               <td><button class="filmmod" id="mod{bm[0]}" type="submit">Modyfikuj film</button></td>
                               <td><button class="filmdel" id="del{bm[0]}">Usuń film</button></td>
@@ -108,17 +108,10 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                             zf += f.getList()[1]+", "
                else:
                     z = "brak"
-               if sql.admin(bu[0]).getList()[0]==1:
-                    us = "Użytkownik usunął konto"
-               elif sql.inactivity_check(bu[0]).getList()[0]!=1:
-                    us="Konto jest zbanowane"
-               else:
-                    us="Konto jest aktywne"
                user_tab += f"""
                     <tr>
                          <td>{bu[0]}</td>
                          <td>{bu[1]}</td>
-                         <td>{us}</td>
                          <td>{mr.hasData()}</td>
                          <td>{zf}</td>
                          <td><button class="ban" id="{bu[0]}">{bou}anuj</button></td>

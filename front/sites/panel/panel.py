@@ -4,25 +4,18 @@ from utils import *
 
 def wrapper(function:callable, sql:SQL, **kwg) -> callable:
     
-    us_id = bottle.request.get_cookie("id")
     if bottle.request.method == 'POST':
         if bottle.request.forms.get('logout', None) == "Wyloguj":
             bottle.response.set_cookie('id', '', expires=0)
             bottle.response.set_cookie('zal', '', expires=0)
             return redirect('/')
-    data = bottle.request.forms.get('delete', None)
-    print(data)
-    if data != None:
-        bottle.response.set_cookie('id', '', expires=0)
-        bottle.response.set_cookie('zal', '', expires=0)
-        q = sql.user_del(us_id)
-        print(q.getMessage())
-        return redirect('/')
+        
+    us_id = bottle.request.get_cookie("id")
     
     if us_id:
         user = sql.user_finder(us_id)
         if sql.admin(us_id).getList()[0]==2:
-            lin = """<button class="bob" onclick="window.location.href = '/admin'">Przejdź do panelu Admina</button>"""
+            lin = """<button onclick="window.location.href = '/admin'">Przejdź do panelu Admina</button>"""
         else:
             lin = ""
         if user.isUsefull():

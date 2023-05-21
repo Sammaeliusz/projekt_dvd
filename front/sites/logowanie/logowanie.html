@@ -1,106 +1,116 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+		<title>{{title}}</title>
+		
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-		<link rel="stylesheet" href="/static/logowanie/basic.css">
-		<script>
-		function userclick(){
-			if(document.cookie.search('id')!=-1){
-				window.location.href = '/panel'
-			}else{
-				window.location.href = '/logowanie'
-			}
-		}
-		function leftmenu(){
-			if(!lmb){
-				var lm = document.getElementById("leftmenu")
-				lm.style.left = "0px"
-				lmb = true;
-			}
-			else{
-				var lm = document.getElementById("leftmenu")
-				lm.style.left = "-310px"
-				lmb = false;
-			}
-		}
-		var lmb = false;
-		window.onload = function (){
-			console.log("keu");
-			document.body.onscroll = function () {
-					var nb = document.getElementById("navhold")
-					var lm = document.getElementById("leftmenu")
-					nb.style.top = window.scrollY
-					lm.style.top = "calc("+window.scrollY+"px + 50px)"
-				}}
-		</script>
+		<link rel="stylesheet" href="static/logowanie/basic.css">
+		
+		<meta name="viewport" initial-scale="1.0">
+		<meta name="description" content="Lokalny Projekt klasowy wypożyczalnia DVD">
+		<meta name="theme-color" content="#366cb4">
 	</head>
 	<body>
 		<!-- MENU -->
-		<div class="navholder" id="navhold">
-			<div class="navbar">
-				<div class="right">
-					<div class="tablink">
-						<a><button class="tabbutt" onclick="userclick()"><img src="static/images/proba.png" class="userclick"></button></a>
+		<div class="navigation-bar" id="navhold">
+			<div class="navigation-block">
+				<div class="right-side">
+					<div class="navigation-tab">
+						<a><button onclick="userclick()" aria-label="Login/Panel"><img src="static/images/proba.png" alt="Panel or Login"></button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">FAQ</button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="zbiory"><button class="tabbutt" onclick="">Zbiory</button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
 					</div>
 				</div>
-				<div class="left">
-					<div class="tablink">
+				<div class="left-side">
+					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">______________________________</button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">O</button></a>
 					</div>
 				</div>
 			</div>
 		</div>
 		
-		<div class="topmain">
-			<div class="mbr">
-				<div class="login">
-					<!-- Intro -->
-					<div class="intro">
-						Logowanie
-					</div>
-					<form action='logowanie' target='_self' method='post'>
-						<div class="window">
-							<input name="mail" type="text" autofocus required>
-							<label for="">Email:</label>
-						</div>
-						
-						<div class="window">
-							<input name="password" type="password" required>
-							<label for="">Hasło:</label>
-						</div>
-						<div class="ready">
-							<button type='submit'>Zaloguj</button>
-							<a class="reset" href="reset">Zapomniałem hasła...</a>
-						</div>
-					</form>
-					% try:
-					% 	error
-						<p style="color:red">Błąd podczas logowania: Error {{error}}</p>
-					% except:
-					%	pass
-					%	end
-					<p>Nie masz jeszcze konta? <a href="rejestracja">Zarejestruj się!</a></p>
+		<div class="holder-left">
+			<div class="intro">
+				<h2>Zaloguj się już dziś!</h2>
+			</div>
+			<div class="login">
+				<!-- Intro -->
+				<div class="intro">
+					Logowanie
 				</div>
+				<form action='logowanie' target='_self' method='post'>
+					<div class="window">
+						<input name="mail" type="text" autofocus required>
+						<label for="">Email:</label>
+					</div>
+					
+					<div class="window">
+						<input name="password" type="password" required>
+						<label for="">Hasło:</label>
+					</div>
+					<div class="ready">
+						<button type='submit'>Zaloguj</button>
+						<a class="reset" href="reset">Zapomniałem hasła...</a>
+					</div>
+				</form>
+				% try:
+				% 	error
+					<p style="color:red">Błąd podczas logowania: Error {{error}}</p>
+				% except:
+				%	pass
+				%	end
+				<p>Nie masz jeszcze konta? <a href="rejestracja">Zarejestruj się!</a></p>
 			</div>
 		</div>
-		<!-- Logowanie -->
-		
+		<div class="holder-right">
+			<div class="intro">
+				<h1>Reklama</h1>
+				<p>:3<br>:3<br>:3<br>:3<br>:3<br>:3<br>:3<br>:3<br>:3<br>:3<br>:3<br>:3<br>:3<br>:3<br>:3<br></p>
+			</div>
+		</div>
 
-
+		<script>
+			function userclick(){
+				if(document.cookie.search('id')!=-1){
+					window.open('/panel', '_self')
+				}else{
+					window.open('/logowanie', '_self')
+				}
+			}
+			function leftmenu(){
+				if(!lmb){
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "0px"
+					lmb = true;
+				}
+				else{
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "-310px"
+					lmb = false;
+				}
+			}
+			var lmb = false;
+			window.onload = function (){
+				console.log("keu");
+				document.body.onscroll = function () {
+						var nb = document.getElementById("navhold")
+						var lm = document.getElementById("leftmenu")
+						nb.style.top = window.scrollY
+						lm.style.top = "calc("+window.scrollY+"px + 50px)"
+					}}
+		</script>
 	</body>
 </html>

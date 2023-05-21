@@ -1,91 +1,145 @@
-<html>                                                                                                                                                                                                                                                                                                                                                        <html>
+<!DOCTYPE html>
+<html lang="pl">                                                                                                                                                                                                                                                                                                                                                        <html>
 	<head>
 		<meta charset="utf-8">
+		<title>{{title}}</title>
+		
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 		<link rel="stylesheet" href="static/film/basic.css">
-		<script>
-		function userclick(){
-			if(document.cookie.search('id')!=-1){
-				window.location.href = '/panel'
-			}else{
-				window.location.href = '/logowanie'
-			}
-		}
-		function leftmenu(){
-			if(!lmb){
-				var lm = document.getElementById("leftmenu")
-				lm.style.left = "0px"
-				lmb = true;
-			}
-			else{
-				var lm = document.getElementById("leftmenu")
-				lm.style.left = "-310px"
-				lmb = false;
-			}
-		}
-		var lmb = false;
-		window.onload = function (){
-			console.log("keu");
-			document.body.onscroll = function () {
-					var nb = document.getElementById("navhold")
-					var lm = document.getElementById("leftmenu")
-					nb.style.top = window.scrollY
-					lm.style.top = "calc("+window.scrollY+"px + 50px)"
-				}}
-		</script>
+		
+		<meta name="viewport" initial-scale="1.0">
+		<meta name="description" content="Lokalny Projekt klasowy wypożyczalnia DVD">
+		<meta name="theme-color" content="#366cb4">
 	</head>
 	<body>
-		<div class="navholder" id="navhold">
-			<div class="navbar">
-				<div class="right">
-					<div class="tablink">
-						<a><button class="tabbutt" onclick="userclick()"><img src="static/images/proba.png" class="userclick"></button></a>
+		<div class="navigation-bar" id="navhold">
+			<div class="navigation-block">
+				<div class="right-side">
+					<div class="navigation-tab">
+						<a><button onclick="userclick()" aria-label="Login/Panel"><img src="static/images/proba.png" alt="Panel or Login"></button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">FAQ</button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="zbiory"><button class="tabbutt" onclick="">Zbiory</button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
 					</div>
 				</div>
-				<div class="left">
-					<div class="tablink">
+				<div class="left-side">
+					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">______________________________</button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">O</button></a>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="leftmenu" id="leftmenu">
-			<div class="lml">
-				<div class="lmltab">
+		
+		<div class="menu-left" id="leftmenu">
+			<div class="menu-left-holder">
+				<div class="menu-left-tab">
 					<p>Menu</p>
 				</div>
-				<div class="lmltab">
+				<div class="menu-left-tab">
 					<a><button>HaHa1</button></a>
 				</div>
-				<div class="lmltab">
-					<a><button>HaHa2</button></a>
+				<div class="menu-left-tab">
+		
 				</div>
-				<div class="lmltab">
-					<a><button>HaHa3</button></a>
-				</div>
-				<div class="lmltab">
-					<a><button>HaHa4</button></a>
+				<div class="menu-left-tab">
+		
 				</div>
 			</div>
-			<div class="lmb">
-				<button onclick="leftmenu()">n</button>
+			<div class="menu-left-button">
+				<button onclick="leftmenu()">=</button>
 			</div>
 		</div>
+		
+		<div class="holder-left">
+			<div class="intro">
+				<h2>Sprawdź nasze najnowsze pozycje!</h2>
+			</div>
+			<div class="movie-card-list">
+				<div class="movie-card-list-holder">
+				% for x in movies:
+					<div class="movie-card">
+						<form action="/film" method="get">
+							<div class="movie-card-button">
+								<button name="mid" value="{{x.id}}">
+									<div class="movie-card-text">
+										<div class="movie-card-text-padding">
+											<div class="movie-card-text-50"><p>Nazwa</p></div>
+											<div class="movie-card-text-50"><p>{{x.name}}</p></div>
+										</div>
+										<div class="movie-card-text-padding">
+											<div class="movie-card-text-50"><p>Reżyser</p></div>
+											<div class="movie-card-text-50"><p>{{x.director}}</p></div>
+										</div>
+										<div class="movie-card-text-padding">
+											<div class="movie-card-text-50"><p>Categories</p></div>
+											<div class="movie-card-text-50"><p>{{x.categories}}</p></div>
+										</div>
+										<div class="movie-card-text-padding">
+											<div class="movie-card-text-50"><p>Rok produkcji</p></div>
+											<div class="movie-card-text-50"><p>{{x.production}}</p></div>
+										</div>
+									</div>
+									<div class="movie-card-image"><img src={{x.file}} alt="{{x.name}}"></div>
+								</button>
+							</div>
+						</form>
+					</div>
+				% end
+				</div>
+			</div>
+		</div>
+		<div class="holder-right">
+			<div class="intro">
+				<h1>Najlepsza platforma do wypożyczania DVD na świecie!</h1>
+				<p>Nieograniczona oferta filmów, seriali, programów i nie tylko. Oglądaj wszędzie. Pobierz ulubione tytuły i oglądaj offline. Zapisz ulubione tytuły, aby zawsze mieć coś do obejrzenia.</p>
+			</div>
+		</div>
+		
+		<script>
+			function userclick(){
+				if(document.cookie.search('id')!=-1){
+					window.open('/panel', '_self')
+				}else{
+					window.open('/logowanie', '_self')
+				}
+			}
+			function leftmenu(){
+				if(!lmb){
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "0px"
+					lmb = true;
+				}
+				else{
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "-310px"
+					lmb = false;
+				}
+			}
+			var lmb = false;
+			window.onload = function (){
+				console.log("keu");
+				document.body.onscroll = function () {
+						var nb = document.getElementById("navhold")
+						var lm = document.getElementById("leftmenu")
+						nb.style.top = window.scrollY
+						lm.style.top = "calc("+window.scrollY+"px + 50px)"
+					}}
+			</script>
+
+	</body>
+</html>
 		<div class="topmain">
 			
 			<div class="mwl">

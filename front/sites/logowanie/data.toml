@@ -4,6 +4,7 @@ name = "login Page"
 route = "/logowanie"
 
 [data]
+title = "logowanie"
 
 [script]
 local = "/logowanie.py"
