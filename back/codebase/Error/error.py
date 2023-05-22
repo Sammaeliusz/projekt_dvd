@@ -17,7 +17,7 @@ class Error:
         self.__FlagSeparator = separator
         self.__flags = f"{f'M{len(message)}{self.__FlagSeparator}' if message else ''}E"
 
-    def getCode(self) -> bool:
+    def getCode(self) -> int:
         return self.__code
 
     def getMessage(self) -> str:
@@ -46,4 +46,7 @@ class Info(Error):
 
     def getMessage(self) -> str:
         return self.__message
+    
+    def getCode(self) -> int:
+        return self.__code
 
