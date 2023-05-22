@@ -824,3 +824,4 @@ class SQL:
             return self.logret(-10001)
         q = q.getList()
         return Answer(self.get_tag_id('admin') in q)
+    
