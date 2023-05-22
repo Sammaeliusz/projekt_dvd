@@ -105,7 +105,7 @@ class Answer:
         if isinstance(self.data, bool):
             return self.data
         else:
-            return False
+            return True if self.isInfo() else False
 
     def getGen(self):
         for x in self.getList():
