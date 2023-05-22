@@ -2,7 +2,7 @@
 <html lang="pl">                                                                                                                                                                                                                                                                                                                                                        <html>
 	<head>
 		<meta charset="utf-8">
-		<title>{{title}}</title>
+		<title>{{movie[1]}}</title>
 		
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 		<link rel="stylesheet" href="static/film/basic.css">
@@ -64,46 +64,28 @@
 		
 		<div class="holder-left">
 			<div class="intro">
-				<h2>Sprawdź nasze najnowsze pozycje!</h2>
+				<h2>{{movie[1]}}</h2>
 			</div>
-			<div class="movie-card-list">
-				<div class="movie-card-list-holder">
-				% for x in movies:
-					<div class="movie-card">
-						<form action="/film" method="get">
-							<div class="movie-card-button">
-								<button name="mid" value="{{x.id}}">
-									<div class="movie-card-text">
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Nazwa</p></div>
-											<div class="movie-card-text-50"><p>{{x.name}}</p></div>
-										</div>
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Reżyser</p></div>
-											<div class="movie-card-text-50"><p>{{x.director}}</p></div>
-										</div>
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Categories</p></div>
-											<div class="movie-card-text-50"><p>{{x.categories}}</p></div>
-										</div>
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Rok produkcji</p></div>
-											<div class="movie-card-text-50"><p>{{x.production}}</p></div>
-										</div>
-									</div>
-									<div class="movie-card-image"><img src={{x.file}} alt="{{x.name}}"></div>
-								</button>
-							</div>
-						</form>
-					</div>
-				% end
+			<div class="movies">
+				<div class="cards">
+					<p>{{movie[0]}}</p>
+					<p>kategorie: 
+					% for x in tags:
+						{{x[1]}}, 
+					% end
+					</p>
+					<p>kategoria wiekowa: {{movie[3]}}+</p>
+					<p>reżyser: {{movie[4]}}</p>
+					<p>rok wydania: {{movie[5]}}</p>
+					<p>na stanie: {{movie[6]}}</p>
 				</div>
 			</div>
 		</div>
 		<div class="holder-right">
-			<div class="intro">
-				<h1>Najlepsza platforma do wypożyczania DVD na świecie!</h1>
-				<p>Nieograniczona oferta filmów, seriali, programów i nie tylko. Oglądaj wszędzie. Pobierz ulubione tytuły i oglądaj offline. Zapisz ulubione tytuły, aby zawsze mieć coś do obejrzenia.</p>
+			<div class="mbr">
+				<div class="intro">
+					<img src="static/Filmy/{{movie[1].replace(' ', '-')}}.png">
+				</div>
 			</div>
 		</div>
 		
@@ -138,30 +120,5 @@
 					}}
 			</script>
 
-	</body>
-</html>
-		<div class="topmain">
-			
-			<div class="mwl">
-				<div class="intro">
-					<h2>{{movie[1]}}</h2>
-				</div>
-				<div class="movies">
-					<div class="cards">
-						<p>{{movie[7]}}</p>
-						<p>kategorie: {{movie[2]}}</p>
-						<p>kategoria wiekowa: {{movie[3]}}+</p>
-						<p>reżyser: {{movie[4]}}</p>
-						<p>rok wydania: {{movie[5]}}</p>
-						<p>na stanie: {{movie[6]}}</p>
-					</div>
-				</div>
-			</div>
-			<div class="mbr">
-				<div class="intro">
-					<img src="static/Filmy/{{movie[1].replace(' ', '-')}}.png">
-				</div>
-			</div>
-		</div>
 	</body>
 </html>
