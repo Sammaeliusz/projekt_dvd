@@ -70,7 +70,7 @@ class Application(bottle.Bottle):
             self.addroute(Create.bottle.route(self, x.route, Create.function.withSite(x), x.name))
 
         self.errors = []
-        path = path + '\\.Errors'.replace('\\', '/')
+        path = path + '\\!Errors'.replace('\\', '/')
         for x in [f.path.replace('\\', '/') for f in scandir(path) if f.is_dir()]:
             self.errors.append(Create.Site(self.SQL_Connection, x, x.split('/')[-1]))
 
