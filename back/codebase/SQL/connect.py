@@ -386,12 +386,11 @@ class SQL:
         if not self.user_exists(user_id):
             return self.logret(-1005, notes = f'user_id -> {user_id}')
         answer = self.get_user_tags(user_id).getList()
-        if not 0 in answer:
+        if not self.get_tag_id('inactive') in answer:
             return self.logret(-1023, notes = f'user_id -> {user_id}')
         return self.logret(-1004, notes = f'user_id -> {user_id}')
     
     def get_ban_id(self) -> int:
-        print(list(zip(*self.get_all_tags().getList())))
         return list(zip(*self.get_all_tags().getList()))[1].index('banned')
     
     def get_tag_id(self, tagname) -> int:
@@ -557,7 +556,8 @@ class SQL:
         if self.user_ban_status(user_id).getBool():
             return self.logret(-1011)
         
-        if not self.inactivity_check(user_id).getBool():
+        q = self.inactivity_check(user_id)
+        if not q.getBool():
             return self.logret(-1004)
         
         self.__log__(-1019, notes = f'user id -> {user_id}')
@@ -721,6 +721,22 @@ class SQL:
         if not self.movie_exists(movie_id):
             return self.logret(-2004, notes = f'movie_id -> {movie_id}')
         return self.find_movie(movie_id)
+    
+    def movie_tags(self, movie_id:int) -> Answer:
+
+        if not self.movie_exists(movie_id):
+            return self.logret(-2004, notes = f'movie_id -> {movie_id}')
+        question = self.get_movie_tags(movie_id)
+        if not question.isUsefull():
+            return question
+        a = []
+        c = self.get_all_tags().getList()
+        b = list(zip(*c))[0]
+        
+        for x in question.getList():
+            if x in b:
+                a.append(c[b.index(x)])
+        return Answer(a)
 
     #Searches for a user by id
     def user_finder(self, user_id:int) -> Answer:
