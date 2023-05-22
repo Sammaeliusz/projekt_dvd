@@ -63,7 +63,7 @@ class Application(bottle.Bottle):
     def setup(self, path:str):
         self.sites = []
         for x in [f.path.replace('\\', '/') for f in scandir(path) if f.is_dir()]:
-            if x.split('/')[-1] not in ['Filmy','.Errors']:
+            if x.split('/')[-1] not in ['Filmy','!Errors']:
                 self.sites.append(Create.Site(self.SQL_Connection, x, x.split('/')[-1], menubar=Create.html.standard.menubar()))
 
         for x in self.sites:
