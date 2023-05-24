@@ -97,6 +97,18 @@ class SQL:
         
         else:
             return self.connection.cursor()
+    
+    def date(self, year, month, day) -> str:
+        y = str(year)
+        if len(str(day)) == 1:
+            d = '0'+str(day)
+        else:
+            d = str(day)
+        if len(str(month)) == 1:
+            m = '0'+str(month)
+        else:
+            m = str(month)
+        return f'{y}-{m}-{d}'
 
 
     #wrapper for SELECT
@@ -134,24 +146,35 @@ class SQL:
             if x[1] == 'int':
                 if not isinstance(x[0], int):
                     check = False
+                    break
             elif x[1] == 'tinytext':
                 if not len(str(x[0]).encode()) < 256:
                     check = False
+                    break
             elif x[1] == 'tinyint':
                 if not isinstance(x[0], int) and not abs(x[0]) < 128 :
                     check = False
+                    break
             elif x[1] == 'smallint':
                 if not isinstance(x[0], int) and not abs(x[0]) < 32768:
                     check = False
+                    break
             elif x[1] == 'mediumint':
                 if not isinstance(x[0], int) and not abs(x[0]) < 8388608:
                     check = False
+                    break
             elif x[1] == 'text':
                 if not len(str(x[0]).encode()) < 65535:
                     check = False
+                    break
             elif x[1] == 'varchar64':
                 if not len(str(x[0]).encode()) < 65:
                     check = False
+                    break
+            elif x[1] == 'date':
+                if not len(str(x[0]).encode()) == 10 and not str(x[4])+str(x[7]) == '--':
+                    check = False
+                    break
         return check
 
     # user connected functions
@@ -312,6 +335,86 @@ class SQL:
         if self.check_datatypes([tag_id, name, description], data.take):
             return self.execute(data.question.format(tag_id = tag_id, name = name, description = description))
         return self.logret(-8)
+
+    # rent connected functions
+
+    def get_all_user_rents(self, user_id:int) -> Answer:
+        data = self.sql_conf.get_all_user_rents
+        if self.check_datatypes([user_id], data.take):
+            return self.select(data.question.format(user_id = user_id))
+        return self.logret(-8)
+
+    def get_all_movie_rents(self, movie_id:int) -> Answer:
+        data = self.sql_conf.get_all_movie_rents
+        if self.check_datatypes([movie_id], data.take):
+            return self.select(data.question.format(movie_id = movie_id))
+        return self.logret(-8)
+    
+    def get_all_outdated(self, date:str) -> Answer:
+        data = self.sql_conf.get_all_outdated
+        if self.check_datatypes([date], data.take):
+            return self.select(data.question.format(date = date))
+        return self.logret(-8)
+    
+    def get_all_not_returned(self) -> Answer:
+        return self.select(self.sql_conf.get_all_not_returned.question)
+    
+    def update_rent(self, movie_id:int, user_id:int, rent:str, return_date:str, real_return:str, rent_id:int) -> Answer:
+        data = self.sql_conf.update_rent
+        if self.check_datatypes([movie_id, user_id, rent, return_date, real_return, rent_id], data.take):
+            return self.execute(data.question.format(movie_id = movie_id, user_id = user_id, rent = rent, return_date = return_date, real_return = real_return, rent_id = rent_id))
+        return self.logret(-8)
+    
+    def return_rent(self, rent_id:int, date:str) -> Answer:
+        data = self.sql_conf.return_rent
+        if self.check_datatypes([rent_id, date], data.take):
+            return self.execute(data.question.format(real_return = date, rent_id = rent_id))
+        return self.logret(-8)
+    
+    def create_new_rent(self, movie_id:int, user_id:int, rent:str, return_date:str) -> Answer:
+        data = self.sql_conf.create_new_rent
+        if self.check_datatypes([movie_id, user_id, rent, return_date], data.take):
+            return self.execute(data.question.format(movie_id = movie_id, user_id = user_id, rent = rent, return_date = return_date,))
+        return self.logret(-8)
+    
+    def delete_rent(self, rent_id:int, date:str) -> Answer:
+        data = self.sql_conf.delete_rent
+        if self.check_datatypes([rent_id], data.take):
+            return self.execute(data.question.format(rent_id = rent_id))
+        return self.logret(-8)
+    
+    def get_all_before(self, date:str) -> Answer:
+        data = self.sql_conf.get_all_before
+        if self.check_datatypes([date], data.take):
+            return self.select(data.question.format(date = date))
+        return self.logret(-8)
+    
+    def get_all_after(self, date:str) -> Answer:
+        data = self.sql_conf.get_all_after
+        if self.check_datatypes([date], data.take):
+            return self.select(data.question.format(date = date))
+        return self.logret(-8)
+    
+    def get_all_user_rented_returned(self, user_id:int) -> Answer:
+        data = self.sql_conf.get_all_user_rented_returned
+        if self.check_datatypes([user_id], data.take):
+            return self.select(data.question.format(user_id = user_id))
+        return self.logret(-8)
+    
+    def get_all_user_rented_not_returned(self, user_id:int) -> Answer:
+        data = self.sql_conf.get_all_user_rented_not_returned
+        if self.check_datatypes([user_id], data.take):
+            return self.select(data.question.format(user_id = user_id))
+        return self.logret(-8)
+    
+    def get_all_user_outdated(self, user_id:int, date:str) -> Answer:
+        data = self.sql_conf.get_all_user_outdated
+        if self.check_datatypes([user_id, date], data.take):
+            return self.select(data.question.format(user_id = user_id, date = date))
+        return self.logret(-8)
+
+    
+    
     # unspecified
 
     def check_userdata(self, typ:str, value:str) -> Answer:
@@ -380,21 +483,24 @@ class SQL:
         return False
 
     #checks if user is active
-    def inactivity_check(self, user_id:int) -> Answer:
+    def inactivity_check(self, user_id:int) -> bool:
         
         self.__log__(-1017, notes = f'user_id = {user_id}')
         if not self.user_exists(user_id):
-            return self.logret(-1005, notes = f'user_id -> {user_id}')
+            self.__log__(-1005, notes = f'user_id -> {user_id}')
+            return False
         answer = self.get_user_tags(user_id).getList()
         if not self.get_tag_id('inactive') in answer:
-            return self.logret(-1023, notes = f'user_id -> {user_id}')
-        return self.logret(-1004, notes = f'user_id -> {user_id}')
+            self.__log__(-1023, notes = f'user_id -> {user_id}')
+            return True
+        self.__log__(-1004, notes = f'user_id -> {user_id}')
+        return False
     
     def get_ban_id(self) -> int:
-        return list(zip(*self.get_all_tags().getList()))[1].index('banned')
+        return list(zip(*self.get_all_tags().getList()))[1].index('banned')+1
     
     def get_tag_id(self, tagname) -> int:
-        return list(zip(*self.get_all_tags().getList()))[1].index(tagname)
+        return list(zip(*self.get_all_tags().getList()))[1].index(tagname)+1
 
     def user_ban_status(self, user_id:int, ban_id=-1) -> Answer:
 
@@ -415,8 +521,8 @@ class SQL:
 
         question = self.inactivity_check(user_id)
 
-        if not question.isInfo():
-            return question
+        if not question:
+            return self.logret(-1004)
 
         question = self.set_user_tag(user_id, self.get_tag_id('inactivity'))
 
@@ -457,8 +563,8 @@ class SQL:
 
         question = self.inactivity_check(user_id)
 
-        if not question.isInfo():
-            return question
+        if not question:
+            return self.logret(-1004)
 
         question = self.delete_user_tag(user_id, self.get_tag_id('inactivity'))
 
@@ -556,8 +662,9 @@ class SQL:
         if self.user_ban_status(user_id).getBool():
             return self.logret(-1011)
         
-        q = self.inactivity_check(user_id)
-        if not q.getBool():
+        question = self.inactivity_check(user_id)
+
+        if not question:
             return self.logret(-1004)
         
         self.__log__(-1019, notes = f'user id -> {user_id}')
@@ -591,8 +698,10 @@ class SQL:
         if len(q.getList()) > 0:
             return self.logret(-1001, notes = f'simmilar mail found -> {mail}')
 
-        if not self.inactivity_check(user_id).getBool():
-            return self.logret(-1004, notes=f"inactive user id -> {user_id}")
+        question = self.inactivity_check(user_id)
+
+        if not question:
+            return self.logret(-1004)
 
         if password == '':
             password = self.find_user(user_id).getList()[3]
@@ -638,23 +747,186 @@ class SQL:
         
         q = self.user_deactivate(user_id)
         return self.logret(-1021, notes = f'user_id -> {user_id}')
+    
+    def stock_add(self, movie_id, amount) -> Answer:
 
-    #deprived functionality
-    #def active_users(self) -> Answer:
+        if not self.movie_exists(movie_id):
+            return self.logret(-2004, notes = f'movie_id -> {movie_id}')
+        
+        q = self.movie_finder(movie_id).getList()
+        return self.movie_change_add_tags(movie_id, q[1], [], q[2], q[3], q[4], q[5]+amount, q[6])
+    
+    def stock_sub(self, movie_id, amount) -> Answer:
+
+        if not self.movie_exists(movie_id):
+            return self.logret(-2004, notes = f'movie_id -> {movie_id}')
+        
+        q = self.movie_finder(movie_id).getList()
+        return self.movie_change_add_tags(movie_id, q[1], [], q[2], q[3], q[4], q[5]-amount, q[6])
+
     #gets movies rented by the user
-    def movies_rented(self, user_id:int) -> Answer:
+    def user_rent_history(self, user_id:int) -> Answer:
         
-        if(cursor:=self.cursor()):
-            answer = self.select(cursor, f"SELECT `movie`, `rent`, `return`, `real_return` FROM `rents` WHERE user = {user_id};")
-            cursor.close()
-            self.__log__(-1008, notes=f"of user id -> {user_id}")
-            return Answer(answer)
+        if not self.user_exists(user_id):
+            return self.logret(-1005, notes = f'user_id -> {user_id}')
         
-        else:
-            self.__log__(-200)
-            
-        return Answer(self.__codes__[-200])
+        q = self.get_all_user_rents(user_id)
+        if not q.isUsefull():
+            return self.logret(-4000)
+        return q
+    
+    def user_actual_rent(self, user_id:int) -> Answer:
+        
+        if not self.user_exists(user_id):
+            return self.logret(-1005, notes = f'user_id -> {user_id}')
+        
+        q = self.get_all_user_rented_not_returned(user_id)
+        if not q.isUsefull():
+            return self.logret(-4000)
+        return q
+    
+    def user_have_return(self, user_id:int, date:str) -> Answer:
+        
+        if not self.user_exists(user_id):
+            return self.logret(-1005, notes = f'user_id -> {user_id}')
+        
+        q = self.get_all_user_outdated(user_id, date)
+        if not q.isUsefull():
+            return self.logret(-4000)
+        return q
+    
+    def user_old_rent(self, user_id:int) -> Answer:
+        
+        if not self.user_exists(user_id):
+            return self.logret(-1005, notes = f'user_id -> {user_id}')
+        
+        q = self.get_all_user_rented_returned(user_id)
+        if not q.isUsefull():
+            return self.logret(-4000)
+        return q
 
+    def movie_rented(self, movie_id:int) -> Answer:
+
+        if not self.movie_exists(movie_id):
+            return self.logret(-2004, notes = f'movie_id -> {movie_id}')
+        
+        q = self.get_all_movie_rents(movie_id)
+        if not q.isUsefull():
+            return self.logret(-4001)
+        return q
+    
+    def rents_user_outdated(self, user_id:int) -> Answer:
+        
+        today = datef.today().strftime('%Y-%m-%d')
+        q = self.user_rented(user_id)
+        if q.isError():
+            return q.getError()
+        
+        q2 = self.get_all_outdated(today)    
+        if q2.isError():
+            return q2.getError()
+
+        answer = []
+
+        for x in q:
+            if x in q2:
+                answer.append(x)
+        
+        return Answer(answer)
+    
+    def rents_movie_outdated(self, movie_id) -> Answer:
+        
+        today = datef.today().strftime('%Y-%m-%d')
+        q = self.movie_rented(movie_id)
+        if q.isError():
+            return q.getError()
+        
+        q2 = self.get_all_outdated(today)    
+        if q2.isError():
+            return q2.getError()
+
+        answer = []
+
+        for x in q:
+            if x in q2:
+                answer.append(x)
+        
+        return Answer(answer)
+    
+    def rents_all_outdated(self) -> Answer:
+
+        today = datef.today().strftime('%Y-%m-%d')
+        q = self.get_all_outdated(today)    
+        if not q.isUsefull():
+            return self.logret(-4002)
+        return q
+    
+    def rents_not_returned(self) -> Answer:
+
+        q = self.get_all_not_returned()
+        if not q.isUsefull():
+            return self.logret(-4002)
+        return q
+    
+    def rent_update(self, rent_id, movie_id, user_id, rent, return_date, real_return) -> Answer:
+        
+        if not self.user_exists(user_id):
+            return self.logret(-1005, notes = f'user_id -> {user_id}')
+
+        if not self.movie_exists(movie_id):
+            return self.logret(-2004, notes = f'movie_id -> {movie_id}')
+
+        q = self.update_rent(movie_id, user_id, rent, return_date, real_return, rent_id)
+        if not q.isUsefull():
+            return self.logret(-4003)
+        return q
+    
+    def rent_return(self, rent_id, date) -> Answer:
+
+        q = self.return_rent(rent_id, date)
+        if not q.isUsefull():
+            return self.logret(-4006)
+        return q
+    
+    def rent(self, movie_id, user_id, rent, return_date) -> Answer:
+        
+        if not self.user_exists(user_id):
+            return self.logret(-1005, notes = f'user_id -> {user_id}')
+
+        if not self.movie_exists(movie_id):
+            return self.logret(-2004, notes = f'movie_id -> {movie_id}')
+
+        q = self.create_new_rent(movie_id, user_id, rent, return_date)
+        if not q.isUsefull():
+            return self.logret(-4004)
+        q = self.stock_sub(1)
+        if not q.isUsefull():
+            return self.logret(-2005)
+        return q
+    
+    def unrent(self, rent_id) -> Answer:
+
+        q = self.delete_rent(rent_id)
+        if not q.isUsefull():
+            return self.logret(-4005)
+        q = self.stock_add(1)
+        if not q.isUsefull():
+            return self.logret(-2005)
+        return q
+
+    def rented_before(self, date) -> Answer:
+
+        q = self.get_all_before(date)
+        if not q.isUsefull():
+            return self.logret(-4005)
+        return q
+    
+    def rented_after(self, date) -> Answer:
+
+        q = self.get_all_after(date)
+        if not q.isUsefull():
+            return self.logret(-4005)
+        return q
 
     #Adds a movie to database
     def movie_add(self, title:str, age:int, director:str, production:int, stock:int, tags:list[int], description="") -> Answer:
@@ -742,7 +1014,7 @@ class SQL:
     def user_finder(self, user_id:int) -> Answer:
         
         if not self.user_exists(user_id):
-            return self.logret(-2004, notes = f'user_id -> {user_id}')
+            return self.logret(-1004, notes = f'user_id -> {user_id}')
         return self.find_user(user_id)
 
     #Changes data of a movie
@@ -763,7 +1035,7 @@ class SQL:
             if not movie_tags.isUsefull():
                 self.__log__(-2001)
             else:
-                movie_tags  = movie_tags .getList()
+                movie_tags = movie_tags.getList()
                 for x in tags.copy():
                     if not x in q:
                         self.__log__(-3000, notes = f'tag_id -> {x}')
@@ -779,6 +1051,32 @@ class SQL:
                             self.__log__(-3001, notes = f'tag_id -> {x}')
 
         return self.update_movie(movie_id, title, age, director, production, stock, description=description)
+    
+    def movie_change_add_tags(self, movie_id:int, title:str, tags:list[int], age:int, director:str, production:int, stock:int, description:str) -> Answer:
+        
+        title = self.protection(title)
+        director = self.protection(director)
+        description = self.protection(description)
+
+        q = self.get_all_tags()
+        if not q.isUsefull():
+            self.__log__(-2001)
+        else:
+            movie_tags = self.get_movie_tags(movie_id)
+            if not movie_tags.isUsefull():
+                self.__log__(-2001)
+            else:
+                movie_tags = movie_tags.getList()
+                for x in tags.copy():
+                    if not x in q:
+                        self.__log__(-3000, notes = f'tag_id -> {x}')
+                        continue
+                    if not x in movie_tags:
+                        p = self.set_movie_tag(movie_id, x)
+                        if not p.isUsefull():
+                            self.__log__(-3001, notes = f'tag_id -> {x}')
+
+        return self.update_movie(movie_id, title, age, director, production, stock, description=description)
 
     #Gets recently added movies
     def movies_recent(self, amount:int) -> Answer:
@@ -786,7 +1084,7 @@ class SQL:
 
     #set stock amount of movie by id to 0
     def movie_delete(self, movie_id:int) -> Answer:
-        return self.movie_change(movie_id, '', [], )
+        return self.movie_change(movie_id, '', [], 0, '', 0, 0, '')
 
     #actually, I don't know why this even exists, not used anymore!
     def all_from_all(self, table:str) -> Answer:
@@ -819,9 +1117,8 @@ class SQL:
     
 
     def admin(self, user_id:int) -> Answer:
-        q = self.get_user_tags()
+        q = self.get_user_tags(user_id)
         if not q.isUsefull():
-            return self.logret(-10001)
+            return self.logret(-3003)
         q = q.getList()
         return Answer(self.get_tag_id('admin') in q)
-    

@@ -42,8 +42,17 @@
 -2002:MOVIE - failed to create a movie:ERROR
 -2003:MOVIE - created new movie:INFO
 -2004:MOVIE - movie doesn't exist:ERROR
+-2005:MOVIE - can't change stock amount:ERROR
 -3000:TAG - wrong tag id provided:ERROR
 -3001:TAG - failed to bind tag:ERROR
--3001:TAG - failed to unbind tag:ERROR
+-3002:TAG - failed to unbind tag:ERROR
+-3003:TAG - failed to check admin tag:ERROR
+-4000:RENTS - failed to get user rents:ERROR
+-4001:RENTS - failed to get movie rents:ERROR
+-4002:RENTS - failed to get outdated rents:ERROR
+-4003:RENTS - failed to update rent:ERROR
+-4004:RENTS - failed to rent a movie:ERROR
+-4005:RENTS - failed to delete rent:ERROR
+-4006:RENTS - failed to return rent:ERROR
 -10000:BASE - ok:INFO
 -10001:BASE - not ok:ERROR

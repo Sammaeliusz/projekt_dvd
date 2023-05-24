@@ -5,29 +5,29 @@ def MessageCreator(code:int, message='', separator='_', typ='ERROR'):
 
 class Error:
 
-    __code: int
-    __message: str
-    __FlagSeparator: str
-    __flags: str
+    code: int
+    message: str
+    FlagSeparator: str
+    flags: str
 
     def __init__(self, code, message="", separator='_'):
 
-        self.__code = code
-        self.__message = message
-        self.__FlagSeparator = separator
-        self.__flags = f"{f'M{len(message)}{self.__FlagSeparator}' if message else ''}E"
+        self.code = code
+        self.message = message
+        self.FlagSeparator = separator
+        self.flags = f"{f'M{len(message)}{self.FlagSeparator}' if message else ''}E"
 
     def getCode(self) -> int:
-        return self.__code
+        return self.code
 
     def getMessage(self) -> str:
-        return self.__message
+        return self.message
 
     def getFlags(self) -> str:
-        return self.__flags.split(self.__FlagSeparator)
+        return self.flags.split(self.FlagSeparator)
 
     def getFlagSeparator(self) -> str:
-        return self.__FlagSeparator
+        return self.FlagSeparator
 
     def getType(self) -> str:
         return "ERROR"
@@ -36,17 +36,17 @@ class Info(Error):
 
     def __init__(self, code, message="", separator='_'):
 
-        self.__code = code
-        self.__message = message
-        self.__FlagSeparator = separator
-        self.__flags = f"{f'M{len(message)}{self.__FlagSeparator}' if message else ''}I"
+        self.code = code
+        self.message = message
+        self.FlagSeparator = separator
+        self.flags = f"{f'M{len(message)}{self.FlagSeparator}' if message else ''}I"
 
     def getType(self) -> str:
         return "INFO"
 
     def getMessage(self) -> str:
-        return self.__message
+        return self.message
     
     def getCode(self) -> int:
-        return self.__code
+        return self.code
 
