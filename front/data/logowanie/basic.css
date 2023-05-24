@@ -145,6 +145,46 @@ body{
 	width:1.15em;
 	height:1.15em;
 }
+.navigation-bar .navigation-block * .navigation-tab a input{
+	background:transparent;
+	background-repeat:no-repeat;
+	
+	display:flex;
+	position:relative;
+	overflow:hidden;
+	
+	padding: 10px 15px;
+	
+	height:100%;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+	
+	border:none;
+	cursor:pointer;
+	outline:none;
+	
+	text-transform:uppercase;
+	text-decoration:none;
+	color:var(--button-color);
+	font-weight:bold;
+
+	direction: ltr;
+	
+	align-items:center;
+	
+	transition: 0.5s;
+}
+.navigation-bar .navigation-block * .navigation-tab a input:hover{
+	box-shadow:var(--button-hover-shadow);
+	background:var(--button-hover-background);
+	color:var(--button-hover-color);
+}
+.navigation-bar .navigation-block * .navigation-tab a input:focus{
+	box-shadow:var(--button-hover-shadow);
+	background:var(--button-hover-background);
+	color:var(--button-hover-color);
+}
 
 .menu-left{
 	display:flex;

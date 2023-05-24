@@ -145,6 +145,46 @@ body{
 	width:1.15em;
 	height:1.15em;
 }
+.navigation-bar .navigation-block * .navigation-tab a input{
+	background:transparent;
+	background-repeat:no-repeat;
+	
+	display:flex;
+	position:relative;
+	overflow:hidden;
+	
+	padding: 10px 15px;
+	
+	height:100%;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+	
+	border:none;
+	cursor:pointer;
+	outline:none;
+	
+	text-transform:uppercase;
+	text-decoration:none;
+	color:var(--button-color);
+	font-weight:bold;
+
+	direction: ltr;
+	
+	align-items:center;
+	
+	transition: 0.5s;
+}
+.navigation-bar .navigation-block * .navigation-tab a input:hover{
+	box-shadow:var(--button-hover-shadow);
+	background:var(--button-hover-background);
+	color:var(--button-hover-color);
+}
+.navigation-bar .navigation-block * .navigation-tab a input:focus{
+	box-shadow:var(--button-hover-shadow);
+	background:var(--button-hover-background);
+	color:var(--button-hover-color);
+}
 
 .menu-left{
 	display:flex;
@@ -405,7 +445,7 @@ body{
 	width: calc(100% - 10px);
 	height:inherit;
 	
-	left: 5px;
+	justify-content: center;
 }
 
 
@@ -437,7 +477,9 @@ body{
 	display: flex;
 	position: relative;
 
-	left: 20px
+	left: 50px;
+
+	flex-direction: column;
 }
 .holder-left .movies .cards p{
 	display: flex;
@@ -450,4 +492,36 @@ body{
 	text-transform:uppercase;
 	text-decoration:none;
 	text-shadow: 2px 2px 15px rgba(0,0,0,0.76);
+}
+.holder-left .movies .rent{
+	display: flex;
+	position: relative;
+
+	width: 50%;
+	height: 100px;
+	
+	text-align:left;
+	border-radius: 1em;
+    cursor: pointer;
+    overflow: hidden;
+	outline: none;
+    background: rgba(0,0,0,0.35);
+	border: 1px solid white;
+	color: var(--button-color);
+	
+	align-items:center;
+	justify-content:center;
+	
+	text-transform:uppercase;
+	text-decoration:none;
+	font-size: 1em;
+	font-weight:bold;
+}
+.holder-left .movies .rent:hover{
+	background: var(--button-background);
+	box-shadow: var(--button-hover-shadow);
+	color: var(--button-color);
+}
+.holder-left .movies .rent:active{
+	box-shadow: var(--button-hover-shadow);
 }
