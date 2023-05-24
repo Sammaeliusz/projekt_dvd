@@ -1,5 +1,5 @@
 [main]
-local = ".Errors/404/index.html"
+local = "!Errors/404/index.html"
 name = "404"
 route = "404"
 

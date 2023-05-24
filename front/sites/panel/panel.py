@@ -10,61 +10,81 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
             bottle.response.set_cookie('zal', '', expires=0)
             return redirect('/')
         
-    us_id = bottle.request.get_cookie("id")
+    user_id = bottle.request.get_cookie("id")
     
-    if us_id:
-        user = sql.user_finder(us_id)
-        if sql.admin(us_id).getList()[0]==2:
-            lin = """<button onclick="window.location.href = '/admin'">Przejdź do panelu Admina</button>"""
-        else:
-            lin = ""
-        if user.isUsefull():
-            bottle.response.set_cookie('user', str(f"{user.getList()[1]}|{user.getList()[2]}|{user.getList()[3]}"))
-            rented = sql.movies_rented(us_id)
-            
-            if rented.isUsefull():
-                rented_history = ""
-                rented_history2 = ""
-                today = date.today()
-                n = 0
-                rlist = rented.getList()
-                if not isinstance(rlist[0], list):
-                    rlist = [rlist]
+    if user_id:
+        user_id = int(user_id)
 
-                for i in rlist:
-                    print(i)
-                    movie = sql.movie_finder(i[0])
-                    print(movie.getList())
-                    if movie.isUsefull():
-                        
-                        if i[3] == None and i[2] != None:
-                                
-                            if i[2]-today < timedelta(0):
-                                is_overdue = "tak"
-                                n += 1
-                                if bottle.request.get_cookie('zal')!="yes":
-                                    bottle.response.set_cookie('zal', str("yes"))
-                                    return redirect('/panel')
-                            else: 
-                                is_overdue = "nie"
-                                
-                            rented_history += f'''
-                            <tr class="position">
-                                <td class="name">{movie.getList()[1]}</td>
-                                <td class="data">{i[1].day}.{i[1].month}.{i[1].year}-{i[2].day}.{i[2].month}.{i[2].year}</td>
-                                <td class="iss">{is_overdue}</td>
-                            </tr>'''
-                            
-                        elif(i[3]!= None):
-                            
-                            rented_history2 += f'''
-                            <tr class="position">
-                                <td class="name">{movie.getList()[1]}</td>
-                                <td class="data">{i[1].day}.{i[1].month}.{i[1].year}-{i[3].day}.{i[3].month}.{i[3].year}</td>
-                            </tr>'''
-                            is_overdue="nie"
-                return function(user=user.getList(), swyp=rented_history, swypp=rented_history2,admin= lin, **kwg)
+        user = sql.user_finder(user_id)
+
+        if user.isUsefull():
+
+            rented = sql.user_actual_rent(user_id)
+            history = sql.user_rent_history(user_id)
+            not_returned = sql.user_have_return(user_id, today())
+
+            admin = False
+            if sql.admin(user_id).getBool():
+                admin = True
+
+            user_list = user.getList()
+            bottle.response.set_cookie('user', str(f"{user_list[1]}|{user_list[2]}|{user_list[3]}"))
             
-            return function(user=user.getList(), swyp="", swypp="", admin= lin, **kwg)
+            rented_list = []
+            return_popup = []
+            history_list = []
+
+            if rented.isUsefull() and not_returned.isUsefull():
+                not_returned = not_returned.getList()
+
+                for x in not_returned:
+                    q = sql.movie_finder(int(x[1]))
+                    if q.isUsefull():
+                        q = q.getList()
+                        return_popup.append(f'{q[1]}')
+
+                for x in rented.getList():
+                    q = sql.movie_finder(int(x[1]))
+                    if q.isUsefull():
+                        q = q.getList()
+                        rented_list.append(Struct({
+                            "id":x[1],
+                            "name":q[1],
+                            "rent":x[3],
+                            "return_date":x[4],
+                            "to_return":x in not_returned,
+                            "file":f"static/Filmy/{q[1].replace(' ', '-').replace(':','')}.png"
+                        }))
+
+            elif rented.isUsefull():
+
+                for x in rented.getList():
+                    q = sql.movie_finder(int(x[1]))
+                    if q.isUsefull():
+                        q = q.getList()
+                        rented_list.append(Struct({
+                            "id":x[1],
+                            "name":q[1],
+                            "rent":x[3],
+                            "return_date":x[4],
+                            "to_return":False,
+                            "file":f"static/Filmy/{q[1].replace(' ', '-').replace(':','')}.png"
+                        }))
+            
+            if history.isUsefull():
+
+                for x in history.getList():
+                    q = sql.movie_finder(int(x[1]))
+                    if q.isUsefull():
+                        q = q.getList()
+                        history_list.append(Struct({
+                            "id":x[1],
+                            "name":q[1],
+                            "rent":x[3],
+                            "return_date":x[4],
+                            "real_return":x[5],
+                            "file":f"static/Filmy/{q[1].replace(' ', '-').replace(':','')}.png"
+                        }))
+            return function(user = user_list, rented = rented_list, history = history_list, admin = admin, return_popup = return_popup, **kwg)
         
     return redirect('/logowanie')

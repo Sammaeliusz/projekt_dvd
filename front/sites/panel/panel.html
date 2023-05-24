@@ -35,130 +35,211 @@
 			function Zmiana() {
 				location.href = './zmiana'
 			}
-			function zal(){
-			let x =document.cookie;
-			if (x.includes("zal=yes"))
-				alert("Masz zaległe filmy!");}
-			function actual(){
-			document.getElementById("inrow").style.transform = "translatex(25%)";
-			document.getElementById("actual").style.transform = "translatex(0%)";
-			document.getElementById("history").style.transform = "translatex(5%)"
-			}
-			function history(){
-			document.getElementById("inrow").style.transform = "translatex(-25%)";
-			document.getElementById("actual").style.transform = "translatex(-5%)";
-			document.getElementById("history").style.transform = "translatex(0%)"
-			}
 		</script>
 	</head>
 	<body>
-		<!-- MENU -->
-		<div class="navholder" id="navhold">
-			<div class="navbar">
-				<div class="right">
-					<div class="tablink">
-						<a><button class="tabbutt" onclick="userclick()"><img src="static/images/proba.png" class="userclick"></button></a>
+		<div class="navigation-bar" id="navhold">
+			<div class="navigation-block">
+				<div class="right-side">
+					<div class="navigation-tab">
+						<a><button onclick="userclick()" aria-label="Login/Panel"><img src="static/images/proba.png" alt="Panel or Login"></button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">FAQ</button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="zbiory"><button class="tabbutt" onclick="">Zbiory</button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
 					</div>
 				</div>
-				<div class="left">
-					<div class="tablink">
+				<div class="left-side">
+					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">______________________________</button></a>
 					</div>
-					<div class="tablink">
+					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">O</button></a>
 					</div>
 				</div>
 			</div>
 		</div>
 		
-		<div class="leftmenu" id="leftmenu">
-			<div class="lml">
-				<div class="lmltab">
+		<div class="menu-left" id="leftmenu">
+			<div class="menu-left-holder">
+				<div class="menu-left-tab">
 					<p>Menu</p>
 				</div>
-				<div class="lmltab">
-					<a><button>Panel użytkownika</button></a>
+				% if admin:
+				<div class="menu-left-tab">
+					<a><button onclick="window.location.href = '/admin'">Przejdź do panelu Admina</button></a>
 				</div>
-				<div class="lmltab">
-					<a><button>Panel administratora</button></a>
-				</div>
+				% end
 			</div>
-			<div class="lmb">
-				<button onclick="leftmenu()">n</button>
+			<div class="menu-left-button">
+				<button onclick="leftmenu()">=</button>
 			</div>
 		</div>
-		<div class="topmain">
-			
-			<div class="mwl">
-				<div class="info">
-					<table>
-						<tr>
-							<td>Nazwa użytkownika: </td>
-							<td class="answer">{{user[1]}}</td>
-						</tr>
-						<tr>
-							<td>Adres e-mail: </td>
-							<td class="answer">{{user[2]}}</td>
-						</tr>
-					</table>
-					<div class="butts">
-						<button class="bob" onclick="Zmiana()">Zmień dane</button>
-						<form action="" method="post">
-							<button class="bob" type="submit" name="logout" value="Wyloguj">Wyloguj</button>
+
+		<div class="holder-left">
+			<div class="intro">
+				<h2>Cześć, {{user[1]}}! Dobrze cię znów widzieć :)</h2>
+			</div>
+			<div class="info">
+				<div class="info-row">
+					<div class="info-column left">
+						<p>Nazwa użytkownika</p>
+					</div>
+					<div class="info-column right">
+						<p>{{user[1]}}</p>
+					</div>
+				</div>
+				<div class="info-row">
+					<div class="info-column left">
+						<p>adres e-mail</p>
+					</div>
+					<div class="info-column right">
+						<p>{{user[2]}}</p>
+					</div>
+				</div>
+				<div class="butts">
+					<button class="bob" onclick="Zmiana()">Zmień dane</button>
+					<form action="" method="post">
+						<button class="bob" type="submit" name="logout" value="Wyloguj">Wyloguj</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="holder-right">
+			<div class="info">
+				<p>Wypożyczone filmy</p>
+			</div>
+			<div class="movie-card-list">
+				<div class="movie-card-list-holder">
+				% for x in rented:
+					<div class="movie-card">
+						<form action="/film" method="get">
+							<div class="movie-card-button">
+								<button name="mid" value="{{x.id}}">
+									<div class="movie-card-text">
+										<div class="movie-card-text-padding">
+											<div class="movie-card-text-50"><p>Nazwa</p></div>
+											<div class="movie-card-text-50"><p>{{x.name}}</p></div>
+										</div>
+										<div class="movie-card-text-padding">
+											<div class="movie-card-text-50"><p>Wypożyczono</p></div>
+											<div class="movie-card-text-50"><p>{{x.rent}}</p></div>
+										</div>
+										<div class="movie-card-text-padding">
+											<div class="movie-card-text-50"><p>Zwrot planowany</p></div>
+											<div class="movie-card-text-50"><p>{{x.return_date}}</p></div>
+										</div>
+										% if x.to_return:
+										<div class="movie-card-text-padding">
+											<div class="movie-card-text-50"><p style="color:red; font-weight: bold;">ZALEGA ZE ZWROTEM</p></div>
+										</div>
+										% end
+										<div class="movie-card-text-padding"></div>
+											<button class="movie-card-button-inside" onclick='zwrot({{x.id}})'>Zwrot</button>
+										</div>
+									</div>
+									<div class="movie-card-image"><img src={{x.file}} alt="{{x.name}}"></div>
+								</button>
+							</div>
 						</form>
-						{{!admin}}
 					</div>
+				% end
 				</div>
 			</div>
-			<div class="mbr">
-				<div class="intro">
-					<h1>Cześć, {{user[1]}}! Dobrze cię znów widzieć :)</h1>
-				</div>
-				<div class="list">
-					<div class="choice">
-						<button onclick="actual()"><<< Aktualnie wypożyczone</button>
-						<button onclick="history()">Historia wypożyczania >>></button>
-					</div>
-					<div class="inrow" id="inrow">
-						<div class="rent" id="actual">
-							<div class="dataTable">
-								<table>
-									<tr class="position">
-										<th class="name"><p>Nazwa</p></th>
-										<th class="data"><p>Okres wypożyczenia</p></th>
-										<th class="iss"><p>Zaległy?</p></th>
-									</tr>
-									{{!swyp}}
-								</table>
+			<div class="info">
+				<p>Historia wypożyczeń</p>
+			</div>
+			<div class="movie-card-list">
+				<div class="movie-card-list-holder">
+				% for x in history:
+					<div class="movie-card">
+						<form action="/film" method="get">
+							<div class="movie-card-button">
+								<button name="mid" value="{{x.id}}">
+									<div class="movie-card-text">
+										<div class="movie-card-text-padding">
+											<div class="movie-card-text-50"><p>Nazwa</p></div>
+											<div class="movie-card-text-50"><p>{{x.name}}</p></div>
+										</div>
+										<div class="movie-card-text-padding">
+											<div class="movie-card-text-50"><p>Wypożyczono</p></div>
+											<div class="movie-card-text-50"><p>{{x.rent}}</p></div>
+										</div>
+										<div class="movie-card-text-padding">
+											<div class="movie-card-text-50"><p>Zwrot planowany</p></div>
+											<div class="movie-card-text-50"><p>{{x.return_date}}</p></div>
+										</div>
+										<div class="movie-card-text-padding">
+											<div class="movie-card-text-50"><p>Zwrot realny</p></div>
+											<div class="movie-card-text-50"><p>{{x.real_return}}</p></div>
+										</div>
+									</div>
+									<div class="movie-card-image"><img src={{x.file}} alt="{{x.name}}"></div>
+								</button>
 							</div>
-						</div>
-						<div class="rent" id="history">
-							<div class="dataTable">
-								<table>
-									<tr class="position">
-										<th class="name">Nazwa</th>
-										<th class="data">Okres wypożyczenia</th>
-									</tr>
-									{{!swypp}}
-								</table>
-							</div>
-						</div>
+						</form>
 					</div>
+				% end
 				</div>
 			</div>
 		</div>
-		<script> zal() </script>
+		<script>
+			function zal(){
+				let x = []
+				% for x in return_popup:
+					x.push("{{x}}")
+				% end
+				if(x.lenght > 0){
+					alert('Masz zaległe filmy!\n\nZaległe filmy:\n'+x.join('\n'))
+				}
+			}
+			function actual(){
+				document.getElementById("inrow").style.transform = "translatex(25%)";
+				document.getElementById("actual").style.transform = "translatex(0%)";
+				document.getElementById("history").style.transform = "translatex(5%)"
+			}
+			function history(){
+				document.getElementById("inrow").style.transform = "translatex(-25%)";
+				document.getElementById("actual").style.transform = "translatex(-5%)";
+				document.getElementById("history").style.transform = "translatex(0%)"
+			}
+			function userclick(){
+				if(document.cookie.search('id')!=-1){
+					window.open('/panel', '_self')
+				}else{
+					window.open('/logowanie', '_self')
+				}
+			}
+			function leftmenu(){
+				if(!lmb){
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "0px"
+					lmb = true;
+				}
+				else{
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "-310px"
+					lmb = false;
+				}
+			}
+			var lmb = false;
+			window.onload = function (){
+				console.log("keu");
+				document.body.onscroll = function () {
+						var nb = document.getElementById("navhold")
+						var lm = document.getElementById("leftmenu")
+						nb.style.top = window.scrollY
+						lm.style.top = "calc("+window.scrollY+"px + 50px)"
+					}}
+			zal()
+		</script>
 	</body>
 </html>

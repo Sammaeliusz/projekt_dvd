@@ -21,3 +21,6 @@ def environhack():
     bottle.request.environ['wsgi.input'] = BytesIO()
     bottle.request.environ['wsgi.input'].write(bottle.tob(body))
     bottle.request.environ['wsgi.input'].seek(0)
+
+def today():
+    return date.today().strftime('%Y-%m-%d')

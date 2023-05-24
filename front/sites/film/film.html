@@ -68,17 +68,19 @@
 			</div>
 			<div class="movies">
 				<div class="cards">
-					<p>{{movie[0]}}</p>
+					<p>{{movie[1]}}</p>
 					<p>kategorie: 
 					% for x in tags:
 						{{x[1]}}, 
 					% end
 					</p>
-					<p>kategoria wiekowa: {{movie[3]}}+</p>
-					<p>reżyser: {{movie[4]}}</p>
-					<p>rok wydania: {{movie[5]}}</p>
-					<p>na stanie: {{movie[6]}}</p>
+					<p>kategoria wiekowa: {{movie[2]}}+</p>
+					<p>reżyser: {{movie[3]}}</p>
+					<p>rok wydania: {{movie[4]}}</p>
+					<p>na stanie: {{movie[5]}}</p>
+					<p>opis filmu: {{movie[6]}}</p>
 				</div>
+				<button class="rent" onclick="rent({{movie[0]}})"></button>
 			</div>
 		</div>
 		<div class="holder-right">
@@ -118,6 +120,9 @@
 						nb.style.top = window.scrollY
 						lm.style.top = "calc("+window.scrollY+"px + 50px)"
 					}}
+			function rent(id){
+				window.open(`/rent?mid=${id}`, '_self')
+			}
 			</script>
 
 	</body>
