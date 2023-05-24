@@ -351,6 +351,8 @@ body{
 	display:flex;
 	position: absolute;
 	z-index:8;
+
+	left: 100px;
 	
 	align-items:flex-start;
 	justify-content:center;

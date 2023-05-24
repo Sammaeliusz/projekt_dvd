@@ -495,7 +495,6 @@ input:valid ~ label{
 }
 
 .holder-left .login button{
-	background: transparent;
 	transition: 0.5s;
 	display: flex;
 	position: relative;
@@ -508,21 +507,19 @@ input:valid ~ label{
 	
 	text-align:left;
 	padding: 10px 15px;
-    background-repeat: no-repeat;
 	border-radius: 1em;
     cursor: pointer;
     overflow: hidden;
 	outline: none;
-    background: linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.35) 25%, rgba(0,0,0,0.35) 75%, rgba(0,0,0,0.35) 100%);
+    background: rgba(0,0,0,0.35);
 	border: 1px solid white;
-	color: #d8d2eDcc;
+	color: var(--button-color);
 	
 	align-items:center;
 	justify-content:center;
 	
 	text-transform:uppercase;
 	text-decoration:none;
-	color:var(--button-color);
 	font-size: 1em;
 	font-weight:bold;
 }
@@ -532,12 +529,6 @@ input:valid ~ label{
 	color: var(--button-color);
 }
 .holder-left .login button:active{
-	box-shadow: var(--button-hover-shadow);
-}
-
-.holder-left .login button:before{
-	content: "";
-	color:var(--button-color);
 	box-shadow: var(--button-hover-shadow);
 }
 
