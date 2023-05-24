@@ -25,15 +25,12 @@
 						<a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
 					</div>
 					<div class="navigation-tab">
-						<a href="zbiory"><button class="tabbutt" onclick="">Zbiory</button></a>
-					</div>
-					<div class="navigation-tab">
 						<a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
 					</div>
 				</div>
 				<div class="left-side">
 					<div class="navigation-tab">
-						<a href="#"><button class="tabbutt" onclick="">______________________________</button></a>
+						<a href="#"><input class="tabinput" onclick="" onkeydown="search(this);"></a>
 					</div>
 					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">O</button></a>
@@ -80,7 +77,9 @@
 					<p>na stanie: {{movie[5]}}</p>
 					<p>opis filmu: {{movie[6]}}</p>
 				</div>
-				<button class="rent" onclick="rent({{movie[0]}})"></button>
+				% if not_rented:
+					<button class="rent" onclick="rent({{movie[0]}})">Wypożycz film</button>
+				% end
 			</div>
 		</div>
 		<div class="holder-right">
@@ -92,6 +91,12 @@
 		</div>
 		
 		<script>
+			if({{re}}==1){
+				alert('Nie udało się wypożyczyć Filmu.');
+			}
+			else if({{re}}==2){
+				alert('Film "{{movie[1]}}" został wypożyczony.')
+			}
 			function userclick(){
 				if(document.cookie.search('id')!=-1){
 					window.open('/panel', '_self')
@@ -120,8 +125,42 @@
 						nb.style.top = window.scrollY
 						lm.style.top = "calc("+window.scrollY+"px + 50px)"
 					}}
-			function rent(id){
-				window.open(`/rent?mid=${id}`, '_self')
+			function rent(x){
+				if (confirm("Czy na pewno chcesz wypożyczyć ten film?")){
+					const xhr = new XMLHttpRequest()
+        			xhr.open('POST', window.location.href)
+        			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+        			xhr.send(`rent=${x}`)
+					setTimeout(window.open, 1000, window.location.href, '_self')
+				}
+			}
+
+			function openWindowWithPost(url, data) {
+				var form = document.createElement("form");
+				form.target = "_self";
+				form.method = "POST";
+				form.action = url;
+				form.style.display = "none";
+
+				for (var key in data) {
+					var input = document.createElement("input");
+					input.type = "hidden";
+					input.name = key;
+					input.value = data[key];
+					form.appendChild(input);
+				}
+				document.body.appendChild(form);
+				form.submit();
+				document.body.removeChild(form);
+			}
+
+			function search(ele) {
+				if(event.key === 'Enter') {
+					openWindowWithPost("/szukaj", {
+						title: ele.value
+					});
+				}
 			}
 			</script>
 

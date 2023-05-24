@@ -1,0 +1,31 @@
+<div class="movie-card-list-holder">
+    % for x in movies:
+    <div class="movie-card">
+        <form action="/film" method="get">
+            <div class="movie-card-button">
+                <button name="mid" value="{{x.id}}">
+                    <div class="movie-card-text">
+                        <div class="movie-card-text-padding">
+                            <div class="movie-card-text-50"><p>Nazwa</p></div>
+                            <div class="movie-card-text-50"><p>{{x.name}}</p></div>
+                        </div>
+                        <div class="movie-card-text-padding">
+                            <div class="movie-card-text-50"><p>Reżyser</p></div>
+                            <div class="movie-card-text-50"><p>{{x.director}}</p></div>
+                        </div>
+                        <div class="movie-card-text-padding">
+                            <div class="movie-card-text-50"><p>Categories</p></div>
+                            <div class="movie-card-text-50"><p>{{x.categories}}</p></div>
+                        </div>
+                        <div class="movie-card-text-padding">
+                            <div class="movie-card-text-50"><p>Rok produkcji</p></div>
+                            <div class="movie-card-text-50"><p>{{x.production}}</p></div>
+                        </div>
+                    </div>
+                    <div class="movie-card-image"><img src={{x.file}} alt="{{x.name}}"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+    % end
+</div>

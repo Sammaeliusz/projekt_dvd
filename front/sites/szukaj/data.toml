@@ -1,0 +1,11 @@
+[main]
+local = "szukaj/szukaj.html"
+name = "szukaj"
+route = "/szukaj"
+
+[data]
+title = "szukaj"
+
+[script]
+local = "/szukaj.py"
+name = "szukaj"

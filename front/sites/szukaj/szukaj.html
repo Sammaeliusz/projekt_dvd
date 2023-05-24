@@ -5,7 +5,7 @@
 		<title>{{title}}</title>
 		
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-		<link rel="stylesheet" href="static/index/basic.css">
+		<link rel="stylesheet" href="static/szukaj/basic.css">
 		
 		<meta name="viewport" initial-scale="1.0">
 		<meta name="description" content="Lokalny Projekt klasowy wypożyczalnia DVD">
@@ -60,48 +60,55 @@
 		</div>
 		
 		<div class="holder-left">
-			<div class="intro">
-				<h2>Sprawdź nasze najnowsze pozycje!</h2>
-			</div>
-			<div class="movie-card-list">
-				<div class="movie-card-list-holder">
-				% for x in movies:
-					<div class="movie-card">
-						<form action="/film" method="get">
-							<div class="movie-card-button">
-								<button name="mid" value="{{x.id}}">
-									<div class="movie-card-text">
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Nazwa</p></div>
-											<div class="movie-card-text-50"><p>{{x.name}}</p></div>
-										</div>
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Reżyser</p></div>
-											<div class="movie-card-text-50"><p>{{x.director}}</p></div>
-										</div>
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Categories</p></div>
-											<div class="movie-card-text-50"><p>{{x.categories}}</p></div>
-										</div>
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Rok produkcji</p></div>
-											<div class="movie-card-text-50"><p>{{x.production}}</p></div>
-										</div>
-									</div>
-									<div class="movie-card-image"><img src={{x.file}} alt="{{x.name}}"></div>
-								</button>
-							</div>
-						</form>
-					</div>
-				% end
+			<div class="filter">
+				<div class="filter-section">
+					<input type="text" name="title" id="title" placeholder="tytuł">
 				</div>
+				<div class="filter-section">
+					<div class="minmax">
+						<div class="minmaxlabel"><label>min</label></div>
+						<div class="minmaxlabel"><label>kategoria wiekowa</label></div>
+						<div class="minmaxlabel"><label>max</label></div>
+					</div>
+					<div class="minmax">
+						<input type="number" name="min" id="an" placeholder="0">
+						<input type="number" name="max" id="ax" placeholder="99">
+					</div>
+				</div>
+				<div class="filter-section">
+					<div class="minmax">
+						<div class="minmaxlabel"><label>min</label></div>
+						<div class="minmaxlabel"><label>data produkcji</label></div>
+						<div class="minmaxlabel"><label>max</label></div>
+					</div>
+					<div class="minmax">
+						<input type="number" name="min" id="pn" placeholder="0">
+						<input type="number" name="max" id="px" placeholder="9999">
+					</div>
+				</div>
+				<div class="filter-section">
+					<input type="text" name="director" id="dir" placeholder="reżyser">
+				</div>
+				<div class="filter-section">
+					<div class="onstock">
+						<input type="checkbox" name="onstock" id="on">
+						<label for="on">Wymuś dostępność</label>
+					</div>
+				</div>
+				<div class="filter-section">
+					% for x in tags:
+					<input type="checkbox" name="{{x}}" id="{{x}}">
+					<label for="{{x}}">{{x}}</label>
+					% end
+				</div>
+				<button class="look" onclick="look();">Szukaj</button>
 			</div>
 		</div>
 		<div class="holder-right">
 			<div class="intro">
-				<h1>Najlepsza platforma do wypożyczania DVD na świecie!</h1>
-				<p>Nieograniczona oferta filmów, seriali, programów i nie tylko. Oglądaj wszędzie. Pobierz ulubione tytuły i oglądaj offline. Zapisz ulubione tytuły, aby zawsze mieć coś do obejrzenia.</p>
+				<h2>Wyniki wyszukiwania</h2>
 			</div>
+			<div class="movie-card-list" id="js"></div>
 		</div>
 		
 		<script>
@@ -126,14 +133,41 @@
 			}
 			var lmb = false;
 			window.onload = function (){
-				console.log("keu");
 				document.body.onscroll = function () {
 						var nb = document.getElementById("navhold")
 						var lm = document.getElementById("leftmenu")
 						nb.style.top = window.scrollY
 						lm.style.top = "calc("+window.scrollY+"px + 50px)"
-					}}
-			
+					}
+				tags = []
+				% for x in tags:
+				tags.push("{{x}}")
+				% end
+				% if title:
+				title.value = "{{title}}"
+				% end
+				look();
+			}
+
+			function look(){
+				const xhr = new XMLHttpRequest()
+				xhr.open('POST', '/ajax/lookup')
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+				xhr.onload = function () {
+					let x = document.getElementById("js")
+					x.innerHTML = xhr.responseText
+				}
+				
+				active = []
+				tags.forEach(element => {
+					if(document.getElementById(element).checked == true){
+						active.push(element)
+					}
+				});
+				xhr.send(`title=${title.value}&age_min=${an.value}&age_max=${ax.value}&director=${dir.value}&production_min=${pn.value}&production_max=${px.value}&stock=${on.value}&categories=${active.toString()}`)
+			}
+
 			function openWindowWithPost(url, data) {
 				var form = document.createElement("form");
 				form.target = "_self";

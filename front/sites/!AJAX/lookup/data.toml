@@ -1,0 +1,10 @@
+[main]
+local = "!AJAX/lookup/look.html"
+name = "lookup"
+route = "/ajax/lookup"
+
+[data]
+
+[script]
+local = "/look.py"
+name = "look"
