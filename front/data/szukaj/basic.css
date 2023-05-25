@@ -1182,7 +1182,7 @@ body{
 	top:0%;
 	float: right;
 	
-	width:calc(50% - 10px);
+	width:calc(80% - 10px);
 	min-height: calc(100% - 10px - 100px) !important;
 	
 	flex-wrap:wrap;
