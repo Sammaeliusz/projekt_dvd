@@ -87,8 +87,8 @@
                 <div class="tablink">
                     <a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
                 </div>
-                <div class="tablink">
-                    <a href="zbiory"><button class="tabbutt" onclick="">Zbiory</button></a>
+                <div class="navigation-tab">
+                    <a href="/szukaj"><button class="tabbutt" onclick="">Zboiry</button></a>
                 </div>
                 <div class="tablink">
                     <a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
@@ -108,17 +108,13 @@
     <div class="content">
         <div class="intro">
             <h1>Witaj {{user}}</h1>
-            <button onclick="window.location.href = '/panel'"> Wróć do panelu użytkownika</button>
+            <button class="wroc" onclick="window.location.href = '/panel'"> Wróć do panelu użytkownika</button>
         </div>
         <div class="wybor">
             <h2>Co chcesz teraz zrobić?</h2>
             <div class="container">
-                <div class="btns" id="users">
-                    <button>Użytkownicy</button>
-                </div>
-                <div class="btns" id="films">
-                    <button>Zbiory</button>
-                </div>
+                <button class="bt1" id="users">Użytkownicy</button>
+                <button class="bt2" id="films">Zbiory</button>
             </div>
         </div>
 

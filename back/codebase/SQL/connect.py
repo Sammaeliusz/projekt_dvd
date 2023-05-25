@@ -284,12 +284,18 @@ class SQL:
         if self.check_datatypes([user_id], data.take):
             return self.select(data.question.format(user_id = user_id))
         return self.logret(-8)
+    
+    def get_all_user_tags(self) -> Answer:
+        return self.select(self.sql_conf.get_all_user_tags.question)
 
     def get_movie_tags(self, movie_id:int) -> Answer:
         data = self.sql_conf.get_movie_tags
         if self.check_datatypes([movie_id], data.take):
             return self.select(data.question.format(movie_id = movie_id))
         return self.logret(-8)
+    
+    def get_all_movie_tags(self) -> Answer:
+        return self.select(self.sql_conf.get_all_movie_tags.question)
 
     def get_all_tags(self) -> Answer:
         return self.select(self.sql_conf.get_all_tags.question)
@@ -377,7 +383,7 @@ class SQL:
             return self.execute(data.question.format(movie_id = movie_id, user_id = user_id, rent = rent, return_date = return_date,))
         return self.logret(-8)
     
-    def delete_rent(self, rent_id:int, date:str) -> Answer:
+    def delete_rent(self, rent_id:int) -> Answer:
         data = self.sql_conf.delete_rent
         if self.check_datatypes([rent_id], data.take):
             return self.execute(data.question.format(rent_id = rent_id))
@@ -412,9 +418,13 @@ class SQL:
         if self.check_datatypes([user_id, date], data.take):
             return self.select(data.question.format(user_id = user_id, date = date))
         return self.logret(-8)
+    
+    def get_user_movie_rent(self, user_id:int, movie_id:int) -> Answer:
+        data = self.sql_conf.get_user_movie_rent
+        if self.check_datatypes([user_id, movie_id], data.take):
+            return self.select(data.question.format(user_id = user_id, movie_id = movie_id))
+        return self.logret(-8)
 
-    
-    
     # unspecified
 
     def check_userdata(self, typ:str, value:str) -> Answer:
@@ -500,7 +510,10 @@ class SQL:
         return list(zip(*self.get_all_tags().getList()))[1].index('banned')+1
     
     def get_tag_id(self, tagname) -> int:
-        return list(zip(*self.get_all_tags().getList()))[1].index(tagname)+1
+        try:
+            return list(zip(*self.get_all_tags().getList()))[1].index(tagname)+1
+        except:
+            return -1
 
     def user_ban_status(self, user_id:int, ban_id=-1) -> Answer:
 
@@ -904,12 +917,12 @@ class SQL:
             return self.logret(-2005)
         return q
     
-    def unrent(self, rent_id) -> Answer:
+    def unrent(self, rent_id, movie_id, date) -> Answer:
 
-        q = self.delete_rent(rent_id)
+        q = self.return_rent(rent_id, date)
         if not q.isUsefull():
             return self.logret(-4005)
-        q = self.stock_add(1)
+        q = self.stock_add(movie_id, 1)
         if not q.isUsefull():
             return self.logret(-2005)
         return q
@@ -965,26 +978,65 @@ class SQL:
     #
     #   !!!TO BE DONE!!!
     #
-    def movies_find(self, tags=[], name='', age_min=0, age_max=99, director='', production_min=0, production_max=9999, onstock=False) -> Answer:
+    def movies_find_strict(self, tags=[], name='', age_min=0, age_max=99, director='', production_min=0, production_max=9999, onstock=False) -> Answer:
         
         q = self.get_all_movies()
         if not q.isUsefull():
             return self.logret(-10001)
         q = q.getList()
+        for x in tags.copy():
+            gt = self.get_tag_id(x)
+            if gt == -1:
+                del tags[tags.index(x)]
+            else:
+                tags[tags.index(x)] = gt
+
         for x in q.copy():
+            if len(q) == 0:
+                break
             qq = self.get_movie_tags(x[0])
             if not qq.isUsefull():
                 self.__log__(-3000, notes = f'tag_id -> {x}')
-            if not set(qq.getList()) & set(tags) or x[1].find(name) == -1 or not x[2] >= age_min or not x[2] <= age_max or x[3].find(name) == -1 or not x[4] >= production_min or not x[4] <= production_max or (onstock and x[5] == 0):
-                q.remove(q.index(x))
+            if (len(tags) > 0 and not set(qq.getList()) & set(tags)) or x[1].find(name) == -1 or not x[2] >= age_min or not x[2] <= age_max or x[3].find(director) == -1 or not x[4] >= production_min or not x[4] <= production_max or (onstock and x[5] == 0):
+                del q[q.index(x)]
                 continue
             qqq = self.find_movie(x[0])
             if not qqq.isUsefull():
                 self.__log__(-10001)
-                q.remove(q.index(x))
+                del q[q.index(x)]
             else:
                 q[q.index(x)] = qqq
         
+        return Answer(q)
+    
+    def movies_find_lazy(self, tags=[], name='', age_min=0, age_max=99, director='', production_min=0, production_max=9999, onstock=False) -> Answer:
+        
+        q = self.get_all_movies()
+        if not q.isUsefull():
+            return self.logret(-10001)
+        q = q.getList()
+        for x in tags.copy():
+            gt = self.get_tag_id(x)
+            if gt == -1:
+                del tags[tags.index(x)]
+            else:
+                tags[tags.index(x)] = gt
+
+        for x in q.copy():
+            if len(q) == 0:
+                break
+            qq = self.get_movie_tags(x[0])
+            if not qq.isUsefull():
+                self.__log__(-3000, notes = f'tag_id -> {x}')
+            if (len(tags) > 0 and not set(qq.getList()) & set(tags)) and x[1].find(name) == -1 and not x[2] >= age_min and not x[2] <= age_max and x[3].find(director) == -1 and not x[4] >= production_min and not x[4] <= production_max and (onstock and x[5] == 0):
+                del q[q.index(x)]
+                continue
+            qqq = self.find_movie(x[0])
+            if not qqq.isUsefull():
+                self.__log__(-10001)
+                del q[q.index(x)]
+            else:
+                q[q.index(x)] = qqq
         return Answer(q)
 
     #Searches for a movie by id
@@ -1115,6 +1167,11 @@ class SQL:
         else:
             self.__log__(-200)
     
+    def movie_all_tags(self) -> Answer:
+        q = self.get_all_movie_tags()
+        if not q.isUsefull():
+            return Answer(None)
+        return q
 
     def admin(self, user_id:int) -> Answer:
         q = self.get_user_tags(user_id)
@@ -1122,3 +1179,13 @@ class SQL:
             return self.logret(-3003)
         q = q.getList()
         return Answer(self.get_tag_id('admin') in q)
+
+    def rent_id_ideal(self, user_id, movie_id) -> Answer:
+
+        if not self.user_exists(user_id):
+            return self.logret(-1005, notes = f'user_id -> {user_id}')
+
+        if not self.movie_exists(movie_id):
+            return self.logret(-2004, notes = f'movie_id -> {movie_id}')
+        
+        return self.get_user_movie_rent(user_id, movie_id)

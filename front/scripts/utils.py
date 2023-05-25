@@ -3,7 +3,7 @@ from sys import path as system_path
 
 from io import BytesIO
 from os import path, makedirs
-from datetime import date, timedelta
+from datetime import datetime, timedelta
 from codebase.SQL.connect import SQL
 from codebase.Tools.structure import Struct
 from codebase.SQL.answer import Answer
@@ -23,4 +23,7 @@ def environhack():
     bottle.request.environ['wsgi.input'].seek(0)
 
 def today():
-    return date.today().strftime('%Y-%m-%d')
+    return datetime.today().strftime('%Y-%m-%d')
+
+def today_add(days=0):
+    return (datetime.today() + timedelta(days=days)).strftime('%Y-%m-%d')

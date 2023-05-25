@@ -26,12 +26,16 @@ class Answer:
         if len(l) == 1:
             if isinstance(l[0], (list, tuple)):
                 return self.__unlist__(l[0])
+            elif isinstance(l[0], (Answer)):
+                return self.__unlist__(l[0].getList())
             else:
                 return l[0]
         elif len(l) > 1:
             for x, y in enumerate(l):
-                if isinstance(l[0], (list, tuple)):
+                if isinstance(l[x], (list, tuple)):
                     l[x] = self.__unlist__(y)
+                elif isinstance(l[x], (Answer)):
+                    l[x] = self.__unlist__(y.getList())
             return list(l)
         return None
 

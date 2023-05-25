@@ -51,7 +51,6 @@ class Application(bottle.Bottle):
 
     def adderror(self, error:callable):
         self.error_list.append(error)
-
         
     def setSecret(self, secret_key):
         self.secret = secret_key
@@ -63,15 +62,22 @@ class Application(bottle.Bottle):
     def setup(self, path:str):
         self.sites = []
         for x in [f.path.replace('\\', '/') for f in scandir(path) if f.is_dir()]:
-            if x.split('/')[-1] not in ['Filmy','!Errors']:
+            if x.split('/')[-1] not in ['Filmy','!Errors', '!AJAX']:
+                self.sites.append(Create.Site(self.SQL_Connection, x, x.split('/')[-1], menubar=Create.html.standard.menubar()))
+
+        for x in self.sites:
+            self.addroute(Create.bottle.route(self, x.route, Create.function.withSite(x), x.name))
+        
+        ajax_path = path + '\\!AJAX'.replace('\\', '/')
+        for x in [f.path.replace('\\', '/') for f in scandir(ajax_path) if f.is_dir()]:
                 self.sites.append(Create.Site(self.SQL_Connection, x, x.split('/')[-1], menubar=Create.html.standard.menubar()))
 
         for x in self.sites:
             self.addroute(Create.bottle.route(self, x.route, Create.function.withSite(x), x.name))
 
         self.errors = []
-        path = path + '\\!Errors'.replace('\\', '/')
-        for x in [f.path.replace('\\', '/') for f in scandir(path) if f.is_dir()]:
+        error_path = path + '\\!Errors'.replace('\\', '/')
+        for x in [f.path.replace('\\', '/') for f in scandir(error_path) if f.is_dir()]:
             self.errors.append(Create.Site(self.SQL_Connection, x, x.split('/')[-1]))
 
         for x in self.errors:

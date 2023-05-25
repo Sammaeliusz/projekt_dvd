@@ -19,6 +19,19 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
 
         if user.isUsefull():
 
+            if bottle.request.method == 'POST':
+                if (zwrot:=bottle.request.forms.get('zwrot', None)):
+                    q = sql.rent_id_ideal(user_id, int(zwrot))
+                    if q.isUsefull():
+                        sql.unrent(q.getList()[0], int(zwrot),today())
+
+            deletion = bottle.request.forms.get('delete', None)
+            if deletion != None:
+                bottle.response.set_cookie('id', '', expires=0)
+                bottle.response.set_cookie('zal', '', expires=0)
+                q = sql.delete_user(user_id)
+                return redirect('/')
+
             rented = sql.user_actual_rent(user_id)
             history = sql.user_rent_history(user_id)
             not_returned = sql.user_have_return(user_id, today())
@@ -36,6 +49,8 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
 
             if rented.isUsefull() and not_returned.isUsefull():
                 not_returned = not_returned.getList()
+                if not isinstance(not_returned[0],list):
+                    not_returned = [not_returned]
 
                 for x in not_returned:
                     q = sql.movie_finder(int(x[1]))
@@ -43,7 +58,10 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                         q = q.getList()
                         return_popup.append(f'{q[1]}')
 
-                for x in rented.getList():
+                rented = rented.getList()
+                if not isinstance(rented[0],list):
+                    rented = [rented]
+                for x in rented:
                     q = sql.movie_finder(int(x[1]))
                     if q.isUsefull():
                         q = q.getList()
@@ -58,7 +76,10 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
 
             elif rented.isUsefull():
 
-                for x in rented.getList():
+                rented = rented.getList()
+                if not isinstance(rented[0],list):
+                    rented = [rented]
+                for x in rented:
                     q = sql.movie_finder(int(x[1]))
                     if q.isUsefull():
                         q = q.getList()
@@ -70,10 +91,12 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                             "to_return":False,
                             "file":f"static/Filmy/{q[1].replace(' ', '-').replace(':','')}.png"
                         }))
-            
             if history.isUsefull():
 
-                for x in history.getList():
+                history = history.getList()
+                if not isinstance(history[0],list):
+                    history = [history]
+                for x in history:
                     q = sql.movie_finder(int(x[1]))
                     if q.isUsefull():
                         q = q.getList()
@@ -82,7 +105,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                             "name":q[1],
                             "rent":x[3],
                             "return_date":x[4],
-                            "real_return":x[5],
+                            "real_return":x[5] if x[5] else 'Nie zwrócono',
                             "file":f"static/Filmy/{q[1].replace(' ', '-').replace(':','')}.png"
                         }))
             return function(user = user_list, rented = rented_list, history = history_list, admin = admin, return_popup = return_popup, **kwg)

@@ -1,14 +1,14 @@
 body{
 	font-family:'Roboto';
 	background: rgb(136,26,156);
-	background: linear-gradient(61deg, rgba(106,20,126,1) 0%, rgba(17,118,196,1) 45%, rgba(179,69,255,1) 100%);
+	background: #8c77e3;
 }
 
 .navholder{
 	display:flex;
 	width:100%;
 	justify-content: flex-end;
-	background: rgba(35,10,62, 0.55);
+	background: #3a435e;
 }
 
 .navholder .navbar{
@@ -54,7 +54,7 @@ body{
 	
 	text-transform:uppercase;
 	text-decoration:none;
-	color:rgba(200, 200, 200, 0.5);
+	color:#ac9de7;
 	font-weight:bold;
 }
 
@@ -74,21 +74,6 @@ body{
 .userclick{
 	width:1.15em;
 	height:1.15em;
-}
-
-.intro{
-	padding: 50px;
-    text-align: center;
-    font-size: 25;
-    font-family: "Roboto";
-    color: #18124Daa;
-}
-
-.h2{
-	padding: 15px 0;
-    text-align: center;
-    font-size: 22;
-    color: #18124Daa;
 }
 
 .cards{
@@ -125,3 +110,150 @@ body{
 	top:0;
 	left:0;
 }
+
+.content{
+	display: flex;
+	position: relative;
+	
+	width:100%;
+	height: 100%;
+	
+	flex-direction: column;
+	align-items: center;
+}
+/*informacja-komunikat na gorze*/
+.intro{
+	padding: 50px;
+    text-align: center;
+    font-size: 25;
+    font-family: "Roboto";
+    color: #18124Daa;
+}
+
+/*przycisk do powrotu do profilu uzytkownika*/
+.wroc {
+	padding: 20px;
+    font-size: 25;
+	font-weight: bold;
+    font-family: "Roboto";
+    color: #d6cbff;
+	background: #3a435e;
+	border-color: #ac9de7;
+	border-style: solid;
+	border-width: 5px;
+	border-radius: 15px;
+}
+
+/*caly fragment z wyborem tableki, ktora chce sie zobaczyc czy zedytowac*/
+.wybor{
+	display: flex;
+	position: relative;
+
+	width:40%;
+	height: 120px;
+	padding-top: 5px;
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+    text-align: center;
+    font-size: 20;
+    color: #d6cbff;
+	background-color:  #3a435e;
+	font-family: 'Roboto';
+	border-color: #ac9de7;
+	border-style: solid;
+	border-width: 5px;
+	border-radius: 15px;
+	
+	flex-direction: column;
+}
+.container{
+	display: flex;
+	position: relative;
+
+	justify-content: center;
+	align-items: center
+}
+/*przycisk do przejscia do tabelki z uzytkownikami*/
+.container .bt1 {
+	display: flex;
+	position: relative;
+
+	width: 100px;
+
+	padding: 10px;
+	margin: 0 15px;
+  font-size: 15;
+  font-family: "Roboto";
+  color:   #d6cbff;
+	background: #5864a1;
+	border:3px solid #ac9de7;
+	border-radius: 15px;
+	text-align: center;
+	
+	transition: 0.3s;
+}
+.container .bt1:hover{
+	background: #6874b1;
+}
+
+/*przycisk do przejscia do tabelki z filmami*/
+.container .bt2 {
+	display: flex;
+	position: relative;
+	outline:none;
+
+	width: 100px;
+	
+	padding: 10px;
+	margin: 0 15px;
+  font-size: 15;
+  font-family: "Roboto";
+  color:   #d6cbff;
+	background: #5864a1;
+	border:3px solid #ac9de7;
+	border-radius: 15px;
+	
+	text-align: center;
+  transition: 0.3s;
+}
+.container .bt2:hover{
+	background: #6874b1;
+}
+
+/*tabelki*/
+
+table {
+	border-collapse: collapse;
+	font-family: 'Roboto';
+	width: 100%;
+	display: flex;
+	overflow: scroll;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+table::-webkit-scrollbar {
+	display: none;
+  }
+
+
+td, th {
+	border-color: #ac9de7;
+	border-style: solid;
+	border-width: 5px;
+	border-radius: 15px;
+    padding: 10px;
+	margin: 50px;
+    max-width: 500px;
+	background-color:  #3a435e;
+    color: #d6cbff;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.table-container {
+	width: 100%;
+	position: relative;
+	overflow: scroll;
+	display: inline;
+  }
