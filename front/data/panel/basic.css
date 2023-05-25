@@ -761,3 +761,81 @@ body{
 .movie-card .movie-card-button-inside:active{
 	box-shadow: var(--button-hover-shadow);
 }
+
+.movie-card:hover .movie-card-button{
+	z-index:100;
+	transform:scale(1.1);
+}
+
+.movie-card:hover .movie-card-button .movie-card-image{
+	z-index:1000;
+	background:var(--button-hover-background);
+}
+
+.movie-card:hover .movie-card-button .movie-card-text{
+	z-index:100;
+	background:var(--button-hover-background);
+	width:200px;
+	padding-left:200px;
+	color:var(--main-color);
+}
+
+.movie-card:hover .movie-card-button .movie-card-text .movie-card-text-padding .movie-card-text-50 p{
+	color:var(--main-color);
+}
+.holder-right .infos{
+	display: flex;
+	position: relative;
+
+	padding:0 100px;
+
+	height: 250px;
+	width: 100%;
+
+	flex-direction: row;
+	justify-content: space-between;
+}
+.holder-right .movie-list{
+	display: flex;
+	position: relative;
+
+	height: 250px;
+	width: 100%;
+
+	flex-direction: row;
+	justify-content: space-between;
+}
+.movie-card .movie-card-button-inside{
+	display: flex;
+	position: absolute;
+
+	top:280px;
+
+	width: 90%;
+	height: 50px;
+	
+	text-align:left;
+	border-radius: 1em;
+    cursor: pointer;
+    overflow: hidden;
+	outline: none;
+    background: rgba(0,0,0,0.35);
+	border: 1px solid white;
+	color: var(--button-color);
+	
+	align-items:center;
+	justify-content:center;
+	
+	text-transform:uppercase;
+	text-decoration:none;
+	font-size: 1em;
+	font-weight:bold;
+}
+.movie-card .movie-card-button-inside:hover{
+	background: var(--button-background);
+	box-shadow: var(--button-hover-shadow);
+	color: var(--button-color);
+}
+.movie-card .movie-card-button-inside:active{
+	box-shadow: var(--button-hover-shadow);
+}
