@@ -29,18 +29,25 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
 
     if not question.isUsefull():
         return redirect('/')
-
+    t=[]
     tags = sql.movie_tags(movie_id)
-
+    print(tags.getList()[1])
     if tags.isError() or tags.isInfo():
         sql.__log__(-10001, notes = f'{tags.getMessage()}')
         return function(movie=question.getList(), tags=[])
-    
+    else:
+        tg = tags.getList()
+        if isinstance(tg[1],list):
+            for i in tg:
+                print(i)
+                t.append(i[1])
+        else:
+            t.append(tg[1])
     user_id = bottle.request.get_cookie("id")
     
     if user_id:
         user_id = int(user_id)
-
+        logged=True
         user = sql.user_finder(user_id)
 
         if user.isUsefull():
@@ -53,5 +60,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                     if x[1] == movie_id:
                         not_rented = False
                         break
+    else:
+        logged=False
 
-    return function(movie=question.getList(), tags=tags.getList(), re = rent_error, not_rented = not_rented)
+    return function(movie=question.getList(), tags=t, re = rent_error, not_rented = not_rented, logged=logged)

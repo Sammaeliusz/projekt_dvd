@@ -117,6 +117,6 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                          <td><button class="ban" id="{bu[0]}">{bou}anuj</button></td>
                     </tr>
                """
-          return function(user="Admin", film_table=film_tab, user_table=user_tab)
+          return function(user="Admin", movies=film_tab, users=user_tab)
      else:
           return redirect('/panel')

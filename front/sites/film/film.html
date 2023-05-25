@@ -71,7 +71,7 @@
 					<p>{{movie[1]}}</p>
 					<p>kategorie: 
 					% for x in tags:
-						{{x[1]}}, 
+						{{x}}, 
 					% end
 					</p>
 					<p>kategoria wiekowa: {{movie[2]}}+</p>
@@ -80,7 +80,7 @@
 					<p>na stanie: {{movie[5]}}</p>
 					<p>opis filmu: {{movie[6]}}</p>
 				</div>
-				% if not_rented:
+				% if not_rented and logged:
 					<button class="rent" onclick="rent({{movie[0]}})">Wypożycz film</button>
 				% end
 			</div>
