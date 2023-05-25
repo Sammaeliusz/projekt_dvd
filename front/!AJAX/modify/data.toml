@@ -1,0 +1,10 @@
+[main]
+local = "!AJAX/modify/modify.html"
+name = "modify"
+route = "/ajax/modify"
+
+[data]
+
+[script]
+local = "/modify.py"
+name = "modify"

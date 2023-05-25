@@ -1133,7 +1133,8 @@ class SQL:
     #Gets recently added movies
     def movies_recent(self, amount:int) -> Answer:
         return self.find_last_movie(amount)
-
+    def the_best_movie(self, lim:int) -> Answer:
+        return self.select(self.sql_conf.the_best.question.format(lim=lim))
     #set stock amount of movie by id to 0
     def movie_delete(self, movie_id:int) -> Answer:
         return self.movie_change(movie_id, '', [], 0, '', 0, 0, '')

@@ -27,10 +27,13 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                 "production":y[4],
                 "file":f"static/Filmy/{y[1].replace(' ', '-').replace(':','')}.png"
             })]
-    movies2 = sql.rented_after(today_add(-30))
+    movies2 = sql.the_best_movie(8)
     
     if movies2.isUsefull():
-        y = movies2.getList()
+        mil = movies2.getList()
+        y=[]
+        for i in mil:
+            y.append(sql.movie_finder(i[0]).getList())
         print(y)
         if isinstance(y[0], list):
             ans2 = [Struct({
@@ -51,4 +54,4 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                 "file":f"static/Filmy/{y[1].replace(' ', '-').replace(':','')}.png"
             })]
 
-    return function(movies = answer,movies2=ans2, title = data.title)
+    return function(movies = ans,movies2=ans2, title = data.title)

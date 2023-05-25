@@ -4,7 +4,7 @@ name = "movie Page"
 route = "/film"
 
 [data]
-title = ""
+title = "Film"
 
 [script]
 local = "/film.py"

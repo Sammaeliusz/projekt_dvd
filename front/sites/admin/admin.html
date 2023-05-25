@@ -1,162 +1,259 @@
 <html>
-<head>
-	<meta charset="utf-8">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-    <link rel="stylesheet" href="/static/admin/basic.css">
-<script>
-    function users(){
-        su.visibility = "visible";
-        su.height = "5em";
-        sf.visibility = "hidden";
-        sf.height = "0";
-    }
-    function films(){
-        sf.visibility = "visible";
-        sf.height = "5em";
-        su.visibility = "hidden";
-        su.height = "0";
-   }
-   function datasend(){
-        dataids = event.target.id;
-        dataid="";
-        for(i = 3; i< dataids.length; i++){
-            dataid+=dataids[i];
-        }
-        console.log(dataid)
-        datafield = document.querySelectorAll(".film"+dataid);
-        data = ""
-        datafield.forEach(e => {
-            data += e.value;
-            data += ";";
-        })
-        data+=dataids.substr(0, 3)
-        const xhr = new XMLHttpRequest()
-        xhr.open('POST', '/admin')
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
-        // send request
-        fd='data='+data
-        console.log(fd)
-        xhr.send(fd)
-   }
-   function ban(){
-        banid = event.target.id;
-        const xhr = new XMLHttpRequest()
-        xhr.open('POST', '/admin')
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
-        // send request
-        fd='banid='+banid
-        console.log(fd)
-        xhr.send(fd)
-   }
-   window.onload = function (){
-        ml = document.querySelectorAll(".filmmod");
-        dl = document.querySelectorAll(".filmdel");
-        bu = document.querySelectorAll(".ban");
-        ml.forEach(element => {
-            element.addEventListener("click", datasend)
-        });
-        dl.forEach(element => {
-            element.addEventListener("click", datasend)
-        });
-        bu.forEach(element => {
-            element.addEventListener("click", ban)
-        });
-        document.querySelector(".filmadd").addEventListener("click", datasend)
-   }
-   function checkCookie(){
-        if(document.cookie.search('redi')!=-1){
-            document.cookie = "red=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            location.reload();
-        }
-   }
-</script>
-</head>
-<body>
-    <!-- MENU -->
-    <div class="navholder" id="navhold">
-        <div class="navbar">
-            <div class="right">
-                <div class="tablink">
-                    <a><button class="tabbutt" onclick="userclick()"><img src="static/images/proba.png" class="userclick"></button></a>
-                </div>
-                <div class="tablink">
-                    <a href="#"><button class="tabbutt" onclick="">FAQ</button></a>
-                </div>
-                <div class="tablink">
-                    <a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
-                </div>
-                <div class="navigation-tab">
-                    <a href="/szukaj"><button class="tabbutt" onclick="">Zboiry</button></a>
-                </div>
-                <div class="tablink">
-                    <a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
+    <!DOCTYPE html>
+    <html lang="pl">                                                                                                                                                                                                                                                                                                                                                        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>{{title}}</title>
+            
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+            <link rel="stylesheet" href="static/admin/basic.css">
+            
+            <meta name="viewport" initial-scale="1.0">
+            <meta name="description" content="Lokalny Projekt klasowy wypożyczalnia DVD">
+            <meta name="theme-color" content="#366cb4">
+        </head>
+        <body>
+            <div class="navigation-bar" id="navhold">
+                <div class="navigation-block">
+                    <div class="right-side">
+                        <div class="navigation-tab">
+                            <a><button onclick="userclick()" aria-label="Login/Panel"><img src="static/images/proba.png" alt="Panel or Login"></button></a>
+                        </div>
+                        <div class="navigation-tab">
+                            <a href="#"><button class="tabbutt" onclick="">FAQ</button></a>
+                        </div>
+                        <div class="navigation-tab">
+                            <a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
+                        </div>
+                        <div class="navigation-tab">
+                            <a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
+                        </div>
+                    </div>
+                    <div class="left-side">
+                        <div class="navigation-tab">
+                            <a href="#"><input class="tabinput" onclick="" onkeydown="search(this);"></a>
+                        </div>
+                        <div class="navigation-tab">
+                            <a href="#"><button class="tabbutt" onclick="">O</button></a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="left">
-                <div class="tablink">
-                    <a href="#"><button class="tabbutt" onclick="">______________________________</button></a>
-                </div>
-                <div class="tablink">
-                    <a href="#"><button class="tabbutt" onclick="">O</button></a>
+            <!-- Intro -->
+        <div class="content">
+            <div class="intro">
+                <h1>Witaj {{user}}</h1>
+                <button id="wroc" onclick="window.location.href = '/panel'"> Wróć do panelu użytkownika</button>
+            </div>
+            <div class="wybor">
+                <h2>Co chcesz teraz zrobić?</h2>
+                <div class="container">
+                    <div class="btns" id="users">
+                        <button>Użytkownicy</button>
+                    </div>
+                    <div class="btns" id="films">
+                        <button>Zbiory</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-        <!-- Intro -->
-    <div class="content">
-        <div class="intro">
-            <h1>Witaj {{user}}</h1>
-            <button class="wroc" onclick="window.location.href = '/panel'"> Wróć do panelu użytkownika</button>
-        </div>
-        <div class="wybor">
-            <h2>Co chcesz teraz zrobić?</h2>
-            <div class="container">
-                <button class="bt1" id="users">Użytkownicy</button>
-                <button class="bt2" id="films">Zbiory</button>
-            </div>
-        </div>
 
-        <div id="list_u">
-            <table>
-                <tr>
-                    <th>Id</th>
-                    <th>Nazwa</th>
-                    <th>Czy zaległe?</th>
-                    <th>Zaległe filmy</th>
-                    <th>Ban:</th>
-                </tr>
-                {{!user_table}}
-            </table>
+            <div id="list_u">
+                <table>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nazwa</th>
+                        <th>Zaległe filmy</th>
+                        <th>Ban:</th>
+                    </tr>
+                    % for x in users:
+                    <tr>
+                        <th>{{x[0]}}</th>
+                        <th>{{x[1]}}</th>
+                        <th>
+                        % for y in x[2]:
+                            {{y}}<br>
+                        % end
+                        </th>
+                        <th>{{x[3]}}</th>
+                    % end
+                </table>
+            </div>
+            <div id="list_f">
+                <table>
+                    <tr>
+                        <th>Id</th>
+                        <th>Tytuł</th>
+                        <th>Kategoria Wiekowa</th>
+                        <th>Reżyser</th>
+                        <th>Rok Produkcji</th>
+                        <th>Ilość</th>
+                        <th>Opis</th>
+                        <th>Zdjęcie</th>
+                        <th>Modyfikuj:</th>
+                        <th>Usuń:</th>
+                    </tr>
+                    % for x in movies:
+                    <tr>
+                        <th>{{x[0]}}</th>
+                        <th><input type="text" name="title" id="tl" placeholder="{{x[1]}}"></th>
+                        <th><input type="number" name="age" id="ag" placeholder="{{x[2]}}"></th>
+                        <th><input type="text" name="director" id="dr" placeholder="{{x[3]}}"></th>
+                        <th><input type="number" name="production" id="pr" placeholder="{{x[4]}}"></th>
+                        <th><input type="number" name="stock" id="st" placeholder="{{x[5]}}"></th>
+                        <th><input type="text" name="description" id="ds" placeholder="{{x[6]}}"></th>
+                        <th><img alt={{x[1]}} src="{{x[7]}}"></th>
+                        <th>
+                        % for y in x[8]:
+                            {{y}}<br>
+                        % end
+                        </th>
+                        <th><button onclick="edit({{x[0]}})"></button></th>
+                        <th><button onclick="delm({{x[0]}})"></button></th>
+                    % end
+                </table>
+            </div>
         </div>
-        <div id="list_f">
-            <table>
-                <tr>
-                    <th>Id</th>
-                    <th>Tytuł</th>
-                    <th>Gatunek</th>
-                    <th>Kategoria Wiekowa</th>
-                    <th>Reżyser</th>
-                    <th>Rok Produkcji</th>
-                    <th>Ilość</th>
-                    <th>Opis</th>
-                    <th>Zdjęcie</th>
-                    <th>Modyfikuj:/Dodaj:</th>
-                    <th>Usuń:</th>
-                </tr>
-                {{!film_table}}
-            </table>
-        </div>
-    </div>
- <script>
-    document.querySelector("#list_u").style.visibility = "hidden";
-    document.querySelector("#list_f").style.visibility = "hidden";
-    document.querySelector("#users").addEventListener("click", users);
-    document.querySelector("#films").addEventListener("click", films);
-    su = document.querySelector("#list_u").style;
-    sf = document.querySelector("#list_f").style;
-    window.setInterval(checkCookie, 1000);
- </script>
-</body>
+    <script>
+        function users(){
+            su.visibility = "visible";
+            su.height = "5em";
+            sf.visibility = "hidden";
+            sf.height = "0";
+        }
+        function films(){
+            sf.visibility = "visible";
+            sf.height = "5em";
+            su.visibility = "hidden";
+            su.height = "0";
+        }
+        function datasend(){
+            dataids = event.target.id;
+            dataid="";
+            for(i = 3; i< dataids.length; i++){
+                dataid+=dataids[i];
+            }
+            console.log(dataid)
+            datafield = document.querySelectorAll(".film"+dataid);
+            data = ""
+            datafield.forEach(e => {
+                data += e.value;
+                data += ";";
+            })
+            data+=dataids.substr(0, 3)
+            const xhr = new XMLHttpRequest()
+            xhr.open('POST', '/admin')
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+            // send request
+            fd='data='+data
+            console.log(fd)
+            xhr.send(fd)
+        }
+        function ban(){
+            banid = event.target.id;
+            const xhr = new XMLHttpRequest()
+            xhr.open('POST', '/admin')
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+            // send request
+            fd='banid='+banid
+            console.log(fd)
+            xhr.send(fd)
+        }
+        window.onload = function (){
+            ml = document.querySelectorAll(".filmmod");
+            dl = document.querySelectorAll(".filmdel");
+            bu = document.querySelectorAll(".ban");
+            ml.forEach(element => {
+                element.addEventListener("click", datasend)
+            });
+            dl.forEach(element => {
+                element.addEventListener("click", datasend)
+            });
+            bu.forEach(element => {
+                element.addEventListener("click", ban)
+            });
+            document.querySelector(".filmadd").addEventListener("click", datasend)
+            document.querySelector("#list_u").style.visibility = "hidden";
+            document.querySelector("#list_f").style.visibility = "hidden";
+            document.querySelector("#users").addEventListener("click", users);
+            document.querySelector("#films").addEventListener("click", films);
+            su = document.querySelector("#list_u").style;
+            sf = document.querySelector("#list_f").style;
+            window.setInterval(checkCookie, 1000);
+        }
+        function checkCookie(){
+            if(document.cookie.search('redi')!=-1){
+                document.cookie = "red=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                location.reload();
+            }
+        }
+        function openWindowWithPost(url, data) {
+				var form = document.createElement("form");
+				form.target = "_self";
+				form.method = "POST";
+				form.action = url;
+				form.style.display = "none";
+
+				for (var key in data) {
+					var input = document.createElement("input");
+					input.type = "hidden";
+					input.name = key;
+					input.value = data[key];
+					form.appendChild(input);
+				}
+				document.body.appendChild(form);
+				form.submit();
+				document.body.removeChild(form);
+			}
+
+			function search(ele) {
+				if(event.key === 'Enter') {
+					openWindowWithPost("/szukaj", {
+						title: ele.value
+					});
+				}
+			}
+            function edit(x){
+                const xhr = new XMLHttpRequest()
+				xhr.open('POST', '/ajax/modify')
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+				xhr.onload = function () {
+                    eval(xhr.responseText)
+					setTimeout(window.reload, 1000)
+				}
+                xhr.send(`mid=${x}&title=${tl.value}&age=${ag.value}&director=${dr.value}&production=${pr.value}&stock=${st.value}&description=${ds.value}`)
+            }
+            function delm(x){
+                const xhr = new XMLHttpRequest()
+				xhr.open('POST', '/ajax/delete-movie')
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+				xhr.onload = function () {
+                    eval(xhr.responseText)
+					setTimeout(window.reload, 1000)
+				}
+                xhr.send(`mid=${x}`)
+            }
+            function look(){
+				const xhr = new XMLHttpRequest()
+				xhr.open('POST', '/ajax/lookup')
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+				xhr.onload = function () {
+					let x = document.getElementById("js")
+					x.innerHTML = xhr.responseText
+				}
+				
+				active = []
+				tags.forEach(element => {
+					if(document.getElementById(element).checked == true){
+						active.push(element)
+					}
+				});
+				xhr.send(`title=${title.value}`)
+			}
+    </script>
+    </body>
 </html>

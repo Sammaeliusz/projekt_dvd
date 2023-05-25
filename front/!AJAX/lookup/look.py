@@ -28,9 +28,9 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
             ans = [Struct({
                 "id":x[0],
                 "name":x[1],
-                "age":x[2],
-                "director":x[3],
-                "production":x[4],
+                "categories":x[2],
+                "director":x[4],
+                "production":x[5],
                 "file":f"static/Filmy/{x[1].replace(' ', '-').replace(':','')}.png"
             }) for x in y]
         else:
