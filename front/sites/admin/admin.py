@@ -32,7 +32,16 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                users = users.getList()
                if not isinstance(users[0], list):
                     users = [users]
-               
+               banid=bottle.request.forms.getunicode("banid", None)
+               if banid != None:
+                    if sql.inactivity_check(banid).getList()[0]!=1:
+                         sql.user_unban(banid)
+                         bottle.response.set_cookie('red', "redi")
+                         return redirect('/admin')
+                    else:
+                         sql.user_delete(banid)
+                         bottle.response.set_cookie('red', "redi")
+                         return redirect('/admin')
                user_list = []
                for x in users:
                     q = sql.user_have_return(int(x[0]), today())

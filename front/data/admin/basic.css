@@ -413,7 +413,6 @@ body{
 }
 
 .holder-left .intro{
-	display: flex;
 	position: relative;
 	z-index:8;
 	
@@ -503,7 +502,4 @@ body{
 	z-index: 0;
 	top:0;
 	left:0;
-}
-#content_admin{
-	display: block;
 }
