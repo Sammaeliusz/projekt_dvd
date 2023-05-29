@@ -1,4 +1,4 @@
-<html lang="pl">                                                                                                                                                                                                                                                                                                                                                        <html lang="pl">                                                                                                                                                                                                                                                                                                                                                        <html>
+<html lang="pl">                                                                                                                                                                                                                                                                                                                                                        <html>
 	<head>
 		<meta charset="utf-8">
 		<title>{{user[1]}}</title>
@@ -22,9 +22,6 @@
 					</div>
 					<div class="navigation-tab">
 						<a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
-					</div>
-					<div class="navigation-tab">
-						<a href="/szukaj"><button class="tabbutt" onclick="">Zbiory</button></a>
 					</div>
 					<div class="navigation-tab">
 						<a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
@@ -88,80 +85,84 @@
 			</div>
 		</div>
 		<div class="holder-right">
-			<div class="info">
-				<p>Wypożyczone filmy</p>
-			</div>
-			<div class="movie-card-list">
-				<div class="movie-card-list-holder">
-				% for x in rented:
-					<div class="movie-card">
-						<form action="/film" method="get">
-							<div class="movie-card-button">
-								<button name="mid" value="{{x.id}}">
-									<div class="movie-card-text">
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Nazwa</p></div>
-											<div class="movie-card-text-50"><p>{{x.name}}</p></div>
-										</div>
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Wypożyczono</p></div>
-											<div class="movie-card-text-50"><p>{{x.rent}}</p></div>
-										</div>
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Zwrot planowany</p></div>
-											<div class="movie-card-text-50"><p>{{x.return_date}}</p></div>
-										</div>
-										% if x.to_return:
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p style="color:red; font-weight: bold;">ZALEGA ZE ZWROTEM</p></div>
-										</div>
-										% end
-										<div class="movie-card-text-padding"></div>
-											<button class="movie-card-button-inside" onclick='zwrot({{x.id}})'>Zwrot</button>
-										</div>
-									</div>
-									<div class="movie-card-image"><img src={{x.file}} alt="{{x.name}}"></div>
-								</button>
-							</div>
-						</form>
-					</div>
-				% end
+			<div class="infos">
+				<div class="info">
+					<p>Wypożyczone filmy</p>
+				</div>
+				<div class="info">
+					<p>Historia wypożyczeń</p>
 				</div>
 			</div>
-			<div class="info">
-				<p>Historia wypożyczeń</p>
-			</div>
-			<div class="movie-card-list">
-				<div class="movie-card-list-holder">
-				% for x in history:
-					<div class="movie-card">
-						<form action="/film" method="get">
-							<div class="movie-card-button">
-								<button name="mid" value="{{x.id}}">
-									<div class="movie-card-text">
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Nazwa</p></div>
-											<div class="movie-card-text-50"><p>{{x.name}}</p></div>
+			<div class="movie-list">
+				<div class="movie-card-list">
+					<div class="movie-card-list-holder">
+					% for x in rented:
+						<div class="movie-card">
+							<form action="/film" method="get">
+								<div class="movie-card-button">
+									<button name="mid" value="{{x.id}}">
+										<div class="movie-card-text">
+											<div class="movie-card-text-padding">
+												<div class="movie-card-text-50"><p>Nazwa</p></div>
+												<div class="movie-card-text-50"><p>{{x.name}}</p></div>
+											</div>
+											<div class="movie-card-text-padding">
+												<div class="movie-card-text-50"><p>Wypożyczono</p></div>
+												<div class="movie-card-text-50"><p>{{x.rent}}</p></div>
+											</div>
+											<div class="movie-card-text-padding">
+												<div class="movie-card-text-50"><p>Zwrot planowany</p></div>
+												<div class="movie-card-text-50"><p>{{x.return_date}}</p></div>
+											</div>
+											% if x.to_return:
+											<div class="movie-card-text-padding">
+												<div class="movie-card-text-50"><p style="color:red; font-weight: bold;">ZALEGA ZE ZWROTEM</p></div>
+											</div>
+											% end
 										</div>
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Wypożyczono</p></div>
-											<div class="movie-card-text-50"><p>{{x.rent}}</p></div>
+										<div class="movie-card-image">
+											<img src={{x.file}} alt="{{x.name}}">
 										</div>
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Zwrot planowany</p></div>
-											<div class="movie-card-text-50"><p>{{x.return_date}}</p></div>
-										</div>
-										<div class="movie-card-text-padding">
-											<div class="movie-card-text-50"><p>Zwrot realny</p></div>
-											<div class="movie-card-text-50"><p>{{x.real_return}}</p></div>
-										</div>
-									</div>
-									<div class="movie-card-image"><img src={{x.file}} alt="{{x.name}}"></div>
-								</button>
-							</div>
-						</form>
+									</button>
+								</div>
+							</form>
+							<button class="movie-card-button-inside" onclick='zwrot({{x.id}})'>Zwrot</button>
+						</div>
+					% end
 					</div>
-				% end
+				</div>
+				<div class="movie-card-list">
+					<div class="movie-card-list-holder">
+					% for x in history:
+						<div class="movie-card">
+							<form action="/film" method="get">
+								<div class="movie-card-button">
+									<button name="mid" value="{{x.id}}">
+										<div class="movie-card-text">
+											<div class="movie-card-text-padding">
+												<div class="movie-card-text-50"><p>Nazwa</p></div>
+												<div class="movie-card-text-50"><p>{{x.name}}</p></div>
+											</div>
+											<div class="movie-card-text-padding">
+												<div class="movie-card-text-50"><p>Wypożyczono</p></div>
+												<div class="movie-card-text-50"><p>{{x.rent}}</p></div>
+											</div>
+											<div class="movie-card-text-padding">
+												<div class="movie-card-text-50"><p>Zwrot planowany</p></div>
+												<div class="movie-card-text-50"><p>{{x.return_date}}</p></div>
+											</div>
+											<div class="movie-card-text-padding">
+												<div class="movie-card-text-50"><p>Zwrot realny</p></div>
+												<div class="movie-card-text-50"><p>{{x.real_return}}</p></div>
+											</div>
+										</div>
+										<div class="movie-card-image"><img src={{x.file}} alt="{{x.name}}"></div>
+									</button>
+								</div>
+							</form>
+						</div>
+					% end
+					</div>
 				</div>
 			</div>
 		</div>
@@ -174,16 +175,6 @@
 				if(x.lenght > 0){
 					alert('Masz zaległe filmy!\n\nZaległe filmy:\n'+x.join('\n'))
 				}
-			}
-			function actual(){
-				document.getElementById("inrow").style.transform = "translatex(25%)";
-				document.getElementById("actual").style.transform = "translatex(0%)";
-				document.getElementById("history").style.transform = "translatex(5%)"
-			}
-			function history(){
-				document.getElementById("inrow").style.transform = "translatex(-25%)";
-				document.getElementById("actual").style.transform = "translatex(-5%)";
-				document.getElementById("history").style.transform = "translatex(0%)"
 			}
 			function userclick(){
 				if(document.cookie.search('id')!=-1){

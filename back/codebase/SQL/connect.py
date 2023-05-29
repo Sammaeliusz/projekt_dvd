@@ -489,6 +489,10 @@ class SQL:
         a = self.find_movie(movie_id)
         if a.isUsefull():
             if len(a.getList())>0:
+                q = self.get_movie_tags(int(a.getList()[0]))
+                if q.isUsefull():
+                    if self.tag_name(q.getList()[0]) == 'deleted':
+                        return False
                 return True
         return False
 
@@ -505,6 +509,19 @@ class SQL:
             return True
         self.__log__(-1004, notes = f'user_id -> {user_id}')
         return False
+
+    def ban_check(self, user_id:int) -> bool:
+        
+        self.__log__(-1017, notes = f'user_id = {user_id}')
+        if not self.user_exists(user_id):
+            self.__log__(-1005, notes = f'user_id -> {user_id}')
+            return False
+        answer = self.get_user_tags(user_id).getList()
+        if not self.get_tag_id('banned') in answer:
+            self.__log__(-1023, notes = f'user_id -> {user_id}')
+            return False
+        self.__log__(-1004, notes = f'user_id -> {user_id}')
+        return True
     
     def get_ban_id(self) -> int:
         return list(zip(*self.get_all_tags().getList()))[1].index('banned')+1
@@ -754,13 +771,17 @@ class SQL:
         if not self.user_exists(user_id):
             return self.logret(-1005, notes = f'user_id -> {user_id}')
         
-        q = self.update_user(user_id, '','','')
-        if q.isError():
-            return self.logret(-1030, notes = f'user_id -> {user_id}')
-        
-        q = self.user_deactivate(user_id)
-        return self.logret(-1021, notes = f'user_id -> {user_id}')
-    
+        q = self.get_all_user_rented_not_returned(user_id)
+        if not q.isUsefull():
+            return self.logret(-10001)
+        if q.getList() == 0:
+            q = self.update_user(user_id, '','','')
+            if q.isError():
+                return self.logret(-1030, notes = f'user_id -> {user_id}')
+            
+            q = self.user_deactivate(user_id)
+            return self.logret(-1021, notes = f'user_id -> {user_id}')
+        return self.logret(-1005, notes = f'user_id -> {user_id}')
     def stock_add(self, movie_id, amount) -> Answer:
 
         if not self.movie_exists(movie_id):
@@ -1137,7 +1158,10 @@ class SQL:
         return self.select(self.sql_conf.the_best.question.format(lim=lim))
     #set stock amount of movie by id to 0
     def movie_delete(self, movie_id:int) -> Answer:
-        return self.movie_change(movie_id, '', [], 0, '', 0, 0, '')
+        q = self.movie_finder(movie_id)
+        if q.isUsefull():
+            return self.movie_change(movie_id, q.getList()[1], ['deleted'], 0, '', 0, 0, '')
+        return Answer(None)
 
     #actually, I don't know why this even exists, not used anymore!
     def all_from_all(self, table:str) -> Answer:
@@ -1190,3 +1214,16 @@ class SQL:
             return self.logret(-2004, notes = f'movie_id -> {movie_id}')
         
         return self.get_user_movie_rent(user_id, movie_id)
+    
+    def users_all(self) -> Answer:
+        return self.get_all_users()
+
+    def tag_name(self, tag_id:int) -> Answer:
+        q = self.get_all_tags()
+        if q.isUsefull():
+            l = list(zip(*q.getList()))
+            if l[1].count(tag_id) > 0:
+                return Answer(l[l[1].index(tag_id)])
+        return Answer(None)
+    def the_best_movie(self, lim:int) -> Answer:
+        return self.select(self.sql_conf.the_best.question.format(lim=lim))

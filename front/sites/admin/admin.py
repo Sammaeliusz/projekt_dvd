@@ -3,6 +3,54 @@ sys.path.append('../front/scripts')
 from utils import *
 import requests
 def wrapper(function:callable, sql:SQL, **kwg) -> callable:
+
+     user_id = bottle.request.get_cookie("id")
+    
+     if user_id:
+        user_id = int(user_id)
+
+        user = sql.user_finder(user_id)
+
+        if user.isUsefull():
+          movies = sql.movies_recent(9999)
+          users = sql.users_all()
+
+          if movies.isUsefull() and users.isUsefull():
+               movies = movies.getList()
+               if not isinstance(movies[0], list):
+                    movies = [movies]
+               
+               for y, x in enumerate(movies.copy()):
+                    q = sql.movie_tags(movies[y][0])
+                    if q.isUsefull():
+                         l = []
+                         for z in q.getList():
+                              l.append(z)
+                         movies[y].append(l)
+                    else:
+                         movies[y].append([])
+               users = users.getList()
+               if not isinstance(users[0], list):
+                    users = [users]
+               
+               user_list = []
+               for x in users:
+                    q = sql.user_have_return(int(x[0]), today())
+                    p_list = []
+                    if q.isUsefull():
+                         q = q.getList()
+                         if not isinstance(q[0], list):
+                              q = [q]
+                         for y in q:
+                              p = sql.movie_finder(int(y[1]))
+                              if p.isUsefull():
+                                   p_list.append(p.getList()[1])
+                    user_list.append([x[0],x[1], p_list, sql.ban_check(int(x[0]))])
+
+               return function(movies = movies, users = user_list, title = kwg['data'].title, user = user.getList()[1])
+          return function(movies = [], users = users, title = kwg['data'].title, user = user.getList()[1])
+     return redirect('/')
+
      film_tab = ""
      user_tab = ""
      us_id = bottle.request.get_cookie("id")

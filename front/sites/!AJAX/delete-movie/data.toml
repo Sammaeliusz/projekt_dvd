@@ -1,0 +1,10 @@
+[main]
+local = "!AJAX/delete-movie/del.html"
+name = "delete-movie"
+route = "/ajax/delete-movie"
+
+[data]
+
+[script]
+local = "/delm.py"
+name = "delm"

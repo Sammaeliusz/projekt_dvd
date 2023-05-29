@@ -25,9 +25,6 @@
                         <div class="navigation-tab">
                             <a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
                         </div>
-                        <div class="tablink">
-                            <a href="zbiory"><button class="tabbutt" onclick="">Zbiory</button></a>
-                        </div>
                         <div class="navigation-tab">
                             <a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
                         </div>
@@ -42,24 +39,38 @@
                     </div>
                 </div>
             </div>
+            <div class="menu-left" id="leftmenu">
+                <div class="menu-left-holder">
+                    <div class="menu-left-tab">
+                        <p>Menu</p>
+                    </div>
+                    <div class="menu-left-tab">
+                        <a><button onclick="window.location.href = '/panel'">Przejdź do panelu Użytkownika</button></a>
+                    </div>
+                </div>
+                <div class="menu-left-button">
+                    <button onclick="leftmenu()">=</button>
+                </div>
+            </div>
             <!-- Intro -->
-        <div class="content">
+        <div class="holder-left">
             <div class="intro">
                 <h1>Witaj {{user}}</h1>
-                <button id="wroc" onclick="window.location.href = '/panel'"> Wróć do panelu użytkownika</button>
+                
             </div>
-            <div class="wybor">
-                <h2>Co chcesz teraz zrobić?</h2>
-                <div class="container">
-                    <div class="btns" id="users">
-                        <button>Użytkownicy</button>
+            <div class="see">
+                <h2>Wyświetl:</h2>
+                <div class="button-holder">
+                    <div class="btns">
+                        <button onclick="loadu()">Użytkownicy</button>
                     </div>
-                    <div class="btns" id="films">
-                        <button>Zbiory</button>
+                    <div class="btns">
+                        <button onclick="loadm()">Filmy</button>
                     </div>
                 </div>
             </div>
-
+        </div>
+        <div class="holder-right">
             <div id="list_u">
                 <table>
                     <tr>
@@ -78,6 +89,7 @@
                         % end
                         </th>
                         <th>{{x[3]}}</th>
+                        <th><button class="ban" id="{bu[0]}">Banuj</button></th>
                     % end
                 </table>
             </div>
@@ -92,26 +104,27 @@
                         <th>Ilość</th>
                         <th>Opis</th>
                         <th>Zdjęcie</th>
+                        <th>Tagi</th>
                         <th>Modyfikuj:</th>
                         <th>Usuń:</th>
                     </tr>
                     % for x in movies:
                     <tr>
                         <th>{{x[0]}}</th>
-                        <th><input type="text" name="title" id="tl" placeholder="{{x[1]}}"></th>
-                        <th><input type="number" name="age" id="ag" placeholder="{{x[2]}}"></th>
-                        <th><input type="text" name="director" id="dr" placeholder="{{x[3]}}"></th>
-                        <th><input type="number" name="production" id="pr" placeholder="{{x[4]}}"></th>
-                        <th><input type="number" name="stock" id="st" placeholder="{{x[5]}}"></th>
-                        <th><input type="text" name="description" id="ds" placeholder="{{x[6]}}"></th>
-                        <th><img alt={{x[1]}} src="{{x[7]}}"></th>
+                        <th><input type="text" name="title" id="tl{{x[0]}}" placeholder="{{x[1]}}"></th>
+                        <th><input type="number" name="age" id="ag{{x[0]}}" placeholder="{{x[2]}}"></th>
+                        <th><input type="text" name="director" id="dr{{x[0]}}" placeholder="{{x[3]}}"></th>
+                        <th><input type="number" name="production" id="pr{{x[0]}}" placeholder="{{x[4]}}"></th>
+                        <th><input type="number" name="stock" id="st{{x[0]}}" placeholder="{{x[5]}}"></th>
+                        <th><input type="text" name="description" id="ds{{x[0]}}" placeholder="{{x[6]}}"></th>
+                        <th><img alt={{x[1]}} width="200px" height="300px" src="{{'/static/Filmy/'+x[1].replace(' ', '-').replace(':','')+'.png'}}"></th>
                         <th>
-                        % for y in x[8]:
+                        % for y in x[7]:
                             {{y}}<br>
                         % end
                         </th>
-                        <th><button onclick="edit({{x[0]}})"></button></th>
-                        <th><button onclick="delm({{x[0]}})"></button></th>
+                        <th><button width="10px" height="50px" onclick="edit({{x[0]}})">Modyfikuj</button></th>
+                        <th><button width="10px" height="50px" onclick="delm({{x[0]}})">Usuń</button></th>
                     % end
                 </table>
             </div>
@@ -217,6 +230,26 @@
 					});
 				}
 			}
+            function loadu(x){
+                const xhr = new XMLHttpRequest()
+				xhr.open('POST', '/ajax/loadu')
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+				xhr.onload = function () {
+                    us.innerHTML = xhr.responseText
+				}
+                xhr.send()
+            }
+            function loadm(x){
+                const xhr = new XMLHttpRequest()
+				xhr.open('POST', '/ajax/loadu')
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+				xhr.onload = function () {
+                    mo.innerHTML = xhr.responseText
+				}
+                xhr.send()
+            }
             function edit(x){
                 const xhr = new XMLHttpRequest()
 				xhr.open('POST', '/ajax/modify')
@@ -226,7 +259,20 @@
                     eval(xhr.responseText)
 					setTimeout(window.reload, 1000)
 				}
-                xhr.send(`mid=${x}&title=${tl.value}&age=${ag.value}&director=${dr.value}&production=${pr.value}&stock=${st.value}&description=${ds.value}`)
+                t = document.getElementById(`tl${x}`)
+                a = document.getElementById(`ag${x}`)
+                d = document.getElementById(`dr${x}`)
+                p = document.getElementById(`pr${x}`)
+                s = document.getElementById(`st${x}`)
+                n = document.getElementById(`ds${x}`)
+
+                tv = (t.value != '' ? t.value : t.placeholder) 
+                av = (a.value != '' ? a.value : a.placeholder) 
+                dv = (d.value != '' ? d.value : d.placeholder) 
+                pv = (p.value != '' ? p.value : p.placeholder) 
+                sv = (s.value != '' ? s.value : s.placeholder) 
+                nv = (n.value != '' ? n.value : n.placeholder) 
+                xhr.send(`mid=${x}&title=${tv}&age=${av}&director=${dv}&production=${pv}&stock=${sv}&description=${nv}`)
             }
             function delm(x){
                 const xhr = new XMLHttpRequest()
@@ -256,6 +302,26 @@
 					}
 				});
 				xhr.send(`title=${title.value}`)
+			}
+            function userclick(){
+				if(document.cookie.search('id')!=-1){
+					window.open('/panel', '_self')
+				}else{
+					window.open('/logowanie', '_self')
+				}
+			}
+            var lmb = false;
+			function leftmenu(){
+				if(!lmb){
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "0px"
+					lmb = true;
+				}
+				else{
+					var lm = document.getElementById("leftmenu")
+					lm.style.left = "-310px"
+					lmb = false;
+				}
 			}
     </script>
     </body>

@@ -1,0 +1,10 @@
+[main]
+local = "!AJAX/loadU/u.html"
+name = "loadu"
+route = "/ajax/loadu"
+
+[data]
+
+[script]
+local = "/loadu.py"
+name = "loadu"
