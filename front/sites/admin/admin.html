@@ -10,7 +10,7 @@
             
             <meta name="viewport" initial-scale="1.0">
             <meta name="description" content="Lokalny Projekt klasowy wypożyczalnia DVD">
-            <meta name="theme-color" content="#366cb4">
+            <meta name="tdeme-color" content="#366cb4">
         </head>
         <body>
             <div class="navigation-bar" id="navhold">
@@ -26,12 +26,15 @@
                             <a href="#"><button class="tabbutt" onclick="">Kontakt</button></a>
                         </div>
                         <div class="navigation-tab">
+                            <a href="/szukaj"><button class="tabbutt" onclick="">Zbiory</button></a>
+                        </div>
+                        <div class="navigation-tab">
                             <a href="/"><button class="tabbutt" onclick="">Strona Główna</button></a>
                         </div>
                     </div>
                     <div class="left-side">
                         <div class="navigation-tab">
-                            <a href="#"><input class="tabinput" onclick="" onkeydown="search(this);"></a>
+                            <a href="#"><input class="tabinput" onclick="" onkeydown="search(tdis);"></a>
                         </div>
                         <div class="navigation-tab">
                             <a href="#"><button class="tabbutt" onclick="">O</button></a>
@@ -53,80 +56,88 @@
                 </div>
             </div>
             <!-- Intro -->
-        <div class="holder-left">
-            <div class="intro">
-                <h1>Witaj {{user}}</h1>
-                
-            </div>
-            <div class="see">
-                <h2>Wyświetl:</h2>
-                <div class="button-holder">
-                    <div class="btns">
-                        <button onclick="loadu()">Użytkownicy</button>
-                    </div>
-                    <div class="btns">
-                        <button onclick="loadm()">Filmy</button>
+        <div id="content_admin">
+            <div class="holder-left">
+                <div class="intro">
+                    <h1>Witaj {{user}}</h1>
+
+                </div>
+                <div class="see">
+                    <h2>Wyświetl:</h2>
+                    <div class="button-holder">
+                        <div class="btns">
+                            <button onclick="loadu()">Użytkownicy</button>
+                        </div>
+                        <div class="btns">
+                            <button onclick="loadm()">Filmy</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="holder-right">
-            <div id="list_u">
-                <table>
-                    <tr>
-                        <th>Id</th>
-                        <th>Nazwa</th>
-                        <th>Zaległe filmy</th>
-                        <th>Ban:</th>
-                    </tr>
-                    % for x in users:
-                    <tr>
-                        <th>{{x[0]}}</th>
-                        <th>{{x[1]}}</th>
-                        <th>
-                        % for y in x[2]:
-                            {{y}}<br>
+            <div class="holder-right">
+                <div id="list_u">
+                    <table>
+                        <tr>
+                            <td>Id</td>
+                            <td>Nazwa</td>
+                            <td>Zaległe filmy</td>
+                            <td>Ban:</td>
+                        </tr>
+                        % for x in users:
+                        <tr>
+                            <td>{{x[0]}}</td>
+                            <td>{{x[1]}}</td>
+                            <td>
+                            % for y in x[2]:
+                                {{y}}<br>
+                            % end
+                            </td>
+                            <td>{{x[3]}}</td>
+                            <td><button class="ban" id="{bu[0]}">Banuj</button></td>
                         % end
-                        </th>
-                        <th>{{x[3]}}</th>
-                        <th><button class="ban" id="{bu[0]}">Banuj</button></th>
-                    % end
-                </table>
-            </div>
-            <div id="list_f">
-                <table>
-                    <tr>
-                        <th>Id</th>
-                        <th>Tytuł</th>
-                        <th>Kategoria Wiekowa</th>
-                        <th>Reżyser</th>
-                        <th>Rok Produkcji</th>
-                        <th>Ilość</th>
-                        <th>Opis</th>
-                        <th>Zdjęcie</th>
-                        <th>Tagi</th>
-                        <th>Modyfikuj:</th>
-                        <th>Usuń:</th>
-                    </tr>
-                    % for x in movies:
-                    <tr>
-                        <th>{{x[0]}}</th>
-                        <th><input type="text" name="title" id="tl{{x[0]}}" placeholder="{{x[1]}}"></th>
-                        <th><input type="number" name="age" id="ag{{x[0]}}" placeholder="{{x[2]}}"></th>
-                        <th><input type="text" name="director" id="dr{{x[0]}}" placeholder="{{x[3]}}"></th>
-                        <th><input type="number" name="production" id="pr{{x[0]}}" placeholder="{{x[4]}}"></th>
-                        <th><input type="number" name="stock" id="st{{x[0]}}" placeholder="{{x[5]}}"></th>
-                        <th><input type="text" name="description" id="ds{{x[0]}}" placeholder="{{x[6]}}"></th>
-                        <th><img alt={{x[1]}} width="200px" height="300px" src="{{'/static/Filmy/'+x[1].replace(' ', '-').replace(':','')+'.png'}}"></th>
-                        <th>
-                        % for y in x[7]:
-                            {{y}}<br>
+                    </table>
+                </div>
+                <div id="list_f">
+                    <table>
+                        <tr>
+                            <td>Id</td>
+                            <td>Tytuł</td>
+                            <td>Kategoria Wiekowa</td>
+                            <td>Reżyser</td>
+                            <td>Rok Produkcji</td>
+                            <td>Ilość</td>
+                            <td>Opis</td>
+                            <td>Zdjęcie</td>
+                            <td>Tagi</td>
+                            <td>Modyfikuj:</td>
+                            <td>Usuń:</td>
+                        </tr>
+                        % movies = movies[::-1]
+                        % for x in movies:
+                        <tr>
+                            <td>{{x[0]}}</td>
+                            <td><input type="text" name="title" id="tl{{x[0]}}" value="{{x[1]}}"></td>
+                            <td><input type="number" name="age" id="ag{{x[0]}}" value="{{x[2]}}"></td>
+                            <td><input type="text" name="director" id="dr{{x[0]}}" value="{{x[3]}}"></td>
+                            <td><input type="number" name="production" id="pr{{x[0]}}" value="{{x[4]}}"></td>
+                            <td><input type="number" name="stock" id="st{{x[0]}}" value="{{x[5]}}"></td>
+                            <td><textarea name="description" id="ds{{x[0]}}" cols="50" rows="2">{{x[6]}}</textarea></td>
+                            <td><img alt={{x[1]}} widtd="100px" height="150px" src="{{'/static/Filmy/'+x[1].replace(' ', '-').replace(':','')+'.png'}}"></td>
+                            <td>
+                            % for y in x[7]:
+                                % if isinstance(y, list):
+                                {{y[1]}}
+                                %else:
+                                {{y}}
+                                %end
+                                <br>
+                            % end
+                            </td>
+                            <td><button widtd="10px" height="50px" onclick="edit({{x[0]}})">Modyfikuj</button></td>
+                            <td><button widtd="10px" height="50px" onclick="delm({{x[0]}})">Usuń</button></td>
                         % end
-                        </th>
-                        <th><button width="10px" height="50px" onclick="edit({{x[0]}})">Modyfikuj</button></th>
-                        <th><button width="10px" height="50px" onclick="delm({{x[0]}})">Usuń</button></th>
-                    % end
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
     <script>
@@ -145,7 +156,7 @@
         function datasend(){
             dataids = event.target.id;
             dataid="";
-            for(i = 3; i< dataids.length; i++){
+            for(i = 3; i< dataids.lengtd; i++){
                 dataid+=dataids[i];
             }
             console.log(dataid)
@@ -158,8 +169,8 @@
             data+=dataids.substr(0, 3)
             const xhr = new XMLHttpRequest()
             xhr.open('POST', '/admin')
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+            xhr.setRequestdeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestdeader('X-Requested-Witd', 'XMLHttpRequest')
             // send request
             fd='data='+data
             console.log(fd)
@@ -169,8 +180,8 @@
             banid = event.target.id;
             const xhr = new XMLHttpRequest()
             xhr.open('POST', '/admin')
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+            xhr.setRequestdeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestdeader('X-Requested-Witd', 'XMLHttpRequest')
             // send request
             fd='banid='+banid
             console.log(fd)
@@ -200,14 +211,14 @@
         }
         function checkCookie(){
             if(document.cookie.search('redi')!=-1){
-                document.cookie = "red=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "red=; expires=tdu, 01 Jan 1970 00:00:00 UTC; patd=/;";
                 location.reload();
             }
         }
-        function openWindowWithPost(url, data) {
+        function openWindowWitdPost(url, data) {
 				var form = document.createElement("form");
 				form.target = "_self";
-				form.method = "POST";
+				form.metdod = "POST";
 				form.action = url;
 				form.style.display = "none";
 
@@ -225,7 +236,7 @@
 
 			function search(ele) {
 				if(event.key === 'Enter') {
-					openWindowWithPost("/szukaj", {
+					openWindowWitdPost("/szukaj", {
 						title: ele.value
 					});
 				}
@@ -234,7 +245,7 @@
                 const xhr = new XMLHttpRequest()
 				xhr.open('POST', '/ajax/loadu')
 				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+				xhr.setRequestHeader('X-Requested-Witd', 'XMLHttpRequest')
 				xhr.onload = function () {
                     us.innerHTML = xhr.responseText
 				}
@@ -244,7 +255,7 @@
                 const xhr = new XMLHttpRequest()
 				xhr.open('POST', '/ajax/loadu')
 				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+				xhr.setRequestHeader('X-Requested-Witd', 'XMLHttpRequest')
 				xhr.onload = function () {
                     mo.innerHTML = xhr.responseText
 				}
@@ -254,7 +265,7 @@
                 const xhr = new XMLHttpRequest()
 				xhr.open('POST', '/ajax/modify')
 				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+				xhr.setRequestHeader('X-Requested-Witd', 'XMLHttpRequest')
 				xhr.onload = function () {
                     eval(xhr.responseText)
 					setTimeout(window.reload, 1000)
@@ -278,7 +289,7 @@
                 const xhr = new XMLHttpRequest()
 				xhr.open('POST', '/ajax/delete-movie')
 				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+				xhr.setRequestHeader('X-Requested-Witd', 'XMLHttpRequest')
 				xhr.onload = function () {
                     eval(xhr.responseText)
 					setTimeout(window.reload, 1000)
@@ -289,7 +300,7 @@
 				const xhr = new XMLHttpRequest()
 				xhr.open('POST', '/ajax/lookup')
 				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+				xhr.setRequestHeader('X-Requested-Witd', 'XMLHttpRequest')
 				xhr.onload = function () {
 					let x = document.getElementById("js")
 					x.innerHTML = xhr.responseText

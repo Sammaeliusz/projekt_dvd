@@ -5,14 +5,14 @@ from utils import *
 
 def wrapper(function:callable, sql:SQL, **kwg) -> callable:
     data = kwg['data']
-    title =             bottle.request.forms.get('title', '')
-    age_min =           bottle.request.forms.get('age_min', 0)
-    age_max =           bottle.request.forms.get('age_max', 99)
-    director =          bottle.request.forms.get('director', '')
-    production_min =    bottle.request.forms.get('production_min', 0)
-    production_max =    bottle.request.forms.get('production_max', 9999)
-    stock =             bottle.request.forms.get('stock', '0')
-    categories =        bottle.request.forms.get('categories', '')
+    title =             bottle.request.forms.getunicode('title', '')
+    age_min =           bottle.request.forms.getunicode('age_min', 0)
+    age_max =           bottle.request.forms.getunicode('age_max', 99)
+    director =          bottle.request.forms.getunicode('director', '')
+    production_min =    bottle.request.forms.getunicode('production_min', 0)
+    production_max =    bottle.request.forms.getunicode('production_max', 9999)
+    stock =             bottle.request.forms.getunicode('stock', '0')
+    categories =        bottle.request.forms.getunicode('categories', '')
 
     x = lambda n, m : m if len(n) == 0 else int(n)
 
@@ -27,14 +27,14 @@ from utils import *
 
 def wrapper(function:callable, sql:SQL, **kwg) -> callable:
     data = kwg['data']
-    title =             bottle.request.forms.get('title', '')
-    age_min =           bottle.request.forms.get('age_min', 0)
-    age_max =           bottle.request.forms.get('age_max', 99)
-    director =          bottle.request.forms.get('director', '')
-    production_min =    bottle.request.forms.get('production_min', 0)
-    production_max =    bottle.request.forms.get('production_max', 9999)
-    stock =             bottle.request.forms.get('stock', '0')
-    categories =        bottle.request.forms.get('categories', '')
+    title =             bottle.request.forms.getunicode('title', '')
+    age_min =           bottle.request.forms.getunicode('age_min', 0)
+    age_max =           bottle.request.forms.getunicode('age_max', 99)
+    director =          bottle.request.forms.getunicode('director', '')
+    production_min =    bottle.request.forms.getunicode('production_min', 0)
+    production_max =    bottle.request.forms.getunicode('production_max', 9999)
+    stock =             bottle.request.forms.getunicode('stock', '0')
+    categories =        bottle.request.forms.getunicode('categories', '')
 
     x = lambda n, m : m if len(n) == 0 else int(n)
 
@@ -45,7 +45,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
 
     movies = sql.movies_find_strict(tags=categories.split(','), name = title, age_min = int(age_min), age_max = int(age_max), director = director, production_min = int(production_min), production_max = int(production_max), onstock = stock=='1')
     if movies.isUsefull():
-        y = movies.getList()
+        y = movies.getunicodeList()
         if isinstance(y[0], list):
             ans = [Struct({
                 "id":x[0],

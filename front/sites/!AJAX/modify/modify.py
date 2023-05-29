@@ -5,14 +5,14 @@ from utils import *
 
 def wrapper(function:callable, sql:SQL, **kwg) -> callable:
     data = kwg['data']
-    mid =               bottle.request.forms.get('mid', None)
-    title =             bottle.request.forms.get('title', '')
-    age =               bottle.request.forms.get('age', 0)
-    director =          bottle.request.forms.get('director', '')
-    production =        bottle.request.forms.get('production', 0)
-    stock =             bottle.request.forms.get('stock', 0)
-    description =       bottle.request.forms.get('description', '')
-    #categories =       bottle.request.forms.get('categories', '')
+    mid =               bottle.request.forms.getunicode('mid', None)
+    title =             bottle.request.forms.getunicode('title', '')
+    age =               bottle.request.forms.getunicode('age', 0)
+    director =          bottle.request.forms.getunicode('director', '')
+    production =        bottle.request.forms.getunicode('production', 0)
+    stock =             bottle.request.forms.getunicode('stock', 0)
+    description =       bottle.request.forms.getunicode('description', '')
+    #categories =       bottle.request.forms.getunicode('categories', '')
 
     print(mid, title, age, director, production, stock, description)
 

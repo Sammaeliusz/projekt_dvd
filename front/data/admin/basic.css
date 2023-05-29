@@ -343,21 +343,17 @@ body{
 }
 
 .holder-left{
-	display:flex;
 	position:relative;
 	overflow:none;
 	z-index:-10;
-	
+	width: 100%;
+	height: fit-content;
 	margin:5px;
 	padding-top:100px;
-	
+	align-content: center;
 	top:0%;
 	left:0%;
-	
-	width:calc(25% - 10px);
-	min-height: calc(100% - 10px - 100px) !important;
-	height:fit-content;
-	
+
 	border-radius:5px;
 	box-shadow: var(--main-shadow);
 	
@@ -367,21 +363,16 @@ body{
 }
 
 .holder-right{
-	display:flex;
 	position:relative;
 	overflow:hidden;
 	z-index:-10;
-	
-	height:fit-content;
-	
+	align-content: center;
 	margin:5px;
 	padding-top:100px;
-	
+	width: 100%;
+	height: fit-content;
 	top:0%;
 	float: right;
-	
-	width:calc(75% - 10px);
-	min-height: calc(100% - 10px - 100px) !important;
 	
 	flex-wrap:wrap;
 }
@@ -426,9 +417,6 @@ body{
 	position: relative;
 	z-index:8;
 	
-	width: calc(100% - 10px);
-	height:inherit;
-	
 	left: 5px;
 }
 
@@ -452,8 +440,6 @@ body{
 	overflow:none;
 	z-index:10;
 	
-	width: calc(100% - 10px);
-	height:fit-content;
 
 	margin:5px;
 	align-self:flex-start;
@@ -463,8 +449,6 @@ body{
 	display:flex;
 	position:relative;
 	
-	width:100%;
-	height:fit-content;
 	
 	flex-wrap:wrap;
 	align-items:center;
@@ -519,4 +503,7 @@ body{
 	z-index: 0;
 	top:0;
 	left:0;
+}
+#content_admin{
+	display: block;
 }
