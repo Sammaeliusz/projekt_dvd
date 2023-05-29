@@ -81,6 +81,7 @@
                             <td>Id</td>
                             <td>Nazwa</td>
                             <td>Zaległe filmy</td>
+                            <td>Czy zbanowany:</td>
                             <td>Ban:</td>
                         </tr>
                         % for x in users:
@@ -93,7 +94,7 @@
                             % end
                             </td>
                             <td>{{x[3]}}</td>
-                            <td><button class="ban" id="{bu[0]}">Banuj</button></td>
+                            <td><button class="ban" id="{{x[0]}}">Banuj/Unbanuj</button></td>
                         % end
                     </table>
                 </div>
@@ -122,7 +123,7 @@
                             <td><input type="number" name="production" id="pr{{x[0]}}" value="{{x[4]}}"></td>
                             <td><input type="number" name="stock" id="st{{x[0]}}" value="{{x[5]}}"></td>
                             <td><textarea name="description" id="ds{{x[0]}}" cols="50" rows="2">{{x[6]}}</textarea></td>
-                            <td><img alt={{x[1]}} widtd="100px" height="150px" src="{{'/static/Filmy/'+x[1].replace(' ', '-').replace(':','')+'.png'}}"></td>
+                            <td><img alt={{x[1]}} widtd="100px" height="150px" ></td>
                             <td>
                             % for y in x[7]:
                                 % if isinstance(y, list):
@@ -169,19 +170,21 @@
             data+=dataids.substr(0, 3)
             const xhr = new XMLHttpRequest()
             xhr.open('POST', '/admin')
-            xhr.setRequestdeader('Content-Type', 'application/x-www-form-urlencoded')
-            xhr.setRequestdeader('X-Requested-Witd', 'XMLHttpRequest')
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestHeader('X-Requested-Witd', 'XMLHttpRequest')
             // send request
             fd='data='+data
             console.log(fd)
             xhr.send(fd)
         }
         function ban(){
+            console.log("dziala");
             banid = event.target.id;
+            console.log(banid);
             const xhr = new XMLHttpRequest()
             xhr.open('POST', '/admin')
-            xhr.setRequestdeader('Content-Type', 'application/x-www-form-urlencoded')
-            xhr.setRequestdeader('X-Requested-Witd', 'XMLHttpRequest')
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestHeader('X-Requested-Witd', 'XMLHttpRequest')
             // send request
             fd='banid='+banid
             console.log(fd)
@@ -334,6 +337,10 @@
 					lmb = false;
 				}
 			}
+            bu = document.querySelectorAll(".ban");
+            bu.forEach(element => {
+                element.addEventListener("click", ban)
+            });
     </script>
     </body>
 </html>

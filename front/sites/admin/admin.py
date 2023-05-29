@@ -5,12 +5,12 @@ import requests
 def wrapper(function:callable, sql:SQL, **kwg) -> callable:
 
      user_id = bottle.request.get_cookie("id")
-    
+     
      if user_id:
         user_id = int(user_id)
 
         user = sql.user_finder(user_id)
-
+        
         if user.isUsefull():
           movies = sql.movies_recent(9999)
           users = sql.users_all()
@@ -34,12 +34,12 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                     users = [users]
                banid=bottle.request.forms.getunicode("banid", None)
                if banid != None:
-                    if sql.inactivity_check(banid).getList()[0]!=1:
+                    if sql.inactivity_check(banid)!=1:
                          sql.user_unban(banid)
                          bottle.response.set_cookie('red', "redi")
                          return redirect('/admin')
                     else:
-                         sql.user_delete(banid)
+                         sql.user_ban(banid)
                          bottle.response.set_cookie('red', "redi")
                          return redirect('/admin')
                user_list = []
@@ -177,3 +177,4 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
           return function(user="Admin", movies=film_tab, users=user_tab)
      else:
           return redirect('/panel')
+#src="{{'/static/Filmy/'+x[1].replace(' ', '-').replace(':','')+'.png'}}"

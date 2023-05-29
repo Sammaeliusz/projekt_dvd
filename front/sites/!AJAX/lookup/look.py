@@ -36,7 +36,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
     stock =             bottle.request.forms.getunicode('stock', '0')
     categories =        bottle.request.forms.getunicode('categories', '')
 
-    x = lambda n, m : m if len(n) == 0 else int(n)
+    x = lambda n, m : m if len(str(n)) == 0 else int(n)
 
     age_min = x(age_min, 0)
     age_max = x(age_max, 99)
@@ -45,7 +45,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
 
     movies = sql.movies_find_strict(tags=categories.split(','), name = title, age_min = int(age_min), age_max = int(age_max), director = director, production_min = int(production_min), production_max = int(production_max), onstock = stock=='1')
     if movies.isUsefull():
-        y = movies.getunicodeList()
+        y = movies.getList()
         if isinstance(y[0], list):
             ans = [Struct({
                 "id":x[0],

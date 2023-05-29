@@ -576,7 +576,7 @@ class SQL:
         if question.getBool():
             return self.logret(-1006, notes = f'user_id -> {user_id}')
 
-        question = self.set_user_tag(user_id, self.get_ban_id())
+        question = self.set_user_tag(user_id, 2)
 
         if question.isError():
             return question
@@ -618,7 +618,7 @@ class SQL:
         if not question.getBool():
             return self.logret(-1006, notes = f'user_id -> {user_id}')
 
-        question = self.delete_user_tag(user_id, self.get_ban_id())
+        question = self.delete_user_tag(user_id, 2)
 
         if question.isError():
             return question

@@ -14,7 +14,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
     stock =             bottle.request.forms.get('stock', '0')
     categories =        bottle.request.forms.get('categories', '')
 
-    x = lambda n, m : m if len(n) == 0 else int(n)
+    x = lambda n, m : m if len(str(n)) == 0 else int(n)
 
     age_min = x(age_min, 0)
     age_max = x(age_max, 99)
