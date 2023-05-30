@@ -95,6 +95,7 @@
                             </td>
                             <td>{{x[3]}}</td>
                             <td><button class="ban" id="{{x[0]}}">Banuj/Unbanuj</button></td>
+							<td><button class="bann" id="{{x[0]}}" onclick="udelete()">Usuń</button></td>
                         % end
                     </table>
                 </div>
@@ -190,6 +191,14 @@
             fd='data='+data
             console.log(fd)
             xhr.send(fd)
+        }
+		function udelete(){
+            dataids = event.target.id;
+            const xhr = new XMLHttpRequest()
+            xhr.open('POST', '/admin')
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestHeader('X-Requested-Witd', 'XMLHttpRequest')
+            xhr.send(`udelete={dataids}`)
         }
         function ban(){
             console.log("dziala");

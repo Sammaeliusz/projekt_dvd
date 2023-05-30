@@ -4,6 +4,12 @@ from utils import *
 import requests
 def wrapper(function:callable, sql:SQL, **kwg) -> callable:
 
+     udelete = bottle.request.forms.getunicode("udelete", None)
+
+     if udelete:
+
+          sql.user_delete(int(udelete))
+
      user_id = bottle.request.get_cookie("id")
      
      if user_id:
@@ -25,15 +31,25 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                     if q.isUsefull():
                          l = []
                          for z in q.getList():
-                              l.append(z)
+                              l.append(z[1])
                          movies[y].append(l)
                     else:
                          movies[y].append([])
+               
+               x_for_movie_del = 0
+               for x in range(len(movies.copy())):
+                    if movies[x - x_for_movie_del][4] == '':
+                         del movies[x - x_for_movie_del]
+                         x_for_movie_del += 1
+
                users = users.getList()
                if not isinstance(users[0], list):
                     users = [users]
-               data=bottle.request.forms.getunicode("data", None)
+
+               data = bottle.request.forms.getunicode("data", None)
+
                if data != None:
+
                     data = data.split(";")
                     print(data)
                     if len(data)>=8:
@@ -41,15 +57,20 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                     if oper == "add":
                          sql.movie_add(data[0], int(data[1]), data[2], int(data[3]), int(data[4]), data[6].split("\n"), data[5])
                          bottle.response.set_cookie('red', "redi")
-               banid=int(bottle.request.forms.getunicode("banid", 0))
+                         return redirect('/admin')
+                    
+               banid = bottle.request.forms.getunicode("banid", None)
                if banid != None:
-                    print(sql.ban_check(banid))
-                    if sql.ban_check(banid):
+                    banid = int(banid)
+                    if sql.ban_check(banid)!=1:
                          sql.user_unban(banid)
                          bottle.response.set_cookie('red', "redi")
+                         return redirect('/admin')
                     else:
                          sql.user_ban(banid)
                          bottle.response.set_cookie('red', "redi")
+                         return redirect('/admin')
+                    
                user_list = []
                for x in users:
                     q = sql.user_have_return(int(x[0]), today())
