@@ -934,7 +934,7 @@ class SQL:
         q = self.create_new_rent(movie_id, user_id, rent, return_date)
         if not q.isUsefull():
             return self.logret(-4004)
-        q = self.stock_sub(1)
+        q = self.stock_sub(movie_id, 1)
         if not q.isUsefull():
             return self.logret(-2005)
         return q
