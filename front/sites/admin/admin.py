@@ -32,6 +32,16 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                users = users.getList()
                if not isinstance(users[0], list):
                     users = [users]
+               data=bottle.request.forms.getunicode("data", None)
+               if data != None:
+                    data = data.split(";")
+                    print(data)
+                    if len(data)>=7:
+                         oper = data.pop()
+                    if oper == "add":
+                         sql.movie_add(data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+                         bottle.response.set_cookie('red', "redi")
+                         return redirect('/admin')
                banid=bottle.request.forms.getunicode("banid", None)
                if banid != None:
                     if sql.inactivity_check(banid)!=1:
