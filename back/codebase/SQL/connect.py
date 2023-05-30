@@ -576,7 +576,7 @@ class SQL:
         if question.getBool():
             return self.logret(-1006, notes = f'user_id -> {user_id}')
 
-        question = self.set_user_tag(user_id, 2)
+        question = self.set_user_tag(user_id, self.get_ban_id())
 
         if question.isError():
             return question
@@ -618,7 +618,7 @@ class SQL:
         if not question.getBool():
             return self.logret(-1006, notes = f'user_id -> {user_id}')
 
-        question = self.delete_user_tag(user_id, 2)
+        question = self.delete_user_tag(user_id, self.get_ban_id())
 
         if question.isError():
             return question
@@ -772,7 +772,7 @@ class SQL:
             return self.logret(-1005, notes = f'user_id -> {user_id}')
         
         q = self.get_all_user_rented_not_returned(user_id)
-        if not q.isUsefull():
+        if q.isError():
             return self.logret(-10001)
         if q.getList() == 0:
             q = self.update_user(user_id, '','','')
@@ -781,7 +781,8 @@ class SQL:
             
             q = self.user_deactivate(user_id)
             return self.logret(-1021, notes = f'user_id -> {user_id}')
-        return self.logret(-1005, notes = f'user_id -> {user_id}')
+        return self.logret(-1030, notes = f'user_id -> {user_id}')
+    
     def stock_add(self, movie_id, amount) -> Answer:
 
         if not self.movie_exists(movie_id):
@@ -933,12 +934,12 @@ class SQL:
         q = self.create_new_rent(movie_id, user_id, rent, return_date)
         if not q.isUsefull():
             return self.logret(-4004)
-        q = self.stock_sub(movie_id, 1)
+        q = self.stock_sub(1)
         if not q.isUsefull():
             return self.logret(-2005)
         return q
     
-    def unrent(self, rent_id, movie_id, date) -> Answer:
+    def unrent(self, rent_id:int, movie_id:int, date:str) -> Answer:
 
         q = self.return_rent(rent_id, date)
         if not q.isUsefull():
@@ -1225,5 +1226,3 @@ class SQL:
             if l[1].count(tag_id) > 0:
                 return Answer(l[l[1].index(tag_id)])
         return Answer(None)
-    def the_best_movie(self, lim:int) -> Answer:
-        return self.select(self.sql_conf.the_best.question.format(lim=lim))
