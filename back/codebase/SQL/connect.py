@@ -152,15 +152,15 @@ class SQL:
                     check = False
                     break
             elif x[1] == 'tinyint':
-                if not isinstance(x[0], int) and not abs(x[0]) < 128 :
+                if not isinstance(x[0], int) or not abs(x[0]) < 128 :
                     check = False
                     break
             elif x[1] == 'smallint':
-                if not isinstance(x[0], int) and not abs(x[0]) < 32768:
+                if not isinstance(x[0], int) or not abs(x[0]) < 32768:
                     check = False
                     break
             elif x[1] == 'mediumint':
-                if not isinstance(x[0], int) and not abs(x[0]) < 8388608:
+                if not isinstance(x[0], int) or not abs(x[0]) < 8388608:
                     check = False
                     break
             elif x[1] == 'text':
