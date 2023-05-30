@@ -29,7 +29,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
             if deletion != None:
                 bottle.response.set_cookie('id', '', expires=0)
                 bottle.response.set_cookie('zal', '', expires=0)
-                q = sql.delete_user(user_id)
+                q = sql.user_delete(user_id)
                 return redirect('/')
 
             rented = sql.user_actual_rent(user_id)
