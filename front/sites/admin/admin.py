@@ -65,7 +65,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                banid = bottle.request.forms.getunicode("banid", None)
                if banid != None:
                     banid = int(banid)
-                    if sql.ban_check(banid)!=1:
+                    if sql.ban_check(banid):
                          sql.user_unban(banid)
                          bottle.response.set_cookie('red', "redi")
                          return redirect('/admin')
