@@ -42,7 +42,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                          sql.movie_add(data[0], int(data[1]), data[2], int(data[3]), int(data[4]), data[6].split("\n"), data[5])
                          bottle.response.set_cookie('red', "redi")
                          return redirect('/admin')
-               banid=int(bottle.request.forms.getunicode("banid", None))
+               banid=int(bottle.request.forms.getunicode("banid", 0))
                if banid != None:
                     if sql.inactivity_check(banid)!=1:
                          sql.user_unban(banid)
