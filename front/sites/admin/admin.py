@@ -29,19 +29,19 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                for y, x in enumerate(movies.copy()):
                     q = sql.movie_tags(movies[y][0])
                     if q.isUsefull():
+                         q = q.getList()
+                         if not isinstance(q[0], list):
+                              q = [q]
                          l = []
-                         for z in q.getList():
-                              if isinstance(z, list):
-                                   l.append(z[1])
-                              else:
-                                   l.append(z)
+                         for z in q:
+                              l.append(z[1])
                          movies[y].append(l)
                     else:
                          movies[y].append([])
                
                x_for_movie_del = 0
                for x in range(len(movies.copy())):
-                    if movies[x - x_for_movie_del][4] == '':
+                    if movies[x - x_for_movie_del][6] == '':
                          del movies[x - x_for_movie_del]
                          x_for_movie_del += 1
 
