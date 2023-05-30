@@ -41,17 +41,15 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                     if oper == "add":
                          sql.movie_add(data[0], int(data[1]), data[2], int(data[3]), int(data[4]), data[6].split("\n"), data[5])
                          bottle.response.set_cookie('red', "redi")
-                         return redirect('/admin')
                banid=int(bottle.request.forms.getunicode("banid", 0))
                if banid != None:
-                    if sql.inactivity_check(banid)!=1:
+                    print(sql.ban_check(banid))
+                    if sql.ban_check(banid):
                          sql.user_unban(banid)
                          bottle.response.set_cookie('red', "redi")
-                         return redirect('/admin')
                     else:
                          sql.user_ban(banid)
                          bottle.response.set_cookie('red', "redi")
-                         return redirect('/admin')
                user_list = []
                for x in users:
                     q = sql.user_have_return(int(x[0]), today())
