@@ -31,7 +31,10 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                     if q.isUsefull():
                          l = []
                          for z in q.getList():
-                              l.append(z[1])
+                              if isinstance(z, list):
+                                   l.append(z[1])
+                              else:
+                                   l.append(z)
                          movies[y].append(l)
                     else:
                          movies[y].append([])
