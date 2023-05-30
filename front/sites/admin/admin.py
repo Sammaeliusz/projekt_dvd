@@ -36,7 +36,7 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                if data != None:
                     data = data.split(";")
                     print(data)
-                    if len(data)>=7:
+                    if len(data)>=8:
                          oper = data.pop()
                     if oper == "add":
                          sql.movie_add(data[1], data[2], data[3], data[4], data[5], data[6], data[7])
