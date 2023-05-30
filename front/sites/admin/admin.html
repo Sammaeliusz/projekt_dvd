@@ -122,8 +122,8 @@
                             <td><input type="text" name="director" id="dr{{x[0]}}" value="{{x[3]}}"></td>
                             <td><input type="number" name="production" id="pr{{x[0]}}" value="{{x[4]}}"></td>
                             <td><input type="number" name="stock" id="st{{x[0]}}" value="{{x[5]}}"></td>
-                            <td><textarea name="description" id="ds{{x[0]}}" cols="50" rows="2">{{x[6]}}</textarea></td>
-                            <td><img alt={{x[1]}} widtd="100px" height="150px" ></td>
+                            <td><textarea name="description" id="ds{{x[0]}}" cols="35" rows="5">{{x[6]}}</textarea></td>
+                            <td><img alt={{x[1]}} widtd="100px" height="150px" src="{{'/static/Filmy/'+x[1].replace(' ', '-').replace(':','')+'.png'}}"></td>
                             <td>
                             % for y in x[7]:
                                 % if isinstance(y, list):
@@ -146,7 +146,7 @@
                             <td><input type="text" name="director" id="dr{{newid}}" ></td>
                             <td><input type="number" name="production" id="pr{{newid}}" ></td>
                             <td><input type="number" name="stock" id="st{{newid}}" ></td>
-                            <td><textarea name="description" id="ds{{newid}}" cols="50" rows="2"></textarea></td>
+                            <td><textarea name="description" id="ds{{newid}}" cols="35" rows="5"></textarea></td>
                             <td></td>
                             <td><textarea name="description" id="ds{{newid}}" cols="10" rows="5"></textarea></td>
                             <td><button widtd="10px" height="50px" onclick="add()">Dodaj</button></td>
