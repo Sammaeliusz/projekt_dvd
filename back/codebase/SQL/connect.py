@@ -934,7 +934,7 @@ class SQL:
         q = self.create_new_rent(movie_id, user_id, rent, return_date)
         if not q.isUsefull():
             return self.logret(-4004)
-        q = self.stock_sub(1)
+        q = self.stock_sub(movie_id, 1)
         if not q.isUsefull():
             return self.logret(-2005)
         return q
@@ -1226,3 +1226,5 @@ class SQL:
             if l[1].count(tag_id) > 0:
                 return Answer(l[l[1].index(tag_id)])
         return Answer(None)
+    def the_best_movie(self, lim:int) -> Answer:
+        return self.select(self.sql_conf.the_best.question.format(lim=lim))
