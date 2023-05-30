@@ -774,8 +774,9 @@ class SQL:
         q = self.get_all_user_rented_not_returned(user_id)
         if q.isError():
             return self.logret(-10001)
-        if q.getList() == 0:
-            q = self.update_user(user_id, '','','')
+        if len(q.getList()) == 0:
+            q2 = self.user_finder(user_id)
+            q = self.update_user(user_id, q2.getList()[1],'','')
             if q.isError():
                 return self.logret(-1030, notes = f'user_id -> {user_id}')
             
