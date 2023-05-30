@@ -137,6 +137,20 @@
                             <td><button widtd="10px" height="50px" onclick="edit({{x[0]}})">Modyfikuj</button></td>
                             <td><button widtd="10px" height="50px" onclick="delm({{x[0]}})">Usuń</button></td>
                         % end
+                        </tr>
+                        <tr>
+                        %newid=len(movies)
+                            <td>{{newid}}</td>
+                            <td><input type="text" name="title" id="tl{{newid}}"></td>
+                            <td><input type="number" name="age" id="ag{{newid}}"></td>
+                            <td><input type="text" name="director" id="dr{{newid}}" ></td>
+                            <td><input type="number" name="production" id="pr{{newid}}" ></td>
+                            <td><input type="number" name="stock" id="st{{newid}}" ></td>
+                            <td><textarea name="description" id="ds{{newid}}" cols="50" rows="2"></textarea></td>
+                            <td></td>
+                            <td><textarea name="description" id="ds{{newid}}" cols="20" rows="2"></textarea></td>
+                            <td><button widtd="10px" height="50px" onclick="add()">Modyfikuj</button></td>
+                        </tr>
                     </table>
                 </div>
             </div>
