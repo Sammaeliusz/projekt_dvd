@@ -171,11 +171,13 @@
 		</div>
 		<script>
 			function zal(){
-				let x = []
+				var x = []
 				% for x in return_popup:
 					x.push("{{x}}")
 				% end
-				if(x.lenght > 0){
+				console.log(x)
+				console.log(x.length)
+				if(x.length > 0){
 					alert('Masz zaległe filmy!\n\nZaległe filmy:\n'+x.join('\n'))
 				}
 			}
@@ -218,8 +220,7 @@
 					window.open('/logowanie', '_self')
 				}
 			}
-			zal()
-
+			
 			function openWindowWithPost(url, data) {
 				var form = document.createElement("form");
 				form.target = "_self";
@@ -256,6 +257,8 @@
 						zwrot: x
 					});
 			}
+			zal()
+
 		</script>
 	</body>
 </html>
