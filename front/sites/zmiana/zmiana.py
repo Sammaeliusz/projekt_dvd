@@ -12,8 +12,9 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
         return function()
     
     user = user.split("|")
-    to_pass = [x if x != None else user[n] for n, x in enumerate([bottle.request.forms.get('name', None),bottle.request.forms.get('mail', None),bottle.request.forms.get('password', None)])]
-    question = sql.userdata_change(bottle.request.get_cookie("id"), *to_pass)
+    to_pass = [bottle.request.forms.get('name', None),bottle.request.forms.get('mail', None),bottle.request.forms.get('password', None).replace("\"", "")]
+    print(to_pass)
+    question = sql.userdata_change(int(bottle.request.get_cookie("id")), *to_pass)
     
     if not question.isUsefull():
         return function(error=question.getMessage(), data=kwg.data)

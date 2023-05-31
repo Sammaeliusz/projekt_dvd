@@ -143,6 +143,7 @@ class SQL:
             return False
         check = True
         for x in zip(*[data, types]):
+            print(x)
             if x[1] == 'int':
                 if not isinstance(x[0], int):
                     check = False
@@ -474,7 +475,7 @@ class SQL:
         self.__log__(-1016, notes = f'on {typ} with {value}')
         return Answer(len(self.check_userdata(typ, value).getList()) == 1)
     
-    def user_exists(self, user_id) -> bool:
+    def user_exists(self, user_id:int) -> bool:
 
         self.__log__(-1022, notes = f'user_id -> {user_id}')
         a = self.find_user(user_id)
@@ -647,6 +648,11 @@ class SQL:
             #return self.logret(-1003, notes = f'simmilar username found -> {username}')
 
         q = self.check_mail(mail)
+        user = self.user_finder(user_id)
+        if not user.isUsefull():
+            return self.logret(-10001)
+        if username == user.getList()[1]:
+            return self.logret(-10001 )
         if q.isError():
             return self.logret(-1015)
         if len(q.getList()) > 0:
@@ -710,31 +716,39 @@ class SQL:
         mail = self.protection(mail)
         password = self.protection(password)
 
+        q = self.check_userdata('mail',mail)
+        if q.isError():
+            return self.logret(-1015)
+        if len(q.getList()) > 0:
+            return self.logret(-1001, notes = f'simmilar mail found -> {mail}')
+        
+
+        if mail=="":
+            mail = self.find_user(user_id).getList()[2]
+        if username=="":
+            username = self.find_user(user_id).getList()[1]
+        if password == '':
+            password = self.find_user(user_id).getList()[3]
+        print(self.mail_check(mail))
         if not self.mail_check(mail):
             return self.logret(-1001)
 
         if not self.password_check(password):
-            return self.logret(-1001)
-
+            return self.logret(-1027)
         #q = self.check_userdata('username',username)
         #if q.isError():
             #return self.logret(-1015)
         #if len(q.getList()) > 0:
             #return self.logret(-1003, notes = f'simmilar username found -> {username}')
 
-        q = self.check_userdata('mail',mail)
-        if q.isError():
-            return self.logret(-1015)
-        if len(q.getList()) > 0:
-            return self.logret(-1001, notes = f'simmilar mail found -> {mail}')
+        
 
         question = self.inactivity_check(user_id)
 
         if not question:
             return self.logret(-1004)
 
-        if password == '':
-            password = self.find_user(user_id).getList()[3]
+        
 
         self.update_user(user_id, username, mail, password)
         
