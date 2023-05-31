@@ -48,7 +48,11 @@ def wrapper(function:callable, sql:SQL, **kwg) -> callable:
                users = users.getList()
                if not isinstance(users[0], list):
                     users = [users]
-
+               x_for_user_del = 0
+               for x in range(len(users.copy())):
+                    if users[x - x_for_user_del][3] == '':
+                         del users[x - x_for_user_del]
+                         x_for_user_del += 1
                data = bottle.request.forms.getunicode("data", None)
 
                if data != None:
